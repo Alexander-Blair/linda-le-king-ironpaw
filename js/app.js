@@ -40,4 +40,44 @@ $(()=>{
   }
   generateTrees();
 
+  //write function to check if it has a tree in the wall
+  //refactor the below
+
+
+  // MOVE YO LUMBER JACK
+  window.addEventListener('keydown', (e) => {
+    if (e.keyCode === 37) {
+      console.log('left');
+      if(lumberjack%width !== 0 && !cells[lumberjack-1].classList.contains('tree')){
+        cells[lumberjack].classList.remove('lumberjack');
+        lumberjack -= 1;
+        cells[lumberjack].classList.add('lumberjack');
+      }
+    }
+    if (e.keyCode === 39 ){
+      console.log('right');
+      if(lumberjack%width !== width-1 && !cells[lumberjack+1].classList.contains('tree')){
+        cells[lumberjack].classList.remove('lumberjack');
+        lumberjack += 1;
+        cells[lumberjack].classList.add('lumberjack');
+      }
+    }
+    if (e.keyCode === 40) {
+      console.log('down');
+      if (lumberjack < width*height-1 ){
+        cells[lumberjack].classList.remove('lumberjack');
+        lumberjack += width;
+        cells[lumberjack].classList.add('lumberjack');
+      }
+    }
+    if (e.keyCode === 38) {
+      console.log('up');
+      if (lumberjack > width-1 ){
+        cells[lumberjack].classList.remove('lumberjack');
+        lumberjack -= width;
+        cells[lumberjack].classList.add('lumberjack');
+      }
+    }
+  }, false);
+
 });

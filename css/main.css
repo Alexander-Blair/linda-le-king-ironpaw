@@ -21,13 +21,13 @@
   background-color: olive;
   }
 .bear{
-  /* background-image: url('./images/test-bear.jpeg'); */
+  /* background-image: url('/images/test-bear.jpeg'); */
   background-color: brown;
   background-size: contain;
  }
 
 .lumberjack{
-  /* background-image: url(/images/lumberjack.gif); */
+  /* background-image: url('/images/lumberjack.gif'); */
   background-color: red;
   background-size: contain;
 }
