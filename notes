@@ -1,0 +1,8 @@
+// const wallTypes = Object.keys(randomWalls[randomMap]);
+
+// wallTypes.forEach(wallType => {
+// If the value is not null..
+// if (randomWalls[randomMap][wallType]) {
+//   // Take the cell index and add the wallType to walls array
+//   walls = randomWalls[randomMap][wallType].map(cellIndex => cells[cellIndex].classList.add(wallType));
+// })
