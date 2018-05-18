@@ -64,7 +64,7 @@ $(()=>{
     }
     if (e.keyCode === 40) {
       console.log('down');
-      if (lumberjack < width*height-1 ){
+      if (!(lumberjack > (width * height) - width) && !cells[lumberjack+width].classList.contains('tree')){
         cells[lumberjack].classList.remove('lumberjack');
         lumberjack += width;
         cells[lumberjack].classList.add('lumberjack');
@@ -72,7 +72,7 @@ $(()=>{
     }
     if (e.keyCode === 38) {
       console.log('up');
-      if (lumberjack > width-1 ){
+      if (lumberjack > width-1 && !cells[lumberjack-width].classList.contains('tree')){
         cells[lumberjack].classList.remove('lumberjack');
         lumberjack -= width;
         cells[lumberjack].classList.add('lumberjack');
