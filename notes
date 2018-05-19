@@ -1,0 +1,4 @@
+If boxAleft < boxBleft + width boxB
+  Box A left + widthBoxA  > boxB
+  BoxA top < BoxBtop = boxb Height
+  BoxAtop + Box A Height > Box B top

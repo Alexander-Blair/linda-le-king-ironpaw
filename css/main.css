@@ -21,13 +21,23 @@
   background-color: olive;
   }
 .bear{
-  /* background-image: url('/images/test-bear.jpeg'); */
+  background-image: url('../images/enemyBear.gif');
   background-color: brown;
+  height: 100px;
+  width: 100px;
   background-size: contain;
+  background-repeat: no-repeat;
  }
 
 .lumberjack{
-  /* background-image: url('/images/lumberjack.gif'); */
-  background-color: red;
+  background-image: url('../images/test-bear.jpeg');
+  height: 100px;
+  width: 100px;
   background-size: contain;
+  background-repeat: no-repeat;
+}
+
+.pinecone{
+  background-image: url('../images/pinecone.png');
+  background-size: cover;
 }
