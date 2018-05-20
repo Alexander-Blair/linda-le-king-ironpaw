@@ -18,8 +18,8 @@ window.addEventListener('DOMContentLoaded', () => {
   // const $enemyBear = $('#enemyBear');
   let lumberjackIndex = 0;
   let bearIndex = 99;
-  // let items =[]
-  let pineconeLocation = null;
+  let pineconeIndex = null;
+  let inventory = 5;
   // let computerPlayer =false;
 
   // 1. create grid
@@ -84,27 +84,38 @@ window.addEventListener('DOMContentLoaded', () => {
         cells[lumberjackIndex].classList.add('lumberjack');
       }
 
-      // if (e.keyCode === 32){
-      //   console.log('spacebar');
-      //   if (items > 0){
-      //     items--;
-      //   }
-
-      //   if(lumberjackIndex === bearIndex){
-      //     console.log('collision!')
-      //   }
+      if (e.keyCode === 32){
+        console.log('spacebar');
+        if (inventory > 0){
+          inventory--;
+          const pinecone = cells[lumberjackIndex];
+          pinecone.classList.add('pinecone');
+          window.setTimeout(() => {
+            pinecone.classList.remove('pinecone');
+          } ,1500);
+        }
+        if (lumberjackIndex === pineconeIndex){
+          inventory ++;
+          console.log('pinecone added to inventory');
+          cells[pineconeIndex].classList.remove('pinecone');
+          //respawn elsewhere
+          pineconeIndex= Math.floor(Math.random() * (gridHeight*gridWidth));
+        }
+      }
     }
+    // if(lumberjackIndex === bearIndex){
+    // console.log('collision!');
   }, false);
 
   //SPAWN RANDOM ITEMS
 
   // function spawnItems(item){
     //set timeout?
-    pineconeLocation = Math.floor(Math.random() * (gridHeight*gridWidth));
-    cells[pineconeLocation].classList.add('pinecone');
+    pineconeIndex = Math.floor(Math.random() * (gridHeight*gridWidth));
+    cells[pineconeIndex].classList.add('pinecone');
     //work out how not to get it in tree squares
     //convert to jquery with addClass later
-  // }
+   // }
   // spawnItems('pinecone');
 
   // BEAR MOVEMENTS
