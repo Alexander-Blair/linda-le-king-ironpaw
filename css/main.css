@@ -27,6 +27,7 @@
   width: 100px;
   background-size: contain;
   background-repeat: no-repeat;
+  z-index: 1;
  }
 
 .lumberjack{
@@ -35,9 +36,11 @@
   width: 100px;
   background-size: contain;
   background-repeat: no-repeat;
+  z-index: 2;
 }
 
 .pinecone{
   background-image: url('../images/pinecone.png');
   background-size: cover;
+  z-index: 1;
 }

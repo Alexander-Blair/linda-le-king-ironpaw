@@ -2,3 +2,14 @@ If boxAleft < boxBleft + width boxB
   Box A left + widthBoxA  > boxB
   BoxA top < BoxBtop = boxb Height
   BoxAtop + Box A Height > Box B top
+
+
+z-index
+  $(function() {
+       var zIndexNumber = 1000;
+       // Put your target element(s) in the selector below!
+       $("div").each(function() {
+               $(this).css('zIndex', zIndexNumber);
+               zIndexNumber -= 10;
+       });
+});

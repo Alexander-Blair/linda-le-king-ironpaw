@@ -1,11 +1,9 @@
 window.addEventListener('DOMContentLoaded', () => {
   // To do list
-  //Enemy movement
-  //spawn random items
   //instructions button
-  //helth bar
+  //health bar
   //timer
-  //if (pineconeOrNot === false){
+
 
   //VARIABLES
 
@@ -51,7 +49,15 @@ window.addEventListener('DOMContentLoaded', () => {
 
   //ARROW BINDING
   window.addEventListener('keydown', (e) => {
-
+    //picking up pinecone
+    if (cells[lumberjackIndex].classList.contains('pinecone')){
+      cells[lumberjackIndex].classList.remove('pinecone');
+      spawnItems();
+      if (inventory < 10){
+        inventory ++;
+        console.log('pinecone added to inventory');
+      }
+    }
     if (e.keyCode === 37) {
       console.log('left');
       if(lumberjackIndex%gridWidth !== 0 && !cells[lumberjackIndex-1].classList.contains('tree')){
@@ -83,40 +89,36 @@ window.addEventListener('DOMContentLoaded', () => {
         lumberjackIndex -= gridWidth;
         cells[lumberjackIndex].classList.add('lumberjack');
       }
+    }
 
-      if (e.keyCode === 32){
-        console.log('spacebar');
-        if (inventory > 0){
-          inventory--;
-          const pinecone = cells[lumberjackIndex];
-          pinecone.classList.add('pinecone');
-          window.setTimeout(() => {
-            pinecone.classList.remove('pinecone');
-          } ,1500);
-        }
-        if (lumberjackIndex === pineconeIndex){
-          inventory ++;
-          console.log('pinecone added to inventory');
-          cells[pineconeIndex].classList.remove('pinecone');
-          //respawn elsewhere
-          pineconeIndex= Math.floor(Math.random() * (gridHeight*gridWidth));
-        }
+    if (e.keyCode === 32){
+      console.log('spacebar');
+      if (inventory > 0){
+        inventory--;
+        console.log(inventory);
+        const pineconeIndex = cells[lumberjackIndex];
+        pineconeIndex.classList.add('pinecone');
+        window.setTimeout(() => {
+          pineconeIndex.classList.remove('pinecone');
+        } ,2000);
       }
     }
-    // if(lumberjackIndex === bearIndex){
-    // console.log('collision!');
   }, false);
 
   //SPAWN RANDOM ITEMS
 
-  // function spawnItems(item){
-    //set timeout?
+  function spawnItems(){
+  //set timeout?
     pineconeIndex = Math.floor(Math.random() * (gridHeight*gridWidth));
+    while(trees.includes(pineconeIndex)){
+      pineconeIndex = Math.floor(Math.random() * (gridHeight*gridWidth));
+    }
     cells[pineconeIndex].classList.add('pinecone');
-    //work out how not to get it in tree squares
-    //convert to jquery with addClass later
-   // }
-  // spawnItems('pinecone');
+  }
+  //work out how not to get it in tree squares
+  //convert to jquery with addClass later
+  // }
+  spawnItems();
 
   // BEAR MOVEMENTS
   const bearPosition = ['up', 'down', 'left', 'right'];
