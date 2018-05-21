@@ -13,3 +13,22 @@ z-index
                zIndexNumber -= 10;
        });
 });
+Pure tile-based platformer is the easiest one to implement out of the four different
+types. In pure tile-based platformers, the character’s position, as far as the game
+logic is concerned, is limited to a position on a tile grid. This makes collision
+detection easy, but limits the control over the character’s movement. Because of
+these limitations, pure tile-based method is not suited for platform games that
+emphasize action or precision.
+The levels in tile-based games are composed of multiple tiles that form a grid.
+Each individual tile on the grid includes information about what sprite it uses, what
+kind of sounds the make etc. Even the characters in pure tile-based games are
+composed of one or more tiles that are bound together. Though the movement of
+the character is limited to a grid in the logic, it can be made to look fluid with
+animations.
+
+Scrolling map
+https://developer.mozilla.org/en-US/docs/Games/Techniques/Tilemaps/Square_tilemaps_implementation%3A_Scrolling_maps
+
+
+Videos to be played if player wins
+https://www.youtube.com/watch?v=EkRX21hHHiM
