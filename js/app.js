@@ -30,7 +30,6 @@ window.addEventListener('DOMContentLoaded', () => {
       cells.push(div);
     }
   }
-
   startGame();
 
   //add lumberjackIndex to grid
@@ -49,13 +48,14 @@ window.addEventListener('DOMContentLoaded', () => {
 
   //ARROW BINDING
   window.addEventListener('keydown', (e) => {
-    //picking up pinecone
+    //picking up pinecone and respawn
     if (cells[lumberjackIndex].classList.contains('pinecone')){
       cells[lumberjackIndex].classList.remove('pinecone');
       spawnItems();
       if (inventory < 10){
         inventory ++;
         console.log('pinecone added to inventory');
+        console.log(inventory);
       }
     }
     if (e.keyCode === 37) {
@@ -110,7 +110,7 @@ window.addEventListener('DOMContentLoaded', () => {
   function spawnItems(){
   //set timeout?
     pineconeIndex = Math.floor(Math.random() * (gridHeight*gridWidth));
-    while(trees.includes(pineconeIndex)){
+    while(trees.includes(pineconeIndex) &&  bearIndex.includes(pineconeIndex)){
       pineconeIndex = Math.floor(Math.random() * (gridHeight*gridWidth));
     }
     cells[pineconeIndex].classList.add('pinecone');

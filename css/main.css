@@ -19,6 +19,11 @@
 
 .tree {
   background-color: olive;
+  background-image: url('../images/tree.png');
+  height: 100px;
+  width: 100px;
+  background-size: contain;
+  background-repeat: no-repeat;
   }
 .bear{
   background-image: url('../images/enemyBear.gif');
@@ -27,11 +32,11 @@
   width: 100px;
   background-size: contain;
   background-repeat: no-repeat;
-  z-index: 1;
+  z-index: 2;
  }
 
 .lumberjack{
-  background-image: url('../images/test-bear.jpeg');
+  background-image: url('../images/lumberjack.gif');
   height: 100px;
   width: 100px;
   background-size: contain;
