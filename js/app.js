@@ -81,16 +81,16 @@ window.addEventListener('DOMContentLoaded', () => {
   init();
 
 
-  let tick = 60;
+  let tick = 5;
 
 const countdown = setInterval(() =>{
     tick --;
     timer.innerHTML = tick;
-    if (countdown < 1){
+    if (countdown === 0){
       clearInterval(countdown);
     }
   }, 1000);
-    //run every 1 second
+    //run every 1 second - doesn't clear
 
   function addLife(){
     numOfLives++;
@@ -117,6 +117,9 @@ const countdown = setInterval(() =>{
     if(lumberjackIndex === bearIndex){
       score--;
       numOfLives --;
+      lumberjackState =2;
+      actionCell = cells[lumberjackIndex];
+      actionCell.classList.add('lumberjackHurt');
       const lifebar = document.querySelector('#lifebar');
       if(lifebar.lastChild) lifebar.removeChild(lifebar.lastChild);
       else lumberjackState = 3; // dead!
@@ -136,6 +139,7 @@ const countdown = setInterval(() =>{
     switch(lumberjackState) {
       case 0: //normal
         if(actionCell) actionCell.classList.remove('lumberjackAttack');
+        actionCell.classList.remove('lumberjackHurt');
         className = 'lumberjack';
         break;
       case 1: // if attacking
@@ -144,6 +148,7 @@ const countdown = setInterval(() =>{
         className = 'lumberjackAttack';
         break;
       case 2: //if hurt
+        if(actionCell) actionCell.classList.remove('lumberjackHurt');
         actionCell = cells[lumberjackIndex];
         className = 'lumberjackHurt';
         score --;
@@ -215,13 +220,12 @@ const countdown = setInterval(() =>{
       // p = 80
       // shift = 16
       pineconeBtn = true;
-
-
-      // console.log('p is for pinecone!');
-      // lumberjackState = 1; // attacking!
-      // if (inventory > 0){
-      //   inventory--;
-      //   console.log(inventory);
+      console.log('p is for pinecone!');
+      lumberjackState = 1; // attacking!
+      if (inventory > 0){
+        inventory--;
+        console.log(inventory);
+      }
     }
   }, false);
 
