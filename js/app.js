@@ -15,7 +15,9 @@ window.addEventListener('DOMContentLoaded', () => {
   const cells = [];
   const trees = [7,8,9,20,21,22,34,38,44,48,54,61,67,71,77,81,87];
   const grid = document.querySelector('#grid');
-  const lifebar = document.querySelector('#lifebar');
+  const p1life = document.querySelector('#lifebar');
+  // const p2life = document.querySelector('#lifebar');
+  const messageDisplay = document.querySelector('.message');//make display
   let lumberjackIndex = 0;
   let bearIndex = 99;
   let pineconeIndex = null;
@@ -23,6 +25,7 @@ window.addEventListener('DOMContentLoaded', () => {
   let score = 10;
   let life =3;
   // let computerPlayer =false;
+  //let hit = true; If attacks hit
 
   // 1. create grid
   //Rendering static tilemaps done with a nested loop iterating over columns and rows.
@@ -34,7 +37,6 @@ window.addEventListener('DOMContentLoaded', () => {
       cells.push(div);
     }
   }
-
 
   //pro
   startGame();
@@ -54,10 +56,16 @@ window.addEventListener('DOMContentLoaded', () => {
   generateTrees();
 
   function checkBear() {
-    if(lumberjackIndex === bearIndex) console.log('RAWR');{
+    if(lumberjackIndex === bearIndex){
       score--;
       life--;
       console.log(score);
+      cells[lumberjackIndex].classList.add('lumberjackHurt');
+      // cells[bearIndex].classList.add('bearAttack');
+      window.setTimeout(() => {
+        cells[lumberjackIndex].classList.remove('lumberjackHurt');
+        // cells[bearIndex].classList.remove('bearAttack');
+      } ,500);
     }
   }
 
@@ -84,15 +92,16 @@ window.addEventListener('DOMContentLoaded', () => {
       checkBear();
     }
     if (e.keyCode === 39 ){
+      console.log('right');
       if(lumberjackIndex%gridWidth !== gridWidth-1 && !cells[lumberjackIndex+1].classList.contains('tree')){
         cells[lumberjackIndex].classList.remove('lumberjack');
         lumberjackIndex += 1;
-        console.log(lumberjackIndex);
         cells[lumberjackIndex].classList.add('lumberjack');
       }
       checkBear();
     }
     if (e.keyCode === 40) {
+      console.log('down');
       if (!(lumberjackIndex > (gridWidth * gridHeight) - gridWidth) && !cells[lumberjackIndex+gridWidth].classList.contains('tree')){
         cells[lumberjackIndex].classList.remove('lumberjack');
         lumberjackIndex += gridWidth;
@@ -116,9 +125,9 @@ window.addEventListener('DOMContentLoaded', () => {
         inventory--;
         console.log(inventory);
         // const lumberjackAttack = cells[lumberjackIndex];
-        lumberjackIndex.classList.add('lumberjackAttack');
+        cells[lumberjackIndex].classList.add('lumberjackAttack');
         window.setTimeout(() => {
-          lumberjackIndex.classList.remove('lumberjackAttack');
+          cells[lumberjackIndex].classList.remove('lumberjackAttack');
         } ,500);
       }
     }
@@ -151,7 +160,6 @@ window.addEventListener('DOMContentLoaded', () => {
           bearIndex += 1;
           cells[bearIndex].classList.add('bear');
         } else {
-          console.log(direction);
           direction = bearPosition[Math.floor(Math.random() * bearPosition.length)];
           console.log(direction);
         }
@@ -163,7 +171,6 @@ window.addEventListener('DOMContentLoaded', () => {
           bearIndex -= 1;
           cells[bearIndex].classList.add('bear');
         } else {
-          console.log(direction);
           direction = bearPosition[Math.floor(Math.random() * bearPosition.length)];
           console.log(direction);
         }
@@ -175,7 +182,6 @@ window.addEventListener('DOMContentLoaded', () => {
           bearIndex += gridWidth;
           cells[bearIndex].classList.add('bear');
         } else {
-          console.log(direction);
           direction = bearPosition[Math.floor(Math.random() * bearPosition.length)];
           console.log(direction);
         }
@@ -187,13 +193,12 @@ window.addEventListener('DOMContentLoaded', () => {
           bearIndex -= gridWidth;
           cells[bearIndex].classList.add('bear');
         } else {
-          console.log(direction);
           direction = bearPosition[Math.floor(Math.random() * bearPosition.length)];
           console.log(direction);
         }
         checkBear();
         break;
     }
-  }, 2000);
+  }, 1000);
   // }
 });
