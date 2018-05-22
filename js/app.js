@@ -8,22 +8,32 @@ window.addEventListener('DOMContentLoaded', () => {
   //pinecone and lumberjack - set inline two backgrounds at once. set seperate class for pinecone and lumberjack
   //set lumberjack state
   //create class for pinecone thrown vs pincone
+  //check for collision between pinecone and bear
 
 
   //GLOBAL VARIABLES
 
+
+  //Map variables
   const gridHeight = 10;
   const gridWidth = 10;
   const cells = [];
 
   // Dom variables
   const grid = document.querySelector('#grid');
+  const timerDisplay = document.querySelector('.timerDisplay')
   const messageBox = document.querySelector('.messageBox');
+
+
+  //intro page
+  const newGame = document.querySelector('#newGame');
+  const startPage = document.querySelector('.intro-page');
+  const gameOver = document.querySelector('game-over');
+  const restart = document.querySelector('.restartBtn')
+  const timer = document.querySelector('#timer')
   //make these
   // const p2life = document.querySelector('#lifebar');
-  // const newGame = document.querySelector('#newGame');
   // const instructionsBtn = document.querySelector('.instructionsBtn')
-  // const timerDisplay = document.querySelector('.timerDisplay')
   // const messageDisplay = document.querySelector('.message');//make display
   let className = 'lumberjack';
   let lumberjackIndex = 0;
@@ -35,18 +45,13 @@ window.addEventListener('DOMContentLoaded', () => {
   let lifebar;
   let lumberjackState = 0;
   let actionCell;
-  let spacebarHeld = true;
-  // let computerPlayer =false;
-  //let hit = true; If attacks hit
+  let pineconeBtn = false;
+
+
 
 
   //LIBRARY
   const trees = [7,8,9,20,21,22,34,38,44,48,54,61,67,71,77,81,87];
-  // class characterSpecs =[{
-
-  //
-  // }]
-
 
   //Gameplay Variables
   // const moveKeys ={
@@ -71,9 +76,21 @@ window.addEventListener('DOMContentLoaded', () => {
   function init(){
     lifebar = document.querySelector('#lifebar');
     for(let i=0; i<3; i++) addLife();
+    // grid.appendChild(Instructions)
   }
   init();
 
+
+  let tick = 60;
+
+const countdown = setInterval(() =>{
+    tick --;
+    timer.innerHTML = tick;
+    if (countdown < 1){
+      clearInterval(countdown);
+    }
+  }, 1000);
+    //run every 1 second
 
   function addLife(){
     numOfLives++;
@@ -81,6 +98,7 @@ window.addEventListener('DOMContentLoaded', () => {
     life.src ='./images/heart.png';
     lifebar.appendChild(life);
   }
+
   //add lumberjackIndex to grid
   cells[lumberjackIndex].classList.add('lumberjack');
 
@@ -99,7 +117,7 @@ window.addEventListener('DOMContentLoaded', () => {
     if(lumberjackIndex === bearIndex){
       score--;
       numOfLives --;
-      const lifebar = document.querySelector('#lifebar')
+      const lifebar = document.querySelector('#lifebar');
       if(lifebar.lastChild) lifebar.removeChild(lifebar.lastChild);
       else lumberjackState = 3; // dead!
       actionCell = cells[lumberjackIndex];
@@ -108,9 +126,10 @@ window.addEventListener('DOMContentLoaded', () => {
     }
   }
 
+
   if(numOfLives < 1){
     console.log('You dead');
-    // loseGame();
+    // loseGame(); //write this function!
   }
 
   window.setInterval(function() {
@@ -132,16 +151,16 @@ window.addEventListener('DOMContentLoaded', () => {
         break;
       case 3:
         console.log('dead!!!');
-        //write end game
+        //lose game function goes here
     }
     // show the lumberjack in the right place
     cells[lumberjackIndex].classList.add(className);
   }, 50);
 
   //ARROW BINDING
-
   window.addEventListener('keyup', (e) => {
     lumberjackState = 0;
+    pineconeBtn = false;
   });
   window.addEventListener('keydown', (e) => {
 
@@ -155,7 +174,7 @@ window.addEventListener('DOMContentLoaded', () => {
         console.log(inventory);
       }
     }
-    if (e.keyCode === 37) {
+    if (e.keyCode === 65) {
       console.log('left');
       if(lumberjackIndex%gridWidth !== 0 && !cells[lumberjackIndex-1].classList.contains('tree')){
         cells[lumberjackIndex].classList.remove('lumberjack');
@@ -164,7 +183,7 @@ window.addEventListener('DOMContentLoaded', () => {
       }
       checkBear();
     }
-    if (e.keyCode === 39 ){
+    if (e.keyCode === 68 ){
       console.log('right');
       if(lumberjackIndex%gridWidth !== gridWidth-1 && !cells[lumberjackIndex+1].classList.contains('tree')){
         cells[lumberjackIndex].classList.remove('lumberjack');
@@ -173,7 +192,7 @@ window.addEventListener('DOMContentLoaded', () => {
       }
       checkBear();
     }
-    if (e.keyCode === 40) {
+    if (e.keyCode === 83) {
       console.log('down');
       if (!(lumberjackIndex > (gridWidth * gridHeight) - gridWidth) && !cells[lumberjackIndex+gridWidth].classList.contains('tree')){
         cells[lumberjackIndex].classList.remove('lumberjack');
@@ -182,7 +201,7 @@ window.addEventListener('DOMContentLoaded', () => {
       }
       checkBear();
     }
-    if (e.keyCode === 38) {
+    if (e.keyCode === 87) {
       console.log('up');
       if (lumberjackIndex > gridWidth-1 && !cells[lumberjackIndex-gridWidth].classList.contains('tree')){
         cells[lumberjackIndex].classList.remove('lumberjack');
@@ -192,19 +211,17 @@ window.addEventListener('DOMContentLoaded', () => {
       checkBear();
     }
 
-    if (e.keyCode === 32){
-      lumberjackState = 1; // attacking!
-      console.log('spacebar');
-      if (inventory > 0){
-        inventory--;
-        console.log(inventory);
-        // // const lumberjackAttack = cells[lumberjackIndex];
-        // cells[lumberjackIndex].classList.add('lumberjackAttack');
-        // window.setTimeout(() => {
-        //   lumberjackIndex = 0;
-        //   cells[lumberjackIndex].classList.remove('lumberjackAttack');
-        // } ,500);
-      }
+    if(e.keyCode === 80 || e.keyCode === 16){
+      // p = 80
+      // shift = 16
+      pineconeBtn = true;
+
+
+      // console.log('p is for pinecone!');
+      // lumberjackState = 1; // attacking!
+      // if (inventory > 0){
+      //   inventory--;
+      //   console.log(inventory);
     }
   }, false);
 
@@ -217,8 +234,6 @@ window.addEventListener('DOMContentLoaded', () => {
       }
       cells[pineconeIndex].classList.add('pinecone');
     }, 1000);
-    //work out how not to get it in tree squares
-    //Add beer to add life
   }
   spawnItems();
 
