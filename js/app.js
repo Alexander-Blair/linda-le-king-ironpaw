@@ -22,17 +22,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Dom variables
   const grid = document.querySelector('#grid');
-  const timerDisplay = document.querySelector('.timerDisplay');
+  const timer = document.querySelector('#timer');
   const messageBox = document.querySelector('.messageBox');
 
 
   //intro page
   // const newGame = document.querySelector('#newGame');
-  // const startPage = document.querySelector('.intro-page');
-  // const gameOver = document.querySelector('game-over');
+  // const introScreen = document.querySelector('.introScreen');
+  // const endScreen = document.querySelector('.endScreen');
   // const restartBtn = document.querySelector('.restartBtn');
   // const soundBtn = document.querySelector('.soundBtn');
-  const timer = document.querySelector('#timer');
   //make these
   // const p2life = document.querySelector('#lifebar');
   // const instructionsBtn = document.querySelector('.instructionsBtn')
@@ -43,7 +42,7 @@ document.addEventListener('DOMContentLoaded', () => {
   let pineconeIndex = null;
   let inventory = 5;
   let score = 10;
-  let numOfLives =3;
+  let numOfLives = 3;
   let lifebar;
   let lumberjackState = 0;
   let actionCell;
@@ -93,16 +92,15 @@ document.addEventListener('DOMContentLoaded', () => {
   init();
 
 
-  let tick = 5;
 
+  let tick = 60;
+  //CHANGE WHEN DEMONSTRATING
   const countdown = setInterval(() =>{
     tick --;
     timer.innerHTML = tick;
-    if (countdown === 0){
-      clearInterval(countdown);
-    }
+    if (tick <= 0) return clearInterval(countdown);
   }, 1000);
-    //run every 1 second - doesn't clear
+  //run every 1 second
 
   function addLife(){
     numOfLives++;
@@ -150,6 +148,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if(actionCell) actionCell.classList.remove('lumberjackAttack');
         actionCell = cells[lumberjackIndex];
         className = 'lumberjackAttack';
+        if (inventory > 0)inventory--;
         break;
       case 2: //if hurt
         if(actionCell) actionCell.classList.remove('lumberjackHurt');
@@ -228,12 +227,8 @@ document.addEventListener('DOMContentLoaded', () => {
       // p = 80
       // shift = 16
       pineconeBtn = true;
-      console.log('p is for pinecone!');
+      console.log('p is for pinecone!', inventory);
       lumberjackState = 1; // attacking!
-      if (inventory > 0){
-        inventory--;
-        console.log(inventory);
-      }
     }
     if(pineconeBtn === true){
       switch(pineconeDirection){
@@ -273,11 +268,6 @@ document.addEventListener('DOMContentLoaded', () => {
   }
   spawnItems();
 
-
-
-  document.addEventListener('keydown', (e) => {
-
-  });
 
   // BEAR MOVEMENTS
   const bearPosition = ['up', 'down', 'left', 'right'];
