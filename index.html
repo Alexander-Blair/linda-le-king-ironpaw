@@ -9,15 +9,28 @@
     <title>King Ironpaw</title>
   </head>
   <body>
-
-    <div id="grid"></div>
-    <div id="lifebar"></div>
-    <div id="pineconeInventory"></div>
-    <div id="timer">Time!</div>
-    <div class="messageBox" alt="messagebox">Use the WASD to move and p to fire a pinecone!</div>
+    <div class="introPage">
+      <h1>King Ironpaw</h1>
+      <div class="introLeft">
+        <div class="column"></div>
+        <button id="newGame">New Game</button>
+        <button id="instructionsBtn">Instructions</button>
+      </div>
     </div>
-    <!-- <div id="lumberjack"></div>
-    <div id="bear"></div> -->
-
+    <div class="gamePage">
+      <div id="grid"></div>
+      <div class="container">
+        <div id="timer">60</div>
+        <div id="pineconeInventory"></div>
+      </div>
+      <div class="bottom-container">
+        <div id="lifebar"></div>
+        <div class="messageBox" alt="messagebox">Use the WASD to move IJKL to fire a pinecone!</div>
+      </div>
+    </div>
+    <div class="gameOverPage">
+      <h1>GAME OVER</h1>
+      <button class="restartBtn">Try Again?</button>
+    </div>
   </body>
 </html>
