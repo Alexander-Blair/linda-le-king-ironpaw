@@ -74,6 +74,14 @@
   z-index: 1;
 }
 
+
+.pineconeAmmo {
+  width: 16px;
+  height: 16px;
+  background-color: red;
+  position: absolute;
+}
+
 #lifebar{
   width: 400px;
   height: 50px;

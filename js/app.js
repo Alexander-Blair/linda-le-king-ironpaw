@@ -1,4 +1,4 @@
-window.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', () => {
   // To do list
   //instructions button
   //timer?
@@ -17,20 +17,22 @@ window.addEventListener('DOMContentLoaded', () => {
   //Map variables
   const gridHeight = 10;
   const gridWidth = 10;
+  const gridSize = gridHeight * gridWidth;
   const cells = [];
 
   // Dom variables
   const grid = document.querySelector('#grid');
-  const timerDisplay = document.querySelector('.timerDisplay')
+  const timerDisplay = document.querySelector('.timerDisplay');
   const messageBox = document.querySelector('.messageBox');
 
 
   //intro page
-  const newGame = document.querySelector('#newGame');
-  const startPage = document.querySelector('.intro-page');
-  const gameOver = document.querySelector('game-over');
-  const restart = document.querySelector('.restartBtn')
-  const timer = document.querySelector('#timer')
+  // const newGame = document.querySelector('#newGame');
+  // const startPage = document.querySelector('.intro-page');
+  // const gameOver = document.querySelector('game-over');
+  // const restartBtn = document.querySelector('.restartBtn');
+  // const soundBtn = document.querySelector('.soundBtn');
+  const timer = document.querySelector('#timer');
   //make these
   // const p2life = document.querySelector('#lifebar');
   // const instructionsBtn = document.querySelector('.instructionsBtn')
@@ -46,7 +48,17 @@ window.addEventListener('DOMContentLoaded', () => {
   let lumberjackState = 0;
   let actionCell;
   let pineconeBtn = false;
+  // let bearIsHit = false;  //if true clearInterval
 
+
+  // //Event listeners
+  // newGame.addEventListener('click',function (){
+  //   alert('hello');
+  // });
+  //
+  // restartBtn.addEventListener('click',function (){
+  //   alert('hello, again!');
+  // });
 
 
 
@@ -64,7 +76,7 @@ window.addEventListener('DOMContentLoaded', () => {
   // CREATES GRID
   //Rendering static tilemaps done with a nested loop iterating over columns and rows.
   function startGame(){
-    for (let i=0; i<gridHeight*gridWidth; i++) {
+    for (let i=0; i<gridSize; i++) {
       const div = document.createElement('div');
       grid.appendChild(div);
       // Push elements to previously empty cells array
@@ -83,7 +95,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
   let tick = 5;
 
-const countdown = setInterval(() =>{
+  const countdown = setInterval(() =>{
     tick --;
     timer.innerHTML = tick;
     if (countdown === 0){
@@ -120,26 +132,18 @@ const countdown = setInterval(() =>{
       lumberjackState =2;
       actionCell = cells[lumberjackIndex];
       actionCell.classList.add('lumberjackHurt');
-      const lifebar = document.querySelector('#lifebar');
+
       if(lifebar.lastChild) lifebar.removeChild(lifebar.lastChild);
       else lumberjackState = 3; // dead!
       actionCell = cells[lumberjackIndex];
       actionCell.classList.add('lumberjackAttack');
-    } else {
     }
-  }
-
-
-  if(numOfLives < 1){
-    console.log('You dead');
-    // loseGame(); //write this function!
   }
 
   window.setInterval(function() {
     switch(lumberjackState) {
       case 0: //normal
-        if(actionCell) actionCell.classList.remove('lumberjackAttack');
-        actionCell.classList.remove('lumberjackHurt');
+        if(actionCell) actionCell.classList.remove('lumberjackAttack', 'lumberjackHurt');
         className = 'lumberjack';
         break;
       case 1: // if attacking
@@ -155,19 +159,23 @@ const countdown = setInterval(() =>{
         numOfLives --;
         break;
       case 3:
-        console.log('dead!!!');
-        //lose game function goes here
+      //dead!
+      //write losegame function;
     }
     // show the lumberjack in the right place
     cells[lumberjackIndex].classList.add(className);
   }, 50);
 
   //ARROW BINDING
-  window.addEventListener('keyup', (e) => {
+  document.addEventListener('keyup', (e) => {
     lumberjackState = 0;
     pineconeBtn = false;
   });
-  window.addEventListener('keydown', (e) => {
+  document.addEventListener('keydown', (e) => {
+    const code =e.keyCode;
+    const lumberjackPosition = ['up','down','left', 'right'];
+    const pineconeDirection = lumberjackPosition[0];
+    // delay =300;
 
     //picking up pinecone and respawn
     if (cells[lumberjackIndex].classList.contains('pinecone')){
@@ -179,26 +187,26 @@ const countdown = setInterval(() =>{
         console.log(inventory);
       }
     }
-    if (e.keyCode === 65) {
-      console.log('left');
-      if(lumberjackIndex%gridWidth !== 0 && !cells[lumberjackIndex-1].classList.contains('tree')){
+    if (code === 65) {
+      //left
+      if(lumberjackIndex % gridWidth !== 0 && !cells[lumberjackIndex-1].classList.contains('tree')){
         cells[lumberjackIndex].classList.remove('lumberjack');
         lumberjackIndex -= 1;
         cells[lumberjackIndex].classList.add('lumberjack');
       }
       checkBear();
     }
-    if (e.keyCode === 68 ){
-      console.log('right');
-      if(lumberjackIndex%gridWidth !== gridWidth-1 && !cells[lumberjackIndex+1].classList.contains('tree')){
+    if (code === 68 ){
+      //right
+      if(lumberjackIndex % gridWidth !== gridWidth-1 && !cells[lumberjackIndex+1].classList.contains('tree')){
         cells[lumberjackIndex].classList.remove('lumberjack');
         lumberjackIndex += 1;
         cells[lumberjackIndex].classList.add('lumberjack');
       }
       checkBear();
     }
-    if (e.keyCode === 83) {
-      console.log('down');
+    if (code === 83) {
+      //down
       if (!(lumberjackIndex > (gridWidth * gridHeight) - gridWidth) && !cells[lumberjackIndex+gridWidth].classList.contains('tree')){
         cells[lumberjackIndex].classList.remove('lumberjack');
         lumberjackIndex += gridWidth;
@@ -206,8 +214,8 @@ const countdown = setInterval(() =>{
       }
       checkBear();
     }
-    if (e.keyCode === 87) {
-      console.log('up');
+    if (code === 87) {
+      //up
       if (lumberjackIndex > gridWidth-1 && !cells[lumberjackIndex-gridWidth].classList.contains('tree')){
         cells[lumberjackIndex].classList.remove('lumberjack');
         lumberjackIndex -= gridWidth;
@@ -216,7 +224,7 @@ const countdown = setInterval(() =>{
       checkBear();
     }
 
-    if(e.keyCode === 80 || e.keyCode === 16){
+    if(code === 80 || code === 16){
       // p = 80
       // shift = 16
       pineconeBtn = true;
@@ -227,13 +235,37 @@ const countdown = setInterval(() =>{
         console.log(inventory);
       }
     }
+    if(pineconeBtn === true){
+      switch(pineconeDirection){
+        case 'right':
+          if(code === 68 && !cells[lumberjackIndex+1].classList.contains('tree')){
+            cells[lumberjackIndex+1].classList.add('pineconeAmmo');
+          }
+          break;
+        case 'left':
+          if(code === 68 && !cells[lumberjackIndex-1].classList.contains('tree')){
+            cells[lumberjackIndex-1].classList.add('pineconeAmmo');
+          }
+          break;
+        case 'down':
+          if(code === 68 && !cells[lumberjackIndex + gridWidth].classList.contains('tree')){
+            cells[lumberjackIndex + gridWidth].classList.add('pineconeAmmo');
+          }
+          break;
+        case 'up':
+          if(code === 68 && !cells[lumberjackIndex - gridWidth].classList.contains('tree')){
+            cells[lumberjackIndex -gridWidth].classList.add('pineconeAmmo');
+          }
+          break;
+      }
+    }
   }, false);
 
   //SPAWN RANDOM ITEMS
   function spawnItems(){
     window.setTimeout(() => {
       pineconeIndex = Math.floor(Math.random() * (gridHeight*gridWidth));
-      while(trees.includes(pineconeIndex)){
+      while(trees.includes(pineconeIndex) || pineconeIndex === bearIndex){
         pineconeIndex = Math.floor(Math.random() * (gridHeight*gridWidth));
       }
       cells[pineconeIndex].classList.add('pinecone');
@@ -241,13 +273,19 @@ const countdown = setInterval(() =>{
   }
   spawnItems();
 
+
+
+  document.addEventListener('keydown', (e) => {
+
+  });
+
   // BEAR MOVEMENTS
   const bearPosition = ['up', 'down', 'left', 'right'];
   let direction = bearPosition[0];
   window.setInterval(() => {
     switch(direction) {
       case 'right':
-        if(bearIndex%gridWidth !== gridWidth-1 && !cells[bearIndex+1].classList.contains('tree')) {
+        if(bearIndex % gridWidth !== gridWidth-1 && !cells[bearIndex+1].classList.contains('tree')) {
           cells[bearIndex].classList.remove('bear');
           bearIndex += 1;
           cells[bearIndex].classList.add('bear');
@@ -258,7 +296,7 @@ const countdown = setInterval(() =>{
         checkBear();
         break;
       case 'left':
-        if(bearIndex%gridWidth !== 0 && !cells[bearIndex-1].classList.contains('tree')) {
+        if(bearIndex % gridWidth !== 0 && !cells[bearIndex-1].classList.contains('tree')) {
           cells[bearIndex].classList.remove('bear');
           bearIndex -= 1;
           cells[bearIndex].classList.add('bear');
