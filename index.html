@@ -2,34 +2,43 @@
 <html lang="en" dir="ltr">
   <head>
     <meta charset="utf-8">
-      <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script> -->
     <script src="./js/app.js" charset="utf-8"></script>
     <link rel="stylesheet" href="./css/main.css">
     <link href="https://fonts.googleapis.com/css?family=Press+Start+2P" rel="stylesheet">
     <title>King Ironpaw</title>
   </head>
   <body>
+    <!-- <audio src="/sounds/"</audio> decide later -->
     <div class="introPage">
-      <h1>King Ironpaw</h1>
-      <div class="introLeft">
+      <img src="./images/introPage.jpg" id="bg" alt="King IronPaw">
+      <!-- <div class="introLeft"> -->
         <div class="column"></div>
-        <button id="newGame">New Game</button>
+        <h1>King Ironpaw</h1>
+        <button id="newGameBtn">New Game</button>
         <button id="instructionsBtn">Instructions</button>
+        <button id="music">amazing theme music</button>
+        <!-- work on reveal -->
       </div>
     </div>
+
     <div class="gamePage">
       <div id="grid"></div>
       <div class="container">
-        <div id="timer">60</div>
-        <div id="pineconeInventory"></div>
+        <div id="timer"></div>
+        <div id="scoreboard">
+          <p>Score: <span id="score"></span></p>
+        </div>
+
+
       </div>
       <div class="bottom-container">
+        <div id="pineconeInventory">5</div>
         <div id="lifebar"></div>
         <div class="messageBox" alt="messagebox">Use the WASD to move IJKL to fire a pinecone!</div>
       </div>
     </div>
     <div class="gameOverPage">
-      <h1>GAME OVER</h1>
+      <p>GAME OVER</p>
       <button class="restartBtn">Try Again?</button>
     </div>
   </body>

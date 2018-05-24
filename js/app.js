@@ -1,18 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
-  // To do list
-  //instructions button
-  //timer?
-  //turn into smooth based tile game?
-  //add score
-  //add logic
-  //pinecone and lumberjack - set inline two backgrounds at once. set seperate class for pinecone and lumberjack
-  //set lumberjack state
-  //create class for pinecone thrown vs pincone
-  //check for collision between pinecone and bear
-
 
   //GLOBAL VARIABLES
-
 
   //Map variables
   const gridHeight = 10;
@@ -20,45 +8,82 @@ document.addEventListener('DOMContentLoaded', () => {
   const gridSize = gridHeight * gridWidth;
   let cells = [];
 
-  // Dom variables
+  //DOM variables
   const grid = document.querySelector('#grid');
   const timer = document.querySelector('#timer');
   const messageBox = document.querySelector('.messageBox');
+  const lifebar = document.querySelector('#lifebar');
+  const scoreboard = document.querySelector('#scoreboard');
+  let score = document.querySelector('#score');
 
 
-  //intro page
-  // const newGame = document.querySelector('#newGame');
-  // const introScreen = document.querySelector('.introScreen');
-  // const endScreen = document.querySelector('.endScreen');
-  // const restartBtn = document.querySelector('.restartBtn');
-  // const soundBtn = document.querySelector('.soundBtn');
-  //make these
-  // const p2life = document.querySelector('#lifebar');
-  // const instructionsBtn = document.querySelector('.instructionsBtn')
-  // const messageDisplay = document.querySelector('.message');//make display
+  // PAGES
+  const introPage = document.querySelector('.introPage');
+  const gamePage = document.querySelector('.gamePage')
+  const gameOverPage = document.querySelector('.gameOverPage');
+
+  //Buttonns
+  const newGameBtn = document.querySelector('#newGameBtn');
+  const instructionsBtn = document.querySelector('.instructionsBtn')
+  const restartBtn = document.querySelector('.restartBtn');
+  const soundBtn = document.querySelector('.soundBtn');
+
+
+  //GAMEPLAY VARIABLES
+  let startedGame = false;
   let className = 'lumberjack';
   let bearClassName = 'bear';
   let lumberjackIndex = 0;
   let bearIndex = 99;
   let pineconeIndex = null;
   let inventory = 5;
-  let score = 10;
   let numOfLives = 3;
-  let lifebar;
   let lumberjackState = 0;
   let bearState =0;
   let actionCell;
+  const lumberJackDirections = {
+    up: {
+      code: 87,
+      gridChange: -gridWidth,
+      animation: 'lumberjackRight'
+    },
+    down: {
+      code: 83,
+      gridChange: gridWidth,
+      animation: 'lumberjackRight'
+    },
+    left: {
+      code: 65,
+      gridChange: -1,
+      animation: 'lumberjackLeft'
+    },
+    right: {
+      code: 68,
+      gridChange: 1,
+      animation: 'lumberjackRight'
+    }
+  };
+
+
+  //hide pages for the introPage
+  gamePage.classList.add('hidden');
+  gameOverPage.classList.add('hidden');
+
 
 
 
   // //Event listeners
-  // newGame.addEventListener('click',function (){
-  //   alert('hello');
-  // });
-  //
-  // restartBtn.addEventListener('click',function (){
-  //   alert('hello, again!');
-  // });
+  newGameBtn.addEventListener('click',function (){
+    introPage.classList.add('hidden');
+    gamePage.classList.remove('hidden');
+    createGrid();
+    startedGame =true;
+    score = 0;
+  });
+
+  restartBtn.addEventListener('click',function (){
+    location.reload();
+  });
 
 
 
@@ -75,22 +100,22 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // CREATES GRID
   //Rendering static tilemaps done with a nested loop iterating over columns and rows.
-  function startGame(){
+  function createGrid(){
     for (let i=0; i<gridSize; i++) {
       const div = document.createElement('div');
       grid.appendChild(div);
       // Push elements to previously empty cells array
       cells.push(div);
     }
+    createLife();
+    generateTrees();
   }
-  startGame();
+  createGrid();
 
-  function init(){
-    lifebar = document.querySelector('#lifebar');
+  function createLife(){
+    lifebar;
     for(let i=0; i<3; i++) addLife();
-    // grid.appendChild(Instructions)
   }
-  init();
 
   //add lumberjackIndex to grid
   cells[lumberjackIndex].classList.add('lumberjack');
@@ -99,14 +124,15 @@ document.addEventListener('DOMContentLoaded', () => {
   cells[bearIndex].classList.add('bear');
 
 
-  let tick = 60;
-  //CHANGE WHEN DEMONSTRATING
+  let tick = 360;
   const countdown = setInterval(() =>{
     tick --;
     timer.innerHTML = tick;
-    if (tick <= 0) return clearInterval(countdown);
+    if (tick <= 0) {
+      clearInterval(countdown);
+      loseGame();
+    }
   }, 1000);
-  //run every 1 second
 
   function addLife(){
     numOfLives++;
@@ -120,12 +146,14 @@ document.addEventListener('DOMContentLoaded', () => {
       cells[trees[i]].classList.add('tree');
     }
   }
-  generateTrees();
 
-  //LOSE THE GAME
+  //LOSE THE GAMEs
   function loseGame(){
     cells =[];
     grid.innerHTML ='';
+    gamePage.classList.add('hidden');
+    gameOverPage.classList.remove('hidden');
+    //clears the board
   }
 
 
@@ -135,9 +163,14 @@ document.addEventListener('DOMContentLoaded', () => {
       score--;
       numOfLives --;
       lumberjackState =2;
-
-      if(lifebar.lastChild) lifebar.removeChild(lifebar.lastChild);
-      else lumberjackState = 3; // dead!
+      actionCell = cells[lumberjackIndex];
+      className = 'lumberjackHurt';
+      if(lifebar.lastChild){
+        lifebar.removeChild(lifebar.lastChild);
+      }else {
+        lumberjackState = 3; // dead!
+        loseGame();
+      }
     }
   }
 
@@ -172,7 +205,7 @@ document.addEventListener('DOMContentLoaded', () => {
   window.setInterval(function() {
     switch(lumberjackState) {
       case 0: //normal
-        if(actionCell) actionCell.classList.remove('lumberjackAttack', 'lumberjackHurt');
+        if(actionCell) actionCell.classList.remove('lumberjackLeft','lumberjackRight','lumberjackAttack', 'lumberjackHurt');
         className = 'lumberjack';
         break;
       case 1: // if attacking
@@ -180,6 +213,7 @@ document.addEventListener('DOMContentLoaded', () => {
         actionCell = cells[lumberjackIndex];
         className = 'lumberjackAttack';
         if (inventory > 0)inventory--;
+        lumberjackState =0;
         break;
       case 2: //if hurt
         if(actionCell) actionCell.classList.remove('lumberjackHurt');
@@ -187,6 +221,7 @@ document.addEventListener('DOMContentLoaded', () => {
         className = 'lumberjackHurt';
         score --;
         numOfLives --;
+        lumberjackState =0;
         break;
       case 3:
       //dead!
@@ -198,7 +233,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }, 50);
 
   //ARROW BINDING
-  document.addEventListener('keyup', (e) => {
+  document.addEventListener('keyup', () => {
     lumberjackState = 0;
   });
   document.addEventListener('keydown', (e) => {
@@ -218,36 +253,48 @@ document.addEventListener('DOMContentLoaded', () => {
     if (code === 65){
       //left
       if(lumberjackIndex % gridWidth !== 0 && !cells[lumberjackIndex-1].classList.contains('tree')){
-        cells[lumberjackIndex].classList.remove('lumberjack');
+        cells[lumberjackIndex].classList.remove('lumberjack', 'lumberjackAttack', 'lumberjackRight');
         lumberjackIndex -= 1;
-        cells[lumberjackIndex].classList.add('lumberjack');
+        cells[lumberjackIndex].classList.add('lumberjackLeft');
+        setTimeout(function() {
+          cells[lumberjackIndex].classList.remove('lumberjackLeft');
+        }, 200);
       }
       checkBear();
     }
     if (code === 68 ){
       //right
       if(lumberjackIndex % gridWidth !== gridWidth-1 && !cells[lumberjackIndex+1].classList.contains('tree')){
-        cells[lumberjackIndex].classList.remove('lumberjack');
+        cells[lumberjackIndex].classList.remove('lumberjack', 'lumberjackAttack', 'lumberjackLeft');
         lumberjackIndex += 1;
-        cells[lumberjackIndex].classList.add('lumberjack');
+        cells[lumberjackIndex].classList.add('lumberjackRight');
+        setTimeout(function() {
+          cells[lumberjackIndex].classList.remove('lumberjackRight');
+        }, 200);
       }
       checkBear();
     }
     if (code === 83) {
       //down
       if (!(lumberjackIndex > (gridWidth * gridHeight) - gridWidth) && cells[lumberjackIndex+gridWidth] && !cells[lumberjackIndex+gridWidth].classList.contains('tree')){
-        cells[lumberjackIndex].classList.remove('lumberjack');
+        cells[lumberjackIndex].classList.remove('lumberjack', 'lumberjackAttack', 'lumberjackLeft','lumberjackRight');
         lumberjackIndex += gridWidth;
-        cells[lumberjackIndex].classList.add('lumberjack');
+        cells[lumberjackIndex].classList.add('lumberjackRight');
+        setTimeout(function() {
+          cells[lumberjackIndex].classList.remove('lumberjackRight');
+        }, 200);
       }
       checkBear();
     }
     if (code === 87) {
       //up
       if (lumberjackIndex > gridWidth-1 && !cells[lumberjackIndex-gridWidth].classList.contains('tree')){
-        cells[lumberjackIndex].classList.remove('lumberjack');
+        cells[lumberjackIndex].classList.remove('lumberjack', 'lumberjackAttack', 'lumberjackLeft','lumberjackRight');
         lumberjackIndex -= gridWidth;
-        cells[lumberjackIndex].classList.add('lumberjack');
+        cells[lumberjackIndex].classList.add('lumberjackRight');
+        setTimeout(function() {
+          cells[lumberjackIndex].classList.remove('lumberjackRight');
+        }, 200);
       }
       checkBear();
     }

@@ -1,8 +1,30 @@
 *{
   box-sizing: border-box;
   font-family: 'Press Start 2P',cursive;
-  }
+}
 
+
+/* MOVE TO SEPERATE PAGE */
+.introPage >h1 buttons{
+  display: flex;
+  flex-wrap: wrap;
+  z-index: 1;
+  position:absolute;
+}
+
+.introPage #bg{
+  min-width: 100%;
+  min-height: 100%;
+  width: 100%;
+  height: auto;
+  top: 0;
+  left: 0;
+  z-index: 0;
+}
+
+/* .introLeft{
+ width: 500px
+} */
 
 #grid{
   background-image: url('../images/grass.png');
@@ -17,11 +39,16 @@
   }
 
 #grid div{
-  border: 1px solid thistle;
   width: 10%;
   height: 10%;
   display: inline-block;
   }
+
+
+.hidden{
+  display:none;
+}
+
 
 .tree {
   background-image: url('../images/tree.png');
@@ -31,7 +58,7 @@
   background-repeat: no-repeat;
   }
 .bear{
-  background-image: url('../images/enemyBear.gif');
+  background-image: url('../images/BearWalk.gif');
   background-color: yellow;
   height: 100px;
   width: 100px;
@@ -40,9 +67,7 @@
   z-index: 2;
  }
 
-.lumberjack{
-  background-image: url('../images/lumberjack.gif');
-  background-color: yellow;
+.lumberjack, .lumberjackLeft, .lumberjackRight {
   height: 100px;
   width: 100px;
   background-size: contain;
@@ -50,8 +75,29 @@
   z-index: 2;
 }
 
-.lumberjackAttack{
-  background-image: url('../images/lumberjack_attack.gif');
+.lumberjack{
+  background-image: url('../images/lumberjack.gif');
+}
+
+
+.lumberjackLeft{
+  background-image: url('../images/lumberjackLeft.gif');
+
+}
+
+.lumberjackRight{
+  background-image: url('../images/lumberjackRight.gif');
+}
+
+
+.lumberjackAttackRight{
+  background-image: url('../images/lumberjackThrowRight.gif');
+  background-size: cover;
+  z-index: 2;
+
+}
+.lumberjackAttackLeft{
+  background-image: url('../images/lumberjackThrowLeft.gif');
   background-size: cover;
   z-index: 2;
 
@@ -63,14 +109,14 @@
 
 }
 .bearAttack{
-  background-image: url('../images/moonbear.gif');
+  background-image: url('../images/BearGrabLOOP.gif');
   background-size: cover;
   z-index: 1;
 
 }
 
 .bearHurt{
-  background-image: url('../images/king-iron-paw.png');
+  background-image: url('../images/BearGrabFlippedLOOP.gif');
   background-size: cover;
   z-index: 1;
 
@@ -91,9 +137,13 @@
 #lifebar{
   width: 400px;
   height: 50px;
-  margin: 20px 0px 20px 260px;
+  margin: 20px 0 20px 260px;
   text-align: right;
   }
+
+#timer, #scoreboard{
+  /* width: */
+}
 
 
 .messageBox {
