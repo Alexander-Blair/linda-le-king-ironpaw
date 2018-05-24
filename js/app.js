@@ -41,26 +41,49 @@ document.addEventListener('DOMContentLoaded', () => {
   let lumberjackState = 0;
   let bearState =0;
   let actionCell;
+  const directionCodes = {
+    87: 'up',
+    83: 'down',
+    65: 'left',
+    68: 'right'
+  };
   const lumberJackDirections = {
     up: {
+      lumberjackIndex: lumberjackIndex,
       code: 87,
-      gridChange: -gridWidth,
-      animation: 'lumberjackRight'
+      animation: 'lumberjackRight',
+      newIndex: 10,
+      boundaryCondition: function(lumberjackIndex) {
+        if(lumberjackIndex > gridWidth-1) return true;
+        else return false;
+      }
     },
     down: {
       code: 83,
-      gridChange: gridWidth,
-      animation: 'lumberjackRight'
+      animation: 'lumberjackRight',
+      newIndex: 10,
+      boundaryCondition: function(lumberjackIndex) {
+        if(!(lumberjackIndex > (gridWidth * gridHeight) - gridWidth)) return true;
+        else return false;
+      }
     },
     left: {
       code: 65,
-      gridChange: -1,
-      animation: 'lumberjackLeft'
+      animation: 'lumberjackLeft',
+      newIndex: 1,
+      boundaryCondition: function(lumberjackIndex) {
+        if(lumberjackIndex % gridWidth !== 0) return true;
+        else return false;
+      }
     },
     right: {
       code: 68,
-      gridChange: 1,
-      animation: 'lumberjackRight'
+      animation: 'lumberjackRight',
+      newIndex: 1,
+      boundaryCondition: function(lumberjackIndex) {
+        if(lumberjackIndex % gridWidth !== gridWidth-1) return true;
+        else return false;
+      }
     }
   };
 
@@ -237,8 +260,11 @@ document.addEventListener('DOMContentLoaded', () => {
     lumberjackState = 0;
   });
   document.addEventListener('keydown', (e) => {
-    const code =e.keyCode;
-
+    const code = e.keyCode;
+    const direction = directionCodes[code];
+    function nextCell(a, b, direction) {
+      return direction === 'up' || direction === 'left' ? a - b : a + b;
+    }
     //picking up pinecone and respawn
     if (cells[lumberjackIndex].classList.contains('pinecone')){
       cells[lumberjackIndex].classList.remove('pinecone');
@@ -249,55 +275,23 @@ document.addEventListener('DOMContentLoaded', () => {
         console.log(inventory);
       }
     }
+
+    playerMovement(direction);
+
     //PLAYER MOVEMENTS
-    if (code === 65){
-      //left
-      if(lumberjackIndex % gridWidth !== 0 && !cells[lumberjackIndex-1].classList.contains('tree')){
-        cells[lumberjackIndex].classList.remove('lumberjack', 'lumberjackAttack', 'lumberjackRight');
-        lumberjackIndex -= 1;
-        cells[lumberjackIndex].classList.add('lumberjackLeft');
+    function playerMovement(direction) {
+
+      const blah = nextCell(lumberjackIndex, lumberJackDirections[direction].newIndex, direction);
+      if(lumberJackDirections[direction].boundaryCondition(lumberjackIndex) && !cells[blah].classList.contains('tree')){
+        cells[lumberjackIndex].classList.remove('lumberjack', 'lumberjackAttack', 'lumberjackRight', 'lumberjackLeft');
+        lumberjackIndex = blah;
+        cells[lumberjackIndex].classList.add(lumberJackDirections[direction].animation);
         setTimeout(function() {
-          cells[lumberjackIndex].classList.remove('lumberjackLeft');
+          cells[lumberjackIndex].classList.remove(lumberJackDirections[direction].animation);
         }, 200);
       }
-      checkBear();
     }
-    if (code === 68 ){
-      //right
-      if(lumberjackIndex % gridWidth !== gridWidth-1 && !cells[lumberjackIndex+1].classList.contains('tree')){
-        cells[lumberjackIndex].classList.remove('lumberjack', 'lumberjackAttack', 'lumberjackLeft');
-        lumberjackIndex += 1;
-        cells[lumberjackIndex].classList.add('lumberjackRight');
-        setTimeout(function() {
-          cells[lumberjackIndex].classList.remove('lumberjackRight');
-        }, 200);
-      }
-      checkBear();
-    }
-    if (code === 83) {
-      //down
-      if (!(lumberjackIndex > (gridWidth * gridHeight) - gridWidth) && cells[lumberjackIndex+gridWidth] && !cells[lumberjackIndex+gridWidth].classList.contains('tree')){
-        cells[lumberjackIndex].classList.remove('lumberjack', 'lumberjackAttack', 'lumberjackLeft','lumberjackRight');
-        lumberjackIndex += gridWidth;
-        cells[lumberjackIndex].classList.add('lumberjackRight');
-        setTimeout(function() {
-          cells[lumberjackIndex].classList.remove('lumberjackRight');
-        }, 200);
-      }
-      checkBear();
-    }
-    if (code === 87) {
-      //up
-      if (lumberjackIndex > gridWidth-1 && !cells[lumberjackIndex-gridWidth].classList.contains('tree')){
-        cells[lumberjackIndex].classList.remove('lumberjack', 'lumberjackAttack', 'lumberjackLeft','lumberjackRight');
-        lumberjackIndex -= gridWidth;
-        cells[lumberjackIndex].classList.add('lumberjackRight');
-        setTimeout(function() {
-          cells[lumberjackIndex].classList.remove('lumberjackRight');
-        }, 200);
-      }
-      checkBear();
-    }
+    checkBear();
 
     // PINECONE FIRING
     if(code === 76){//right attack
