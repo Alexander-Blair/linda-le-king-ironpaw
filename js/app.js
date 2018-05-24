@@ -14,7 +14,9 @@ document.addEventListener('DOMContentLoaded', () => {
   const messageBox = document.querySelector('.messageBox');
   const lifebar = document.querySelector('#lifebar');
   const scoreboard = document.querySelector('#scoreboard');
+  const screen = document.querySelector('.screen');
   let score = document.querySelector('#score');
+
 
 
   // PAGES
@@ -22,11 +24,13 @@ document.addEventListener('DOMContentLoaded', () => {
   const gamePage = document.querySelector('.gamePage')
   const gameOverPage = document.querySelector('.gameOverPage');
 
-  //Buttonns
+  //Buttons
   const newGameBtn = document.querySelector('#newGameBtn');
   const instructionsBtn = document.querySelector('.instructionsBtn')
   const restartBtn = document.querySelector('.restartBtn');
   const soundBtn = document.querySelector('.soundBtn');
+  const startTV = document.querySelector('#startTV');
+
 
 
   //GAMEPLAY VARIABLES
@@ -37,7 +41,7 @@ document.addEventListener('DOMContentLoaded', () => {
   let bearIndex = 99;
   let pineconeIndex = null;
   let inventory = 5;
-  let numOfLives = 3;
+  let numOfLives = 0;
   let lumberjackState = 0;
   let bearState =0;
   let actionCell;
@@ -91,9 +95,16 @@ document.addEventListener('DOMContentLoaded', () => {
   //hide pages for the introPage
   gamePage.classList.add('hidden');
   gameOverPage.classList.add('hidden');
+  // screen.classList.add('hidden');
+  // newGameBtn.classList.add('hidden');
+  // instructionsBtn.classList.add('hidden');
 
 
-
+  // startTV.addEventListener('click',function(){
+  //   screen.classList.remove('hidden');
+  //   screen.img.classList.add('screenFadeInOut');
+  //
+  // });
 
   // //Event listeners
   newGameBtn.addEventListener('click',function (){
@@ -110,16 +121,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 
+  //timers messageboards and scores
+
+
   //LIBRARY
   const trees = [7,8,9,20,21,22,34,38,44,48,54,61,67,71,77,81,87];
-
-  //Gameplay Variables
-  // const moveKeys ={
-  //   right: 1,
-  //   left: -1,
-  //   down: gridHeight,
-  //   up: -gridHeight
-  // };
 
   // CREATES GRID
   //Rendering static tilemaps done with a nested loop iterating over columns and rows.
@@ -137,7 +143,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function createLife(){
     lifebar;
-    for(let i=0; i<3; i++) addLife();
+    for(let i=0; i<3; i++){
+      const life = document.createElement('img');
+      life.src ='./images/heart.png';
+      lifebar.appendChild(life);
+    }
   }
 
   //add lumberjackIndex to grid
@@ -157,12 +167,12 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }, 1000);
 
-  function addLife(){
-    numOfLives++;
-    const life = document.createElement('img');
-    life.src ='./images/heart.png';
-    lifebar.appendChild(life);
-  }
+  // function addLife(){
+  //   numOfLives++;
+  //   const life = document.createElement('img');
+  //   life.src ='./images/heart.png';
+  //   lifebar.appendChild(life);
+  // }
 
   function generateTrees(){
     for (let i=0; i<trees.length; i++) {
@@ -186,6 +196,7 @@ document.addEventListener('DOMContentLoaded', () => {
       score--;
       numOfLives --;
       lumberjackState =2;
+      bearState =2;
       actionCell = cells[lumberjackIndex];
       className = 'lumberjackHurt';
       if(lifebar.lastChild){

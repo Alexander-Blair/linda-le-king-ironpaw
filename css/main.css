@@ -3,23 +3,106 @@
   font-family: 'Press Start 2P',cursive;
 }
 
+.screen{
+  height: 469px;
+  width: 835px;
+  min-width: 56.25%;
+  min-height:55.63;
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
+  top: 90px;
+}
+
+
+.screen > img {
+  position: relative;
+  margin-right: auto;
+  height: 469px;
+  width: 835px;
+  margin: 0 auto;
+  animation-name: screenFadeInOut;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: 1;
+  animation-duration: 6s;
+  -webkit-transition: opacity 3s ease-in-out;
+  -moz-transition: opacity 3s ease-in-out;
+  -o-transition: opacity 3s ease-in-out;
+  transition: opacity 3s ease-in-out;
+}
+
+@keyframes screenFadeInOut {
+  0% {
+    opacity:1;
+  }
+  25% {
+    opacity:0;
+  }
+  75% {
+    opacity:0;
+  }
+  100% {
+    opacity:1;
+  }
+}
+.screen img:nth-of-type(1) {
+  animation-delay: 3s;
+}
+.screen img:nth-of-type(2) {
+  animation-delay: 8s;
+
+}
+
+#startTV{
+  background-color: red;
+  position:relative;
+  float:right;
+  margin-right: 282px;
+  margin-top: 117px;
+}
+
+#startTV:hover {
+  background-color: white;
+}
+
 
 /* MOVE TO SEPERATE PAGE */
 .introPage >h1 buttons{
   display: flex;
   flex-wrap: wrap;
-  z-index: 1;
+  z-index: 0;
   position:absolute;
 }
 
+
+
 .introPage #bg{
+  position: absolute;
   min-width: 100%;
   min-height: 100%;
   width: 100%;
   height: auto;
   top: 0;
   left: 0;
-  z-index: 0;
+  z-index: -1;
+}
+
+.gamePage{
+  background-color: black;
+  background-repeat: no-repeat;
+  display: flex;
+  flex-wrap: wrap;
+
+}
+
+
+#scoreboard, #timer{
+  width: 185px;
+  height: 50px;
+  line-height: 50px;
+  text-align: center;
+  transform: translate(60px 20px);
+  background-color: red;
 }
 
 /* .introLeft{
@@ -27,7 +110,7 @@
 } */
 
 #grid{
-  background-image: url('../images/grass.png');
+  background-image: url('../images/grass2.png');
   background-repeat: repeat;
   width: 500px;
   height: 500px;
@@ -35,6 +118,7 @@
   flex-wrap: wrap;
   justify-content: center;
   margin: auto;
+  border-radius: 10px;
 
   }
 
@@ -59,7 +143,6 @@
   }
 .bear{
   background-image: url('../images/BearWalk.gif');
-  background-color: yellow;
   height: 100px;
   width: 100px;
   background-size: contain;
@@ -96,6 +179,12 @@
   z-index: 2;
 
 }
+.lumberjackAttack{
+  background-image: url('../images/lumberjackThrowRight.gif');
+  background-size: cover;
+  z-index: 2;
+
+}
 .lumberjackAttackLeft{
   background-image: url('../images/lumberjackThrowLeft.gif');
   background-size: cover;
@@ -117,33 +206,24 @@
 
 .bearHurt{
   background-image: url('../images/BearGrabFlippedLOOP.gif');
-  background-size: cover;
+  background-size: contain;
   z-index: 1;
 
 }
 .pinecone{
   background-image: url('../images/pinecone.png');
-  background-size: cover;
+  background-size: contain;
+  background-repeat: no-repeat;
   z-index: 1;
 }
 
-
-/* .pineconeAmmo {
-  background-color: red;
-  width: 100px;
-  height: 100px;
-} */
-
 #lifebar{
-  width: 400px;
   height: 50px;
-  margin: 20px 0 20px 260px;
+  margin: 0 auto;
   text-align: right;
+  width: 400px;
   }
 
-#timer, #scoreboard{
-  /* width: */
-}
 
 
 .messageBox {
