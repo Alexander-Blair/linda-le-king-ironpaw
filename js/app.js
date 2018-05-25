@@ -138,13 +138,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
   //timers messageboards and scores
-  console.log(score);
   scoreboard.innerHTML= ('Score:' + (score));
 
-  let tick = 360;
+  let tick = 180;
   const countdown = setInterval(() =>{
     tick --;
-    timer.innerHTML = tick;
+    timer.innerHTML = ('Time:' + tick);
     if (tick <= 0) {
       clearInterval(countdown);
       loseGame();
@@ -303,8 +302,6 @@ document.addEventListener('DOMContentLoaded', () => {
       spawnItems();
       if (inventory < 10){
         inventory ++;
-        console.log('pinecone added to inventory');
-        console.log(inventory);
       }
     }
 
@@ -334,7 +331,6 @@ document.addEventListener('DOMContentLoaded', () => {
         scoreboard.innerHTML= ('Score:' + (score));
 
 
-        console.log('pinecone!', inventory, score);
       }
     }
     if(code === 74){//left attack
@@ -343,7 +339,6 @@ document.addEventListener('DOMContentLoaded', () => {
         bearState =2;
         score++;
         scoreboard.innerHTML= ('Score:' + (score));
-        console.log('pinecone!', inventory, score);
       }
     }
     if(code === 75){//down attack
@@ -352,7 +347,6 @@ document.addEventListener('DOMContentLoaded', () => {
         bearState =2;
         score++;
         scoreboard.innerHTML= ('Score:' + (score));
-        console.log('pinecone!', inventory, score);
       }
     }
     if(code === 73){ //up attack
@@ -361,7 +355,6 @@ document.addEventListener('DOMContentLoaded', () => {
         bearState =2;
         score++;
         scoreboard.innerHTML= ('Score:' + (score));
-        console.log('pinecone!', inventory, score);
       }
     }
   }, false);
@@ -392,7 +385,6 @@ document.addEventListener('DOMContentLoaded', () => {
           cells[bearIndex].classList.add('bear');
         } else {
           direction = bearPosition[Math.floor(Math.random() * bearPosition.length)];
-          console.log(direction);
         }
         checkBear();
         break;
@@ -403,7 +395,6 @@ document.addEventListener('DOMContentLoaded', () => {
           cells[bearIndex].classList.add('bear');
         } else {
           direction = bearPosition[Math.floor(Math.random() * bearPosition.length)];
-          console.log(direction);
         }
         checkBear();
         break;
@@ -414,7 +405,6 @@ document.addEventListener('DOMContentLoaded', () => {
           cells[bearIndex].classList.add('bear');
         } else {
           direction = bearPosition[Math.floor(Math.random() * bearPosition.length)];
-          console.log(direction);
         }
         checkBear();
         break;
@@ -425,33 +415,12 @@ document.addEventListener('DOMContentLoaded', () => {
           cells[bearIndex].classList.add('bear');
         } else {
           direction = bearPosition[Math.floor(Math.random() * bearPosition.length)];
-          console.log(direction);
         }
         checkBear();
         break;
     }
   }, 1000);
 
-
-
-  // function updatePosition(index, direction) {
-  //   // depending on direction, change index
-  //   switch (direction){
-  //     case 'up':
-  //       index - gridWidth;
-  //       break;
-  //     case 'down':
-  //       index + gridWidth;
-  //       break;
-  //     case 'left':
-  //       index -1;
-  //       break;
-  //     case 'right':
-  //       index + 1;
-  //       break;
-  //   }
-  //   return index;
-  // }
 
 
 });

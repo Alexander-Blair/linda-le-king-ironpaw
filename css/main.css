@@ -32,6 +32,11 @@ border: 2px solid black;
   border-radius: 10px;
 }
 
+.instructions > p{
+  line-height: 20px;
+  font-size: 15px;
+}
+
 .screen > img {
   position: fixed;
   margin-right: auto;
@@ -160,6 +165,7 @@ border: 2px solid black;
   color:white;
   border-radius: 10px;
   z-index: 2;
+  margin: auto;
 }
 
 /* .introLeft{
@@ -217,21 +223,24 @@ border: 2px solid black;
 
 
 .lumberjackAttack{
-  background-image: url('../images/lumberjackThrowRight.gif');
+  background-image: url('../images/lumberjack_attack.gif');
 
 }
 .lumberjackAttackRight{
-  background-image: url('../images/lumberjackThrowRight.gif');
+  background-image: url('../images/lumberjack_attack.gif');
 
 
 }
 .lumberjackAttackLeft{
-  background-image: url('../images/lumberjackThrowLeft.gif');
+  background-image: url('../images/lumberjackThrowLeftLoop.gif');
 
 }
 .lumberjackHurt{
-  background-image: url('../images/lumberJack_left.gif');
+  background-image: url('../images/lumberjackFront.');
 
+}
+.bear{
+  background-image: url('../images/BearWalk.gif');
 }
 .bearAttack{
   background-image: url('../images/BearGrabLOOP.gif');
@@ -246,9 +255,6 @@ border: 2px solid black;
 .tree {
   background-image: url('../images/tree.png');
 }
-.bear{
-  background-image: url('../images/BearWalk.gif');
-}
 .pinecone{
   background-image: url('../images/pinecone.png');
   background-size: contain;
@@ -258,7 +264,7 @@ border: 2px solid black;
 
 #lifebar{
   height:20px;
-  margin: 0;
+  margin: auto;
   text-align: right;
   width: 200px;
   z-index: 2;
@@ -277,6 +283,7 @@ border: 2px solid black;
   border: 2px solid black;
   color: dodgerBlue;
   border-radius: 10px;
+  margin:auto;
 
   }
 
