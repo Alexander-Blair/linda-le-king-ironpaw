@@ -36,7 +36,7 @@ border: 2px solid black;
   font-size: 15px;
 }
 
-.screen > img {
+.fadeIn{
   position: fixed;
   margin-right: auto;
   z-index: -1;
@@ -110,7 +110,6 @@ border: 2px solid black;
 .loadingPage > img{
   height:200px;
   margin:auto;
-  /* width: 10% */
 
 }
 
