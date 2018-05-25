@@ -30,7 +30,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const newGameBtn = document.querySelector('#newGameBtn');
   const instructionsBtn = document.querySelector('#instructionsBtn')
   const loadGame = document.querySelector('#loadGame');
-  const restartBtn = document.querySelector('.restartBtn');
+  const restartBtn = document.querySelector('#restartBtn');
   const audio = document.querySelector('#introMusic');
   const startTV = document.querySelector('#startTV');
   const instructions = document.querySelector('.instructions');
@@ -262,7 +262,7 @@ document.addEventListener('DOMContentLoaded', () => {
         className = 'lumberjack';
         break;
       case 1: // if attacking
-        if(actionCell) actionCell.classList.remove('lumberjackAttack', 'lumberjackLeft', 'lumberjackRight');
+        if(actionCell) actionCell.classList.remove('lumberjackLeft','lumberjackRight','lumberjackAttack', 'lumberjackHurt');
         actionCell = cells[lumberjackIndex];
         className = 'lumberjackAttack';
         if (inventory > 0)inventory--;
@@ -292,6 +292,7 @@ document.addEventListener('DOMContentLoaded', () => {
   });
   document.addEventListener('keydown', (e) => {
     const code = e.keyCode;
+    console.log(code);
     const direction = directionCodes[code];
     function nextCell(a, b, direction) {
       return direction === 'up' || direction === 'left' ? a - b : a + b;
@@ -329,8 +330,6 @@ document.addEventListener('DOMContentLoaded', () => {
         bearState =2;
         score++;
         scoreboard.innerHTML= ('Score:' + (score));
-
-
       }
     }
     if(code === 74){//left attack
