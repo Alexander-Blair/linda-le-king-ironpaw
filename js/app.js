@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const lifebar = document.querySelector('#lifebar');
   const scoreboard = document.querySelector('#scoreboard');
   const screen = document.querySelector('.screen');
-  let score;
+  let score =0;
 
 
 
@@ -31,7 +31,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const instructionsBtn = document.querySelector('#instructionsBtn')
   const loadGame = document.querySelector('#loadGame');
   const restartBtn = document.querySelector('.restartBtn');
-  const soundBtn = document.querySelector('.soundBtn');
+  const audio = document.querySelector('#introMusic');
   const startTV = document.querySelector('#startTV');
   const instructions = document.querySelector('.instructions');
 
@@ -128,6 +128,7 @@ document.addEventListener('DOMContentLoaded', () => {
     createGrid();
     startedGame =true;
     score = 0;
+    audio.play();
   });
 
   restartBtn.addEventListener('click',function (){
@@ -137,7 +138,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
   //timers messageboards and scores
-  scoreboard.innerHTML= score;
+  console.log(score);
+  scoreboard.innerHTML= ('Score:' + (score));
 
   let tick = 360;
   const countdown = setInterval(() =>{
@@ -211,6 +213,7 @@ document.addEventListener('DOMContentLoaded', () => {
   function checkBear() {
     if(lumberjackIndex === bearIndex){
       score--;
+      scoreboard.innerHTML= ('Score:' + (score));
       numOfLives --;
       lumberjackState =2;
       bearState =2;
@@ -271,6 +274,7 @@ document.addEventListener('DOMContentLoaded', () => {
         actionCell = cells[lumberjackIndex];
         className = 'lumberjackHurt';
         score --;
+        scoreboard.innerHTML= ('Score:' + (score));
         numOfLives --;
         lumberjackState =0;
         break;
@@ -309,10 +313,10 @@ document.addEventListener('DOMContentLoaded', () => {
     //PLAYER MOVEMENTS
     function playerMovement(direction) {
 
-      const blah = nextCell(lumberjackIndex, lumberJackDirections[direction].newIndex, direction);
-      if(lumberJackDirections[direction].boundaryCondition(lumberjackIndex) && !cells[blah].classList.contains('tree')){
+      const movementConditions = nextCell(lumberjackIndex, lumberJackDirections[direction].newIndex, direction);
+      if(lumberJackDirections[direction].boundaryCondition(lumberjackIndex) && !cells[movementConditions].classList.contains('tree')){
         cells[lumberjackIndex].classList.remove('lumberjack', 'lumberjackAttack', 'lumberjackRight', 'lumberjackLeft');
-        lumberjackIndex = blah;
+        lumberjackIndex = movementConditions;
         cells[lumberjackIndex].classList.add(lumberJackDirections[direction].animation);
         setTimeout(function() {
           cells[lumberjackIndex].classList.remove(lumberJackDirections[direction].animation);
@@ -327,6 +331,9 @@ document.addEventListener('DOMContentLoaded', () => {
       if (bearIndex === lumberjackIndex +1 || bearIndex === lumberjackIndex + 2){
         bearState =2;
         score++;
+        scoreboard.innerHTML= ('Score:' + (score));
+
+
         console.log('pinecone!', inventory, score);
       }
     }
@@ -335,6 +342,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (bearIndex === lumberjackIndex - 1 || bearIndex === lumberjackIndex - 2){
         bearState =2;
         score++;
+        scoreboard.innerHTML= ('Score:' + (score));
         console.log('pinecone!', inventory, score);
       }
     }
@@ -343,6 +351,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (bearIndex === lumberjackIndex + gridWidth || bearIndex === lumberjackIndex +(gridWidth* 2)){
         bearState =2;
         score++;
+        scoreboard.innerHTML= ('Score:' + (score));
         console.log('pinecone!', inventory, score);
       }
     }
@@ -351,6 +360,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (bearIndex === lumberjackIndex - gridWidth || bearIndex === lumberjackIndex -(gridWidth* 2)){
         bearState =2;
         score++;
+        scoreboard.innerHTML= ('Score:' + (score));
         console.log('pinecone!', inventory, score);
       }
     }
