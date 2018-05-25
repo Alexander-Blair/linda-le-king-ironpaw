@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<!-- saved from url=(0059)file:///Users/linda/development/Project1_WDI_LDN/index.html -->
+<html lang="en" dir="ltr"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <script src="./King Ironpaw_files/jquery.min.js"></script>
+    <script src="./King Ironpaw_files/app.js" charset="utf-8"></script>
+    <link rel="stylesheet" href="./King Ironpaw_files/animate.min.css">
+    <link href="./King Ironpaw_files/css" rel="stylesheet">
+    <link rel="stylesheet" href="./King Ironpaw_files/main.css">
+    <title>King Ironpaw</title>
+  </head>
+  <body>
+    <audio id="intro music"></audio>
+    <div class="introPage hidden">
+      <img src="./King Ironpaw_files/start.jpg" id="startbg" alt="King IronPaw">
+      <div class="screen">
+        <img class="firstImage" src="./King Ironpaw_files/introPagePresentsScreen.jpg" alt="Linda Le Presents">
+        <img class="secondImage" src="./King Ironpaw_files/pixeltvscreen.jpg" alt="Bear Screen">
+      </div>
+      <input type="button" id="startTV">
+      <div class="introContainer"></div>
+      <button id="newGameBtn">New Game</button>
+      <button id="instructionsBtn">Instructions</button>
+    </div>
+      <div class="instructions hidden">
+        <p> The year is 2038 and you, a strapping young lumbermancer, are lost in a foreign land eager to return home.. Channel your inner Leonardo di Caprio as you face the might of King Ironpaw.  </p>
+        <p>..with pinecones</p>
+        <p>Use WASD to run and IJKL to throw pinecones from a short distance. Will you survive the night?</p>
+      </div>
+    
+
+    <div class="loadingPage hidden">
+      <img src="./King Ironpaw_files/start.jpg" id="loadingbg" alt="King IronPaw">
+      <img src="./King Ironpaw_files/BearGrabFlippedLOOP.gif" alt="bear trying to grab lumberjack">
+      <img src="./King Ironpaw_files/loadingbar.gif" alt="loading bar">
+      <img src="./King Ironpaw_files/lumberjackRight.gif" alt="lumberjack running">
+      <button id="loadGame">Load Game</button>
+    </div>
+
+    <div class="gamePage">
+      <img src="./King Ironpaw_files/start.jpg" id="gamebg" alt="King IronPaw">
+      <div id="grid"><div class=""></div><div class=""></div><div class=""></div><div class=""></div><div class=""></div><div class=""></div><div class=""></div><div class="tree"></div><div class="tree"></div><div class="tree"></div><div class=""></div><div class=""></div><div class=""></div><div class=""></div><div class=""></div><div class=""></div><div class=""></div><div class=""></div><div class=""></div><div class="pinecone"></div><div class="tree"></div><div class="tree"></div><div class="tree"></div><div class=""></div><div></div><div></div><div class=""></div><div></div><div></div><div class=""></div><div class=""></div><div></div><div></div><div class=""></div><div class="tree"></div><div></div><div class=""></div><div></div><div class="tree"></div><div class=""></div><div class=""></div><div></div><div></div><div class=""></div><div class="tree"></div><div></div><div class=""></div><div></div><div class="tree"></div><div class=""></div><div class=""></div><div></div><div></div><div class=""></div><div class="tree"></div><div></div><div class=""></div><div></div><div></div><div class=""></div><div class=""></div><div class="tree"></div><div></div><div class=""></div><div></div><div></div><div class=""></div><div class="tree"></div><div></div><div class=""></div><div class=""></div><div class="tree"></div><div></div><div class=""></div><div></div><div></div><div class=""></div><div class="tree"></div><div></div><div class=""></div><div class=""></div><div class="tree"></div><div></div><div class=""></div><div></div><div></div><div class="bear"></div><div class="tree"></div><div></div><div class=""></div><div class=""></div><div class=""></div><div class=""></div><div class="lumberjack"></div><div class=""></div><div class=""></div><div class=""></div><div class=""></div><div class=""></div><div class=""></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
+      <div class="container">
+        <div id="timer">190</div>
+        <div id="scoreboard">Score:0</div>
+      </div>
+    <div class="bottom-container">
+      <div id="pineconeInventory">5</div>
+      <div id="lifebar"><img src="./King Ironpaw_files/heart.png"><img src="./King Ironpaw_files/heart.png"><img src="./King Ironpaw_files/heart.png"><img src="./King Ironpaw_files/heart.png"></div>
+      <div class="messageBox" alt="messagebox">Use the WASD to move. IJKL to fire a pinecone!</div>
+      </div>
+    </div>
+    <div class="gameOverPage hidden">
+      <p>GAME OVER</p>
+      <button class="restartBtn">Try Again?</button>
+    </div>
+  
+
+</body></html>

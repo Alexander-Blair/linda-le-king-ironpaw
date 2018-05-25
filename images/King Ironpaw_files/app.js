@@ -13,9 +13,9 @@ document.addEventListener('DOMContentLoaded', () => {
   const timer = document.querySelector('#timer');
   const messageBox = document.querySelector('.messageBox');
   const lifebar = document.querySelector('#lifebar');
-  const scoreboard = document.querySelector('#scoreboard');
+  const $scoreboard = $('#scoreboard');
   const screen = document.querySelector('.screen');
-  let score;
+  let score = 0;
 
 
 
@@ -137,17 +137,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
   //timers messageboards and scores
-  scoreboard.innerHTML= score;
-
-  let tick = 360;
-  const countdown = setInterval(() =>{
-    tick --;
-    timer.innerHTML = tick;
-    if (tick <= 0) {
-      clearInterval(countdown);
-      loseGame();
-    }
-  }, 1000);
+  $scoreboard.text('Score:'+ score);
 
 
   //LIBRARY
@@ -183,6 +173,15 @@ document.addEventListener('DOMContentLoaded', () => {
   cells[bearIndex].classList.add('bear');
 
 
+  let tick = 360;
+  const countdown = setInterval(() =>{
+    tick --;
+    timer.innerHTML = tick;
+    if (tick <= 0) {
+      clearInterval(countdown);
+      loseGame();
+    }
+  }, 1000);
 
   // function addLife(){
   //   numOfLives++;
