@@ -12,44 +12,60 @@
   position: relative;
   z-index: 1;
   top: 90px;
+
 }
 
+.introContainer{
+
+}
 
 .screen > img {
-  position: relative;
+  position: fixed;
   margin-right: auto;
+  z-index: -1;
   height: 469px;
   width: 835px;
   margin: 0 auto;
+  opacity :0;
   animation-name: screenFadeInOut;
   animation-timing-function: ease-in-out;
   animation-iteration-count: 1;
-  animation-duration: 6s;
-  -webkit-transition: opacity 3s ease-in-out;
-  -moz-transition: opacity 3s ease-in-out;
-  -o-transition: opacity 3s ease-in-out;
-  transition: opacity 3s ease-in-out;
-}
+  animation-duration: 5s;
+  -webkit-transition: opacity 6s ease-in-out;
+  -moz-transition: opacity 6s ease-in-out;
+  -o-transition: opacity 6s ease-in-out;
+  transition: opacity 6s ease-in-out;
 
-@keyframes screenFadeInOut {
+}
+@-webkit-keyframes screenFadeInOut {
   0% {
+    opacity:0;
+  }
+  50% {
     opacity:1;
   }
-  25% {
-    opacity:0;
-  }
-  75% {
-    opacity:0;
-  }
+
   100% {
     opacity:1;
   }
 }
-.screen img:nth-of-type(1) {
-  animation-delay: 3s;
+
+@keyframes screenFadeInOut {
+  0% {
+    opacity:0;
+  }
+  50% {
+    opacity:1;
+  }
+
+  100% {
+    opacity:1
+  }
 }
-.screen img:nth-of-type(2) {
-  animation-delay: 8s;
+
+.secondImage {
+  animation-delay: 5s;
+  -webkit-animation-delay: 5s
 
 }
 
@@ -72,6 +88,21 @@
   flex-wrap: wrap;
   z-index: 0;
   position:absolute;
+  animation-name: flash;
+}
+
+
+@keyframes flash {
+  from,
+  50%,
+  to {
+    opacity: 1;
+  }
+
+  25%,
+  75% {
+    opacity: 0;
+  }
 }
 
 
@@ -97,11 +128,17 @@
 
 
 #scoreboard, #timer{
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  align-content: center;
+  position: relative;
+  /* top: 40vh; */
   width: 185px;
   height: 50px;
   line-height: 50px;
   text-align: center;
-  transform: translate(60px 20px);
+  /* transform: translate(60px 20px); */
   background-color: red;
 }
 
