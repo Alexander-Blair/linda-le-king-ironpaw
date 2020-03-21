@@ -1,0 +1,21 @@
+{
+  "name": "linda-le-king-ironpaw",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest",
+    "lint": "eslint"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Alexander-Blair/linda-le-king-ironpaw.git"
+  },
+  "author": "Linda Le",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Alexander-Blair/linda-le-king-ironpaw/issues"
+  },
+  "homepage": "https://github.com/Alexander-Blair/linda-le-king-ironpaw#readme",
+  "dependencies": {}
+}
