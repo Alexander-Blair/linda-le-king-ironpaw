@@ -17,5 +17,9 @@
     "url": "https://github.com/Alexander-Blair/linda-le-king-ironpaw/issues"
   },
   "homepage": "https://github.com/Alexander-Blair/linda-le-king-ironpaw#readme",
-  "dependencies": {}
+  "dependencies": {},
+  "devDependencies": {
+    "eslint": "^6.8.0",
+    "jest": "^25.1.0"
+  }
 }
