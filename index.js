@@ -1,18 +1,9 @@
 document.addEventListener('DOMContentLoaded', () => {
   const gridHeight = 10;
   const gridWidth = 10;
-  const lumberjackStartPosition = 0;
-  const bearStartPosition = 99;
   const startingLives = 3;
 
-  const grid = new Grid(
-    gridHeight,
-    gridWidth,
-    lumberjackStartPosition,
-    bearStartPosition,
-  );
-  const lumberjack = new Lumberjack(startingLives, 0)
-  const bear = new Bear();
+  const grid = new Grid(gridHeight, gridWidth, startingLives);
 
   let cellDivs = [];
 
@@ -21,6 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const scoreboard = document.querySelector('#scoreboard');
   const lifebarElement = document.querySelector('#lifebar');
   let score = 0;
+  let bearMovementInterval;
 
   // PAGES
   const introPage = document.querySelector('.introPage');
@@ -37,7 +29,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const instructions = document.querySelector('.instructions');
 
   function createLife() {
-    for (let i = 0; i < lumberjack.numberOfLives(); i += 1) {
+    for (let i = 0; i < grid.lumberjack().numberOfLives(); i += 1) {
       const life = document.createElement('img');
       life.src = './images/heart.png';
       lifebarElement.appendChild(life);
@@ -61,6 +53,7 @@ document.addEventListener('DOMContentLoaded', () => {
   function loseGame() {
     cellDivs = [];
     grid.innerHTML = '';
+    window.clearInterval(bearMovementInterval);
     gamePage.classList.add('hidden');
     gameOverPage.classList.remove('hidden');
   }
@@ -69,130 +62,124 @@ document.addEventListener('DOMContentLoaded', () => {
     scoreboard.innerHTML = `Score: ${score}`;
   }
 
-  function renderLumberjack(cellDivs) {
-    cellDivs[grid.lumberjackIndex()].classList.add('lumberjack');
+  function renderLumberjack(cellDivs, lumberjack) {
+    const lumberjackIndex = grid.lumberjackGridPosition().getCurrentCellIndex();
+
+    cellDivs[lumberjackIndex].classList.add('lumberjack');
   }
 
   function renderBear(cellDivs) {
-    cellDivs[grid.bearIndex()].classList.add('bear');
+    const bearIndex = grid.bearGridPosition().getCurrentCellIndex();
+
+    cellDivs[bearIndex].classList.add('bear');
   }
 
   function spawnPinecone(cellDivs) {
+    const bearIndex = grid.bearGridPosition().getCurrentCellIndex();
     let pineconeIndex;
 
     window.setTimeout(() => {
       pineconeIndex = Math.floor(Math.random() * grid.numberOfCells());
-      while (!grid.getCell(pineconeIndex).isHabitable() || pineconeIndex === grid.bearIndex()) {
+      while (!grid.getCell(pineconeIndex).isHabitable() || pineconeIndex === bearIndex) {
         pineconeIndex = Math.floor(Math.random() * grid.numberOfCells());
       }
       cellDivs[pineconeIndex].classList.add('pinecone');
     }, 1000);
   }
 
-  function startBearMovement() {
-    const bearPosition = ['up', 'down', 'left', 'right'];
-    let direction = bearPosition[0];
-    window.setInterval(() => {
-      bear.setExploring();
-      let nextIndex;
-      switch(direction) {
-        case 'right':
-          nextIndex = grid.bearIndex() + 1;
-          if (grid.bearIndex() % grid.width() !== grid.width() - 1 && grid.getCell(nextIndex).isHabitable()) {
-            cellDivs[grid.bearIndex()].classList.remove('bear', 'bearHurt', 'bearAttack');
-            grid.moveBear(nextIndex);
-            cellDivs[grid.bearIndex()].classList.add('bear');
-          } else {
-            direction = bearPosition[Math.floor(Math.random() * bearPosition.length)];
-          }
-          checkBear(cellDivs);
-          break;
-        case 'left':
-          nextIndex = grid.bearIndex() - 1;
-          if (grid.bearIndex() % grid.width() !== 0 && grid.getCell(nextIndex).isHabitable()) {
-            cellDivs[grid.bearIndex()].classList.remove('bear', 'bearAttack', 'bearHurt');
-            grid.moveBear(nextIndex);
-            cellDivs[grid.bearIndex()].classList.add('bear');
-          } else {
-            direction = bearPosition[Math.floor(Math.random() * bearPosition.length)];
-          }
-          checkBear(cellDivs);
-          break;
-        case 'down':
-          nextIndex = grid.bearIndex() + grid.width();
-          if (grid.bearIndex() < grid.width() * grid.height() - grid.width() && grid.getCell(nextIndex).isHabitable()) {
-            cellDivs[grid.bearIndex()].classList.remove('bear', 'bearAttack', 'bearHurt');
-            grid.moveBear(nextIndex);
-            cellDivs[grid.bearIndex()].classList.add('bear');
-          } else {
-            direction = bearPosition[Math.floor(Math.random() * bearPosition.length)];
-          }
-          checkBear(cellDivs);
-          break;
-        case 'up':
-          nextIndex = grid.bearIndex() - grid.width();
-          if (grid.bearIndex() > grid.width() - 1 && grid.getCell(nextIndex).isHabitable()) {
-            cellDivs[grid.bearIndex()].classList.remove('bear', 'bearAttack', 'bearHurt');
-            grid.moveBear(nextIndex);
-            cellDivs[grid.bearIndex()].classList.add('bear');
-          } else {
-            direction = bearPosition[Math.floor(Math.random() * bearPosition.length)];
-          }
-          checkBear(cellDivs);
-          break;
-        default:
-          return;
-      }
-      updateLumberjackRendering(cellDivs);
-      updateBearRendering(cellDivs);
-    }, 1000);
+  function updateLumberjackRendering(cellDivs) {
+    let lumberjackClassName;
+
+    if (grid.lumberjack().isDead()) loseGame();
+
+    const lumberjackIndex = grid.lumberjackGridPosition().getCurrentCellIndex();
+
+    if (grid.lumberjack().isExploring()) lumberjackClassName = 'lumberjack';
+    else if (grid.lumberjack().isAttacking()) {
+      lumberjackClassName = 'lumberjackAttack';
+      if (grid.lumberjack().canThrowPineCone()) grid.lumberjack().throwPineCone();
+      grid.lumberjack().setExploring();
+    } else if (grid.lumberjack().isHurt()) {
+      lumberjackClassName = 'lumberjackHurt';
+      score -= 1;
+      updateScoreboard();
+      grid.lumberjack().loseLife();
+      grid.lumberjack().setExploring();
+    }
+    cellDivs[lumberjackIndex].classList.add(lumberjackClassName);
   }
 
+  function updateBearRendering(cellDivs) {
+    let bearClassName;
+    const bearIndex = grid.bearGridPosition().getCurrentCellIndex();
+
+    cellDivs[bearIndex].classList.remove('bearAttack', 'bearHurt');
+
+    if (grid.bear().isExploring()) bearClassName = 'bear';
+    else if (grid.bear().isAttacking()) bearClassName = 'bearAttack';
+    else if (grid.bear().isHurt()) {
+      bearClassName = 'bearHurt';
+      score += 1;
+    }
+
+    cellDivs[bearIndex].classList.add(bearClassName);
+  }
+
+  function checkForAttack(cellDivs) {
+    if (grid.isBearAttacking()) {
+      score -= 1;
+      updateScoreboard();
+      grid.lumberjack().setHurt();
+      grid.bear().setHurt();
+      if (lifebarElement.lastChild) lifebarElement.removeChild(lifebarElement.lastChild);
+    }
+  }
+
+  function moveBear(cellDivs) {
+    const bearPosition = ['up', 'down', 'left', 'right'];
+    const bearIndex = grid.bearGridPosition().getCurrentCellIndex();
+    cellDivs[bearIndex].classList.remove('bear', 'bearHurt', 'bearAttack');
+    const direction = bearPosition[Math.floor(Math.random() * bearPosition.length)];
+    grid.bear().setExploring();
+
+    grid.moveBear(direction);
+    const newBearIndex = grid.bearGridPosition().getCurrentCellIndex();
+
+    checkForAttack(cellDivs);
+    updateLumberjackRendering(cellDivs);
+    updateBearRendering(cellDivs);
+  }
+
+  function moveLumberjack(direction, cellDivs) {
+    if (direction === undefined) return;
+
+    const currentLumberjackIndex = grid.lumberjackGridPosition().getCurrentCellIndex();
+
+    cellDivs[currentLumberjackIndex].classList.remove('lumberjack', 'lumberjackAttack', 'lumberjackRight', 'lumberjackLeft');
+
+    grid.moveLumberjack(direction);
+
+    const newLumberjackIndex = grid.lumberjackGridPosition().getCurrentCellIndex();
+
+    cellDivs[newLumberjackIndex].classList.add(animations[direction]);
+    setTimeout(() => {
+      cellDivs[newLumberjackIndex].classList.remove(animations[direction]);
+    }, 200);
+
+    if (cellDivs[newLumberjackIndex].classList.contains('pinecone')) {
+      cellDivs[newLumberjackIndex].classList.remove('pinecone');
+      if (grid.lumberjack().canPickUpPineCone()) {
+        grid.lumberjack().pickUpPineCone();
+        spawnPinecone(cellDivs);
+      }
+    }
+  }
   // GAMEPLAY VARIABLES
-  let className = 'lumberjack';
-  const directionCodes = {
-    87: 'up',
-    83: 'down',
-    65: 'left',
-    68: 'right',
-  };
-  const lumberJackDirections = {
-    up: {
-      code: 87,
-      animation: 'lumberjackRight',
-      newIndex: 10,
-      boundaryCondition(lumberjackIndex) {
-        if (lumberjackIndex > grid.width() - 1) return true;
-        return false;
-      },
-    },
-    down: {
-      code: 83,
-      animation: 'lumberjackRight',
-      newIndex: 10,
-      boundaryCondition(lumberjackIndex) {
-        if (!(lumberjackIndex > (grid.width() * grid.height()) - grid.width())) return true;
-        return false;
-      },
-    },
-    left: {
-      code: 65,
-      animation: 'lumberjackLeft',
-      newIndex: 1,
-      boundaryCondition(lumberjackIndex) {
-        if (lumberjackIndex % grid.width() !== 0) return true;
-        return false;
-      },
-    },
-    right: {
-      code: 68,
-      animation: 'lumberjackRight',
-      newIndex: 1,
-      boundaryCondition(lumberjackIndex) {
-        if (lumberjackIndex % grid.width() !== grid.width() - 1) return true;
-        return false;
-      },
-    },
+  const animations = {
+    up: 'lumberjackRight',
+    down: 'lumberjackRight',
+    left: 'lumberjackLeft',
+    right: 'lumberjackRight',
   };
 
   // hide pages for the introPage
@@ -217,9 +204,13 @@ document.addEventListener('DOMContentLoaded', () => {
     createCells(document.querySelector('#grid'), cellDivs);
     createLife();
     generateTrees(cellDivs);
-    renderLumberjack(cellDivs);
+    renderLumberjack(cellDivs, grid.lumberjack());
     renderBear(cellDivs);
-    startBearMovement();
+    bearMovementInterval = window.setInterval(() => {
+      moveBear(cellDivs);
+    }, 1000);
+
+    spawnPinecone(cellDivs);
     score = 0;
     audio.play();
   });
@@ -240,89 +231,22 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }, 1000);
 
-  function checkBear(cellDivs) {
-    if (grid.isBearAttacking()) {
-      score -= 1;
-      updateScoreboard();
-      lumberjack.setHurt();
-      bear.setHurt();
-      if (lifebarElement.lastChild) lifebarElement.removeChild(lifebarElement.lastChild);
-    }
-  }
-
-  function nextCell(a, b, direction) {
-    return direction === 'up' || direction === 'left' ? a - b : a + b;
-  }
-
-  function moveLumberjack(direction, cellDivs) {
-    if (direction === undefined) return;
-
-    const nextLumberjackCell = nextCell(grid.lumberjackIndex(), lumberJackDirections[direction].newIndex, direction);
-    if (lumberJackDirections[direction].boundaryCondition(grid.lumberjackIndex()) && grid.getCell(nextLumberjackCell).isHabitable()) {
-      cellDivs[grid.lumberjackIndex()].classList.remove('lumberjack', 'lumberjackAttack', 'lumberjackRight', 'lumberjackLeft');
-      grid.moveLumberjack(nextLumberjackCell);
-      cellDivs[grid.lumberjackIndex()].classList.add(lumberJackDirections[direction].animation);
-      setTimeout(() => {
-        cellDivs[grid.lumberjackIndex()].classList.remove(lumberJackDirections[direction].animation);
-      }, 200);
-    }
-    // picking up pinecone and respawn
-    if (cellDivs[grid.lumberjackIndex()].classList.contains('pinecone')) {
-      cellDivs[grid.lumberjackIndex()].classList.remove('pinecone');
-      spawnPinecone(cellDivs);
-      if (lumberjack.canPickUpPineCone()) lumberjack.pickUpPineCone();
-    }
-  }
-
-  function updateBearRendering(cellDivs) {
-    let bearClassName;
-
-    cellDivs[grid.bearIndex()].classList.remove('bearAttack', 'bearHurt');
-
-    if (bear.isExploring()) bearClassName = 'bear';
-    else if (bear.isAttacking()) bearClassName = 'bearAttack';
-    else if (bear.isHurt()) {
-      bearClassName = 'bearHurt';
-      score += 1;
-    }
-
-    // show the bear in the right place
-    if (cellDivs[grid.bearIndex()]) {
-      cellDivs[grid.bearIndex()].classList.add(bearClassName);
-    }
-  }
-
-  function updateLumberjackRendering(cellDivs) {
-    if (lumberjack.isDead()) loseGame();
-
-    if (lumberjack.isExploring()) className = 'lumberjack';
-    else if (lumberjack.isAttacking()) {
-      className = 'lumberjackAttack';
-      if (lumberjack.canThrowPineCone()) lumberjack.throwPineCone();
-      lumberjack.setExploring();
-    } else if (lumberjack.isHurt()) {
-      className = 'lumberjackHurt';
-      score -= 1;
-      updateScoreboard();
-      lumberjack.loseLife();
-      lumberjack.setExploring();
-    }
-    if (cellDivs[grid.lumberjackIndex()]) {
-      cellDivs[grid.lumberjackIndex()].classList.add(className);
-    }
-  }
-
   // ARROW BINDING
   document.addEventListener('keyup', () => {
-    lumberjack.setExploring();
+    grid.lumberjack().setExploring();
   });
   document.addEventListener('keydown', (e) => {
     const code = e.keyCode;
-    const direction = directionCodes[code];
+    const direction = {
+      87: 'up',
+      83: 'down',
+      65: 'left',
+      68: 'right',
+    }[code];
 
     moveLumberjack(direction, cellDivs);
+    checkForAttack(cellDivs);
     updateLumberjackRendering(cellDivs);
     updateBearRendering(cellDivs);
-    checkBear(cellDivs);
   }, false);
 });

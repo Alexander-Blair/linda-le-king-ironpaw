@@ -1,8 +1,8 @@
 (function(exports) {
-  function Lumberjack(numberOfLives, numberOfPineCones) {
+  function Lumberjack(numberOfLives) {
     this._numberOfLives = numberOfLives;
-    this._numberOfPineCones = numberOfPineCones;
-    this._state = 'running';
+    this._numberOfPineCones = 0;
+    this._state = 'exploring';
   }
 
   const maxPineCones = 10;
@@ -21,7 +21,6 @@
     isHurt() { return this._state === 'hurt'; },
     isAttacking() { return this._state === 'attacking'; },
     isExploring() { return this._state === 'exploring'; },
-    state() { return this._state; },
   };
 
   exports.Lumberjack = Lumberjack;
