@@ -1,41 +1,46 @@
 (function(exports) {
-  function GridPosition(xCoordinate, yCoordinate, gridWidth, gridHeight, cells) {
-    this._xCoordinate = xCoordinate;
-    this._yCoordinate = yCoordinate;
+  function GridPosition(startingXCoordinate, startingYCoordinate, gridWidth, gridHeight, cells) {
+    this._currentXCoordinate = startingXCoordinate;
+    this._currentYCoordinate = startingYCoordinate;
+    this._previousXCoordinate = startingXCoordinate;
+    this._previousYCoordinate = startingYCoordinate;
     this._gridWidth = gridWidth;
     this._gridHeight = gridHeight;
     this._cells = cells;
+    this._currentDirection = 'right';
   }
 
   GridPosition.prototype = {
-    moveLeft() {
-      const nextXCoord = this._xCoordinate - 1;
-      const nextCell = this.getCell(nextXCoord, this._yCoordinate);
+    canMove(direction) {
+      const nextXCoordinate = this.getNextXCoordinate(direction);
+      const nextYCoordinate = this.getNextYCoordinate(direction);
+      const nextCell = this._cells[nextXCoordinate + nextYCoordinate * 10];
 
-      if (nextXCoord >= 0 && nextCell.isHabitable()) this._xCoordinate -= 1;
+      return nextXCoordinate >= 0
+        && nextXCoordinate < this._gridWidth
+        && nextYCoordinate >= 0
+        && nextYCoordinate < this._gridHeight
+        && nextCell.isHabitable();
     },
-    moveRight() {
-      const nextXCoord = this._xCoordinate + 1;
-      const nextCell = this.getCell(nextXCoord, this._yCoordinate);
+    move(direction) {
+      this._previousXCoordinate = this._currentXCoordinate;
+      this._previousYCoordinate = this._currentYCoordinate;
+      this._currentXCoordinate = this.getNextXCoordinate(direction);
+      this._currentYCoordinate = this.getNextYCoordinate(direction);
+    },
+    getNextXCoordinate(direction) {
+      return this._currentXCoordinate + ({ right: 1, left: -1 }[direction] || 0);
+    },
+    getNextYCoordinate(direction) {
+      return this._currentYCoordinate + ({ down: 1, up: -1 }[direction] || 0);
+    },
+    getCurrentCellIndex() { return this._currentXCoordinate + this._currentYCoordinate * 10; },
+    getPreviousCellIndex() {
+      if (this._previousXCoordinate === undefined) return null;
 
-      if (nextXCoord < this._gridWidth && nextCell.isHabitable()) this._xCoordinate += 1;
+      return this._previousXCoordinate + this._previousYCoordinate * 10;
     },
-    moveUp() {
-      const nextYCoord = this._yCoordinate - 1;
-      const nextCell = this.getCell(this._xCoordinate, nextYCoord);
-
-      if (nextYCoord >= 0 && nextCell.isHabitable()) this._yCoordinate -= 1;
-    },
-    moveDown() {
-      const nextYCoord = this._yCoordinate + 1;
-      const nextCell = this.getCell(this._xCoordinate, nextYCoord);
-
-      if (nextYCoord < this._gridHeight && nextCell.isHabitable()) this._yCoordinate += 1;
-    },
-    xCoordinate() { return this._xCoordinate; },
-    yCoordinate() { return this._yCoordinate; },
-    getCurrentCellIndex() { return this._xCoordinate + this._yCoordinate * 10; },
-    getCell(xCoord, yCoord) { return this._cells[xCoord + yCoord * 10]; },
+    getCurrentDirection() { return this._currentDirection; },
   };
 
   exports.GridPosition = GridPosition;

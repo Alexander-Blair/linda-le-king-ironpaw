@@ -18,9 +18,12 @@
     this._cells = initializeCells();
     this._lumberjackGridPosition = new GridPosition(0, 0, width, height, this._cells);
     this._bearGridPosition = new GridPosition(9, 9, width, height, this._cells);
+    this._score = 0;
   }
 
   Grid.prototype = {
+    treePositions() { return treePositions; },
+    score() { return this._score; },
     numberOfCells() { return this._height * this._width; },
     cells() { return this._cells; },
     getCell(cellIndex) { return this.cells()[cellIndex]; },
@@ -33,38 +36,18 @@
     lumberjack() { return this._lumberjack; },
     bear() { return this._bear; },
     moveBear(direction) {
-      switch (direction) {
-        case 'right':
-          this.bearGridPosition().moveRight();
-          break;
-        case 'left':
-          this.bearGridPosition().moveLeft();
-          break;
-        case 'down':
-          this.bearGridPosition().moveDown();
-          break;
-        case 'up':
-          this.bearGridPosition().moveUp();
-          break;
-        default:
+      if (this.bearGridPosition().canMove(direction)) {
+        this.bearGridPosition().move(direction);
+        return true;
       }
+      return false;
     },
     moveLumberjack(direction) {
-      switch (direction) {
-        case 'right':
-          this.lumberjackGridPosition().moveRight();
-          break;
-        case 'left':
-          this.lumberjackGridPosition().moveLeft();
-          break;
-        case 'down':
-          this.lumberjackGridPosition().moveDown();
-          break;
-        case 'up':
-          this.lumberjackGridPosition().moveUp();
-          break;
-        default:
+      if (this.lumberjackGridPosition().canMove(direction)) {
+        this.lumberjackGridPosition().move(direction);
+        return true;
       }
+      return false;
     },
   };
 
