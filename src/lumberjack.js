@@ -18,9 +18,7 @@
     setExploring() { this._state = 'exploring'; },
     setAttacking() { this._state = 'attacking'; },
     setHurt() { this._state = 'hurt'; },
-    isHurt() { return this._state === 'hurt'; },
-    isAttacking() { return this._state === 'attacking'; },
-    isExploring() { return this._state === 'exploring'; },
+    state() { return this._state; },
   };
 
   exports.Lumberjack = Lumberjack;

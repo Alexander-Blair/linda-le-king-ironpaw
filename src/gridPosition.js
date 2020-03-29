@@ -7,7 +7,6 @@
     this._gridWidth = gridWidth;
     this._gridHeight = gridHeight;
     this._cells = cells;
-    this._currentDirection = 'right';
   }
 
   GridPosition.prototype = {
@@ -40,7 +39,6 @@
 
       return this._previousXCoordinate + this._previousYCoordinate * 10;
     },
-    getCurrentDirection() { return this._currentDirection; },
   };
 
   exports.GridPosition = GridPosition;

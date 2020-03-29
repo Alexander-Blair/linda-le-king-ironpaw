@@ -1,15 +1,36 @@
 (function(exports) {
+  const bearClassMappings = {
+    exploring: 'bear',
+    attacking: 'bearAttack',
+    hurt: 'bearHurt',
+  };
+
+  const lumberjackClassMappings = {
+    exploring: 'lumberjack',
+    attacking: 'lumberjackAttack',
+    hurt: 'lumberjackHurt',
+  };
+
+  const lumberjackAnimations = {
+    up: 'lumberjackRight',
+    down: 'lumberjackRight',
+    left: 'lumberjackLeft',
+    right: 'lumberjackRight',
+  };
+
   function GridRenderer(
     grid,
     gridElement,
     lifebarElement,
     scoreboardElement,
+    windowObject,
   ) {
     this._grid = grid;
     this._gridElement = gridElement;
     this._cellElements = [];
     this._lifebarElement = lifebarElement;
     this._scoreboardElement = scoreboardElement;
+    this._windowObject = windowObject;
   }
 
   GridRenderer.prototype = {
@@ -17,9 +38,10 @@
       this.initializeCells();
       this.initializeLifebar();
       this.initializeTrees();
+      this.renderLumberjack();
+      this.renderBear();
+      this.spawnPinecone();
     },
-    cellElements() { return this._cellElements; },
-    updateScoreboard() { this._scoreboardElement.innerHTML = `Score: ${this._grid.score()}`; },
     initializeTrees() {
       this._grid.cells().forEach((cell, index) => {
         if (!cell.isHabitable()) this.cellElements()[index].classList.add('tree');
@@ -39,10 +61,8 @@
         this._lifebarElement.appendChild(life);
       }
     },
-    hideCells() { this._cellElements = []; },
+    hideCells() { this._cellElements.forEach((e) => e.classList.add('hidden')); },
     renderLumberjack() {
-      let className;
-
       const previousCellIndex = this._grid.lumberjackGridPosition().getPreviousCellIndex();
       const currentCellIndex = this._grid.lumberjackGridPosition().getCurrentCellIndex();
 
@@ -51,29 +71,18 @@
           'lumberjack', 'lumberjackAttack', 'lumberjackRight', 'lumberjackLeft', 'lumberjackHurt',
         );
       }
+      const className = lumberjackClassMappings[this._grid.lumberjack().state()];
 
-      if (this._grid.lumberjack().isExploring()) className = 'lumberjack';
-      else if (this._grid.lumberjack().isAttacking()) className = 'lumberjackAttack';
-      else if (this._grid.lumberjack().isHurt()) className = 'lumberjackHurt';
       this._cellElements[currentCellIndex].classList.add(className);
     },
     animateLumberjack(direction) {
-      const animations = {
-        up: 'lumberjackRight',
-        down: 'lumberjackRight',
-        left: 'lumberjackLeft',
-        right: 'lumberjackRight',
-      };
-
       const lumberjackIndex = this._grid.lumberjackGridPosition().getCurrentCellIndex();
-      this._cellElements[lumberjackIndex].classList.add(animations[direction]);
+      this._cellElements[lumberjackIndex].classList.add(lumberjackAnimations[direction]);
       setTimeout(() => {
-        this._cellElements[lumberjackIndex].classList.remove(animations[direction]);
+        this._cellElements[lumberjackIndex].classList.remove(lumberjackAnimations[direction]);
       }, 200);
     },
     renderBear() {
-      let className;
-
       const previousCellIndex = this._grid.bearGridPosition().getPreviousCellIndex();
       const currentCellIndex = this._grid.bearGridPosition().getCurrentCellIndex();
 
@@ -81,9 +90,7 @@
         this._cellElements[previousCellIndex].classList.remove('bearAttack', 'bearHurt', 'bear');
       }
 
-      if (this._grid.bear().isExploring()) className = 'bear';
-      else if (this._grid.bear().isAttacking()) className = 'bearAttack';
-      else if (this._grid.bear().isHurt()) className = 'bearHurt';
+      const className = bearClassMappings[this._grid.bear().state()];
       this._cellElements[currentCellIndex].classList.add(className);
     },
     updateLifebar() {
@@ -96,6 +103,39 @@
           this._lifebarElement.children[lifeElementIndex].classList.add('hidden');
         }
       }
+    },
+    startBearMovement() {
+      this._bearMovementInterval = this._windowObject.setInterval(() => {
+        const possibleDirections = ['up', 'down', 'left', 'right'];
+        let bearMoved = false;
+
+        while (!bearMoved) {
+          const direction = possibleDirections[Math.floor(Math.random() * possibleDirections.length)];
+          if (this._grid.moveBear(direction)) bearMoved = true;
+        }
+        this._grid.bear().setExploring();
+        this.renderLumberjack();
+      });
+    },
+    cellElements() { return this._cellElements; },
+    updateScoreboard() { this._scoreboardElement.innerHTML = `Score: ${this._grid.score()}`; },
+    spawnPinecone() {
+      const bearIndex = this._grid.bearGridPosition().getCurrentCellIndex();
+      let pineconeIndex;
+
+      this._windowObject.setTimeout(() => {
+        pineconeIndex = Math.floor(Math.random() * this._grid.numberOfCells());
+        while (!this._grid.getCell(pineconeIndex).isHabitable() || pineconeIndex === bearIndex) {
+          pineconeIndex = Math.floor(Math.random() * this._grid.numberOfCells());
+        }
+        this._cellElements[pineconeIndex].classList.add('pinecone');
+      }, 1000);
+    },
+    cellContainsPinecone(cellIndex) {
+      return this._cellElements[cellIndex].classList.contains('pinecone');
+    },
+    removePinecone(cellIndex) {
+      this._cellElements[cellIndex].classList.remove('pinecone');
     },
   };
 

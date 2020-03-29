@@ -31,6 +31,10 @@
       this._loadingPage.classList.add('hidden');
       this._gamePage.classList.remove('hidden');
     },
+    showGameOverPage() {
+      this._gamePage.classList.add('hidden');
+      this._gameOverPage.classList.remove('hidden');
+    },
   };
 
   exports.PageNavigator = PageNavigator;
