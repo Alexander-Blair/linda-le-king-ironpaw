@@ -7,42 +7,31 @@
   const lumberjackStartingYCoordinate = 0;
 
   function Grid(height, width, numberOfLives) {
-    function initializeCells() {
-      const cells = [];
-      for (let i = 0; i < height * width; i += 1) {
-        if (treePositions.includes(i)) cells.push(new Cell('tree', false));
-        else cells.push(new Cell('grass', true));
-      }
-      return cells;
-    }
-
     this._height = height;
     this._width = width;
     this._lumberjack = new Lumberjack(numberOfLives);
     this._bear = new Bear(bearStartSpeed);
-    this._cells = initializeCells();
     this._lumberjackGridPosition = new GridPosition(
       lumberjackStartingXCoordinate,
       lumberjackStartingYCoordinate,
       width,
       height,
-      this._cells,
+      treePositions,
     );
     this._bearGridPosition = new GridPosition(
       bearStartingXCoordinate,
       bearStartingYCoordinate,
       width,
       height,
-      this._cells,
+      treePositions,
     );
     this._score = 0;
   }
 
   Grid.prototype = {
+    treePositions() { return treePositions; },
     score() { return this._score; },
     numberOfCells() { return this._height * this._width; },
-    cells() { return this._cells; },
-    getCell(cellIndex) { return this.cells()[cellIndex]; },
     isBearAttacking() {
       return this._bearGridPosition.getCurrentCellIndex()
         === this._lumberjackGridPosition.getCurrentCellIndex();

@@ -1,25 +1,31 @@
 (function(exports) {
-  function GridPosition(startingXCoordinate, startingYCoordinate, gridWidth, gridHeight, cells) {
+  function GridPosition(
+    startingXCoordinate,
+    startingYCoordinate,
+    gridWidth,
+    gridHeight,
+    treePositions,
+  ) {
     this._currentXCoordinate = startingXCoordinate;
     this._currentYCoordinate = startingYCoordinate;
     this._previousXCoordinate = startingXCoordinate;
     this._previousYCoordinate = startingYCoordinate;
     this._gridWidth = gridWidth;
     this._gridHeight = gridHeight;
-    this._cells = cells;
+    this._treePositions = treePositions;
   }
 
   GridPosition.prototype = {
     canMove(direction) {
       const nextXCoordinate = this.getNextXCoordinate(direction);
       const nextYCoordinate = this.getNextYCoordinate(direction);
-      const nextCell = this._cells[nextXCoordinate + nextYCoordinate * 10];
+      const nextCellIndex = nextXCoordinate + nextYCoordinate * 10;
 
       return nextXCoordinate >= 0
         && nextXCoordinate < this._gridWidth
         && nextYCoordinate >= 0
         && nextYCoordinate < this._gridHeight
-        && nextCell.isHabitable();
+        && !this._treePositions.includes(nextCellIndex);
     },
     move(direction) {
       this._previousXCoordinate = this._currentXCoordinate;
