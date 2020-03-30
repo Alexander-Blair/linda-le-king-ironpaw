@@ -20,13 +20,15 @@
       });
       this._lumberjackKeyDownListener = this._documentObject.addEventListener('keydown', (e) => {
         const direction = {
-          87: 'up', 83: 'down', 65: 'left', 68: 'right',
+          38: 'up', 40: 'down', 37: 'left', 39: 'right',
         }[e.keyCode];
 
         if (direction === undefined) return;
 
+        e.preventDefault();
+
         this._grid.moveLumberjack(direction);
-        this.propagateChanges();
+        this.propagateChangesAfterMovement();
         this._gridRenderer.animateLumberjack(direction);
 
         const lumberjackIndex = this._grid.lumberjackGridPosition().getCurrentCellIndex();
@@ -57,13 +59,13 @@
           if (this._grid.moveBear(direction)) bearMoved = true;
         }
         this._grid.bear().setExploring();
-        this.propagateChanges();
+        this.propagateChangesAfterMovement();
       }, this._grid.bear().movementInterval());
     },
     loseGame() {
       this._windowObject.clearInterval(this._bearMovementInterval);
-      this._documentObject.removeEventListener(this._lumberjackKeyDownListener);
-      this._documentObject.removeEventListener(this._lumberjackKeyUpListener);
+      this._documentObject.removeEventListener('keydown', this._lumberjackKeyDownListener);
+      this._documentObject.removeEventListener('keyup', this._lumberjackKeyUpListener);
 
       this._windowObject.setTimeout(() => {
         this._pageNavigator.showGameOverPage();
