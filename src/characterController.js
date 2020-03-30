@@ -14,33 +14,37 @@
   }
 
   CharacterController.prototype = {
-    setupLumberjackMovementListener() {
-      this._lumberjackKeyUpListener = this._documentObject.addEventListener('keyup', () => {
-        this._grid.lumberjack().setExploring();
-      });
-      this._lumberjackKeyDownListener = this._documentObject.addEventListener('keydown', (e) => {
-        const direction = {
-          38: 'up', 40: 'down', 37: 'left', 39: 'right',
-        }[e.keyCode];
+    handleKeyDown(e) {
+      const direction = {
+        38: 'up', 40: 'down', 37: 'left', 39: 'right',
+      }[e.keyCode];
 
-        if (direction === undefined) return;
+      if (direction === undefined) return;
 
-        e.preventDefault();
+      e.preventDefault();
 
-        this._grid.moveLumberjack(direction);
-        this.propagateChangesAfterMovement();
-        this._gridRenderer.animateLumberjack(direction);
+      this._grid.moveLumberjack(direction);
+      this.propagateChangesAfterMovement();
+      this._gridRenderer.animateLumberjack(direction);
 
-        const lumberjackIndex = this._grid.lumberjackGridPosition().getCurrentCellIndex();
+      const lumberjackIndex = this._grid.lumberjackGridPosition().getCurrentCellIndex();
 
-        if (this._gridRenderer.cellContainsPinecone(lumberjackIndex)) {
-          if (this._grid.lumberjack().canPickUpPineCone()) {
-            this._gridRenderer.removePinecone(lumberjackIndex);
-            this._grid.lumberjack().pickUpPineCone();
-            this._gridRenderer.spawnPinecone();
-          }
+      if (this._gridRenderer.cellContainsPinecone(lumberjackIndex)) {
+        if (this._grid.lumberjack().canPickUpPineCone()) {
+          this._gridRenderer.removePinecone(lumberjackIndex);
+          this._grid.lumberjack().pickUpPineCone();
+          this._gridRenderer.spawnPinecone();
         }
-      }, false);
+      }
+    },
+    handleKeyUp() {
+      this._grid.lumberjack().setExploring();
+    },
+    setupLumberjackMovementListener() {
+      this.keyUpListener = () => this.handleKeyUp();
+      this.keyDownListener = (e) => this.handleKeyDown(e);
+      this._documentObject.addEventListener('keyup', this.keyUpListener);
+      this._documentObject.addEventListener('keydown', this.keyDownListener);
     },
     propagateChangesAfterMovement() {
       this._grid.updateStatuses();
@@ -64,8 +68,8 @@
     },
     loseGame() {
       this._windowObject.clearInterval(this._bearMovementInterval);
-      this._documentObject.removeEventListener('keydown', this._lumberjackKeyDownListener);
-      this._documentObject.removeEventListener('keyup', this._lumberjackKeyUpListener);
+      this._documentObject.removeEventListener('keydown', this.keyDownListener);
+      this._documentObject.removeEventListener('keyup', this.keyUpListener);
 
       this._windowObject.setTimeout(() => {
         this._pageNavigator.showGameOverPage();
