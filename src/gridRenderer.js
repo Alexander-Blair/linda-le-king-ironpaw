@@ -104,19 +104,6 @@
         }
       }
     },
-    startBearMovement() {
-      this._bearMovementInterval = this._windowObject.setInterval(() => {
-        const possibleDirections = ['up', 'down', 'left', 'right'];
-        let bearMoved = false;
-
-        while (!bearMoved) {
-          const direction = possibleDirections[Math.floor(Math.random() * possibleDirections.length)];
-          if (this._grid.moveBear(direction)) bearMoved = true;
-        }
-        this._grid.bear().setExploring();
-        this.renderLumberjack();
-      });
-    },
     updateScoreboard() { this._scoreboardElement.innerHTML = `Score: ${this._grid.score()}`; },
     spawnPinecone() {
       const bearIndex = this._grid.bearGridPosition().getCurrentCellIndex();
