@@ -1,7 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
   const pageNavigator = new PageNavigator(
     document.querySelector('.introPage'),
-    document.querySelector('.loadingPage'),
     document.querySelector('.gamePage'),
     document.querySelector('.gameOverPage'),
     document.querySelector('.instructions'),
@@ -27,14 +26,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const newGameButton = document.querySelector('#newGameBtn');
   const instructionsButton = document.querySelector('#instructionsBtn');
-  const loadGameButton = document.querySelector('#loadGame');
   const restartButton = document.querySelector('.restartBtn');
   const audio = document.querySelector('#introMusic');
 
   instructionsButton.addEventListener('click', () => pageNavigator.showInstructions());
-  newGameButton.addEventListener('click', () => pageNavigator.showLoadingPage());
-  restartButton.addEventListener('click', () => location.reload());
-  loadGameButton.addEventListener('click', () => {
+  restartButton.addEventListener('click', () => window.location.reload());
+  newGameButton.addEventListener('click', () => {
     audio.play();
     pageNavigator.showGamePage();
     gridRenderer.init();
