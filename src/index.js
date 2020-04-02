@@ -1,3 +1,8 @@
+import CharacterController from './characterController';
+import Grid from './grid';
+import GridRenderer from './gridRenderer';
+import PageNavigator from './pageNavigator';
+
 document.addEventListener('DOMContentLoaded', () => {
   const pageNavigator = new PageNavigator(
     document.querySelector('.introPage'),
@@ -6,7 +11,10 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelector('.instructions'),
   );
 
-  const grid = new Grid(10, 10, 3);
+  const gridWidth = 10;
+  const gridHeight = 10;
+  const numberOfLives = 3;
+  const grid = new Grid(gridWidth, gridHeight, numberOfLives);
 
   const gridRenderer = new GridRenderer(
     grid,
@@ -37,6 +45,5 @@ document.addEventListener('DOMContentLoaded', () => {
     gridRenderer.init();
     characterController.setupLumberjackMovementListener();
     characterController.setupBearMovementInterval();
-    gridRenderer.updateScoreboard();
   });
 });
