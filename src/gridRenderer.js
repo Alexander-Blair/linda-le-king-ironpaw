@@ -28,6 +28,7 @@ export default function GridRenderer(
   this._gridElement = gridElement;
   this._cellElements = [];
   this._lifebarElement = lifebarElement;
+  this._lifeElements = [];
   this._scoreboardElement = scoreboardElement;
   this._windowObject = windowObject;
 }
@@ -41,6 +42,7 @@ GridRenderer.prototype = {
     this.renderBear();
     this.spawnPinecone();
     this.updateScoreboard();
+    this.updateLifebar();
   },
   initializeTrees() {
     this._grid.treePositions().forEach((index) => {
@@ -48,6 +50,10 @@ GridRenderer.prototype = {
     });
   },
   initializeCells() {
+    const newGridElement = this._gridElement.cloneNode(false);
+    this._gridElement.parentNode.replaceChild(newGridElement, this._gridElement);
+    this._gridElement = newGridElement;
+
     for (let i = 0; i < this._grid.numberOfCells(); i += 1) {
       const div = document.createElement('div');
       this._gridElement.appendChild(div);
@@ -55,10 +61,16 @@ GridRenderer.prototype = {
     }
   },
   initializeLifebar() {
+    const newLifebarElement = this._lifebarElement.cloneNode(false);
+    newLifebarElement.innerHTML = 'Lives: ';
+    this._lifebarElement.parentNode.replaceChild(newLifebarElement, this._lifebarElement);
+    this._lifebarElement = newLifebarElement;
+
     for (let i = 0; i < this._grid.lumberjack().numberOfLives(); i += 1) {
       const div = document.createElement('div');
       div.classList.add('life');
       this._lifebarElement.appendChild(div);
+      this._lifeElements.push(div);
     }
   },
   hideCells() { this._cellElements.forEach((e) => e.classList.add('hidden')); },
@@ -94,14 +106,13 @@ GridRenderer.prototype = {
     this._cellElements[currentCellIndex].classList.add(className);
   },
   updateLifebar() {
-    const startingLives = this._lifebarElement.children.length;
+    const startingLives = this._lifeElements.length;
     const currentLives = this._grid.lumberjack().numberOfLives();
-    console.log("LIVES", currentLives);
 
     for (let i = 0; i < startingLives; i += 1) {
       const lifeElementIndex = startingLives - i - 1;
-      if (lifeElementIndex > currentLives) {
-        this._lifebarElement.children[lifeElementIndex].classList.add('hidden');
+      if (i >= currentLives) {
+        this._lifeElements[lifeElementIndex].classList.add('hidden');
       }
     }
   },

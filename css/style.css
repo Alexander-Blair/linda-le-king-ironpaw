@@ -1,0 +1,277 @@
+body, html {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+*{
+  font-family: 'Press Start 2P',cursive;
+}
+
+#instructions {
+  background: white;
+  border: 0.2vw solid black;
+  border-radius: 1vw;
+  position: absolute;
+  z-index: 1;
+  top: 8vw;
+  left: 24vw;
+  width: 48vw;
+  max-height: 30vw;
+  padding: 1vw 2vw;
+}
+
+#instructions > p{
+  line-height: 1.5vw;
+  font-size: 1vw;
+}
+
+.background {
+  position: relative;
+  height: 100%;
+  width: 100vw;
+  background-image: url('../images/start.jpg');
+  background-repeat: no-repeat;
+  background-size: 100%;
+  top: 0;
+  left: 0;
+}
+
+.cover-screen {
+  position: absolute;
+  top: 6.9vw;
+  left: 21.1vw;
+  height: 32.3vw;
+  width: 57.3vw;
+  background-size: cover;
+}
+
+#intro-page-presents-screen {
+  background-image: url('../images/IntroPagePresentsScreen.jpg');
+  background-repeat: no-repeat;
+  opacity: 0;
+  animation-name: screen-fade-in-4s;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: 1;
+  animation-duration: 4s;
+  -webkit-transition: opacity 4s ease-in-out;
+  -moz-transition: opacity 4s ease-in-out;
+  -o-transition: opacity 4s ease-in-out;
+  transition: opacity 4s ease-in-out;
+}
+
+#intro-display-page {
+  background-image: url('../images/pixeltvscreen.jpg');
+  background-repeat: no-repeat;
+  opacity: 0;
+  animation-name: screen-fade-in-8s;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: 1;
+  animation-duration: 8s;
+  animation-fill-mode: forwards;
+  -webkit-transition: opacity 8s ease-in-out;
+  -moz-transition: opacity 8s ease-in-out;
+  -o-transition: opacity 8s ease-in-out;
+  transition: opacity 8s ease-in-out;
+}
+
+.game-button {
+  display: inline-block;
+  position: absolute;
+  top: 41vw;
+  height: 3vw;
+  border-radius: 0.5vw;
+  background-color: lightGrey;
+  color: red;
+  font-weight: 400;
+  font-size: 0.9vw;
+  border: 0.15vw solid black;
+}
+
+#new-game-button {
+  left: 1vw;
+  width: 10vw;
+}
+
+#instructions-button {
+  left: 12vw;
+  width: 13vw;
+}
+
+@-webkit-keyframes screen-fade-in-4s {
+  0% {
+    opacity:0;
+  }
+  50% {
+    opacity:1;
+  }
+
+  100% {
+    opacity:1;
+  }
+}
+
+@-webkit-keyframes screen-fade-in-8s {
+  0% {
+    opacity:0;
+  }
+  50% {
+    opacity:0;
+  }
+
+  100% {
+    opacity:1;
+  }
+}
+
+@keyframes screen-fade-in-8s {
+  0% {
+    opacity:0;
+  }
+  50% {
+    opacity:0;
+  }
+
+  100% {
+    opacity:1
+  }
+}
+
+@keyframes screen-fade-in-4s {
+  0% {
+    opacity:0;
+  }
+  50% {
+    opacity:1;
+  }
+
+  100% {
+    opacity:1
+  }
+}
+
+@keyframes flash {
+  from,
+  50%,
+  to {
+    opacity: 1;
+  }
+
+  25%,
+  75% {
+    opacity: 0;
+  }
+}
+
+.game-statistic {
+  left: 1vw;
+  width: 30%;
+  height: 2vw;
+  position: relative;
+  text-align: left;
+  color: white;
+  font-size: 1.5vw;
+}
+
+.life {
+  height: 2vw;
+  width: 2vw;
+  background-image: url('../images/heart.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  float: right;
+  display: inline;
+}
+
+#grid {
+  position: absolute;
+  background-image: url('../images/grass2.png');
+  background-repeat: repeat;
+  width: 100%;
+  height: 100%;
+  flex-wrap: wrap;
+  justify-content: center;
+  border-radius: 0.2vw;
+}
+
+#grid div {
+  width: 10%;
+  height: 10%;
+  display: inline-block;
+}
+
+.hidden {
+  opacity: 0;
+}
+
+.hidden div {
+  opacity: 0;
+}
+
+.lumberjack, .lumberjackLeft, .lumberjackRight, .lumberjackAttack, .lumberjackAttackLeft, .lumberjackAttackRight, .tree, .bear, .bearAttack, .bearHurt {
+  height: auto;
+  width: auto;
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+
+.lumberjack {
+  background-image: url('../images/lumberjack.gif');
+}
+
+.lumberjackLeft {
+  background-image: url('../images/lumberjackLeft.gif');
+}
+
+.lumberjackRight {
+  background-image: url('../images/lumberjackRight.gif');
+}
+
+.lumberjackAttack {
+  background-image: url('../images/lumberjack_attack.gif');
+}
+
+.lumberjackAttackRight {
+  background-image: url('../images/lumberjack_attack.gif');
+}
+
+.lumberjackAttackLeft {
+  background-image: url('../images/lumberjackThrowLeftLoop.gif');
+}
+
+.lumberjackHurt {
+  background-image: url('../images/lumberjackFront.png');
+}
+
+.bear {
+  background-image: url('../images/BearWalk.gif');
+}
+
+.bearAttack {
+  background-image: url('../images/BearGrabLOOP.gif');
+}
+
+.bearHurt {
+  background-image: url('../images/BearGrabFlippedLOOP.gif');
+}
+
+.tree {
+  width: 2vw;
+  height: 2vw;
+  background-image: url('../images/tree.png');
+}
+
+.pinecone {
+  background-image: url('../images/pinecone.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+
+#game-over-page > p {
+  position: absolute;
+  background-size: contain;
+  font-size: 10vw;
+  text-align: center;
+  color: white;
+  animation-name: flash;
+}

@@ -11,17 +11,15 @@ export default function PageNavigator(
 }
 
 PageNavigator.prototype = {
-  showIntroPage() {
-    this._loadingPage.classList.add('hidden');
-    this._gamePage.classList.add('hidden');
-    this._gameOverPage.classList.add('hidden');
-    this._instructions.classList.add('hidden');
-  },
-  showInstructions() {
-    this._instructions.classList.remove('hidden');
+  toggleInstructions() {
+    if (this._instructions.classList.contains('hidden')) {
+      this._instructions.classList.remove('hidden');
+    } else this._instructions.classList.add('hidden');
   },
   showGamePage() {
+    this._instructions.classList.add('hidden');
     this._introPage.classList.add('hidden');
+    this._gameOverPage.classList.add('hidden');
     this._gamePage.classList.remove('hidden');
   },
   showGameOverPage() {

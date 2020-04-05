@@ -2,48 +2,56 @@ import CharacterController from './characterController';
 import Grid from './grid';
 import GridRenderer from './gridRenderer';
 import PageNavigator from './pageNavigator';
+import '../css/style.css';
 
 document.addEventListener('DOMContentLoaded', () => {
   const pageNavigator = new PageNavigator(
-    document.querySelector('.introPage'),
-    document.querySelector('.gamePage'),
-    document.querySelector('.gameOverPage'),
-    document.querySelector('.instructions'),
+    document.querySelector('#intro-images'),
+    document.querySelector('#game-page'),
+    document.querySelector('#game-over-page'),
+    document.querySelector('#instructions'),
   );
 
-  const gridWidth = 10;
-  const gridHeight = 10;
-  const numberOfLives = 3;
-  const grid = new Grid(gridWidth, gridHeight, numberOfLives);
+  function createGameClasses() {
+    const gridWidth = 10;
+    const gridHeight = 10;
+    const numberOfLives = 3;
+    const grid = new Grid(gridWidth, gridHeight, numberOfLives);
 
-  const gridRenderer = new GridRenderer(
-    grid,
-    document.querySelector('#grid'),
-    document.querySelector('#lifebar'),
-    document.querySelector('#scoreboard'),
-    window,
-  );
+    const gridRenderer = new GridRenderer(
+      grid,
+      document.querySelector('#grid'),
+      document.querySelector('#lifebar'),
+      document.querySelector('#scoreboard'),
+      window,
+    );
 
-  const characterController = new CharacterController(
-    grid,
-    gridRenderer,
-    document,
-    window,
-    pageNavigator,
-  );
+    const characterController = new CharacterController(
+      grid,
+      gridRenderer,
+      document,
+      window,
+      pageNavigator,
+    );
 
-  const newGameButton = document.querySelector('#newGameBtn');
-  const instructionsButton = document.querySelector('#instructionsBtn');
-  const restartButton = document.querySelector('.restartBtn');
-  const audio = document.querySelector('#introMusic');
-
-  instructionsButton.addEventListener('click', () => pageNavigator.showInstructions());
-  restartButton.addEventListener('click', () => window.location.reload());
-  newGameButton.addEventListener('click', () => {
-    audio.play();
-    pageNavigator.showGamePage();
     gridRenderer.init();
     characterController.setupLumberjackMovementListener();
     characterController.setupBearMovementInterval();
+  }
+
+  const newGameButton = document.querySelector('#new-game-button');
+  const instructionsButton = document.querySelector('#instructions-button');
+  const restartButton = document.querySelector('#restart-button');
+  const audio = document.querySelector('#intro-music');
+
+  instructionsButton.addEventListener('click', () => pageNavigator.toggleInstructions());
+  restartButton.addEventListener('click', () => {
+    createGameClasses();
+    pageNavigator.showGamePage();
+  });
+  newGameButton.addEventListener('click', () => {
+    audio.play();
+    createGameClasses();
+    pageNavigator.showGamePage();
   });
 });
