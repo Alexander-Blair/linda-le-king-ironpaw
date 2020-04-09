@@ -1,13 +1,16 @@
+import { lumberjackExploring, lumberjackAttacking, lumberjackHurt } from './lumberjack';
+import { bearExploring, bearAttacking, bearHurt } from './bear';
+
 const bearClassMappings = {
-  exploring: 'bear',
-  attacking: 'bearAttack',
-  hurt: 'bearHurt',
+  [bearExploring]: 'bear',
+  [bearAttacking]: 'bearAttack',
+  [bearHurt]: 'bearHurt',
 };
 
 const lumberjackClassMappings = {
-  exploring: 'lumberjack',
-  attacking: 'lumberjackAttack',
-  hurt: 'lumberjackHurt',
+  [lumberjackExploring]: 'lumberjack',
+  [lumberjackAttacking]: 'lumberjackAttack',
+  [lumberjackHurt]: 'lumberjackHurt',
 };
 
 const lumberjackAnimations = {
