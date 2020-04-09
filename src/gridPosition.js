@@ -40,8 +40,6 @@ GridPosition.prototype = {
   },
   getCurrentCellIndex() { return this._currentXCoordinate + this._currentYCoordinate * 10; },
   getPreviousCellIndex() {
-    if (this._previousXCoordinate === undefined) return null;
-
     return this._previousXCoordinate + this._previousYCoordinate * 10;
   },
 };
