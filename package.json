@@ -4,7 +4,7 @@
   "description": "",
   "private": true,
   "scripts": {
-    "test": "jest",
+    "test": "NODE_ENV=test jest",
     "lint": "eslint \"src/**\"",
     "build": "webpack",
     "dev": "webpack --mode development",
@@ -22,10 +22,13 @@
   "homepage": "https://github.com/Alexander-Blair/linda-le-king-ironpaw#readme",
   "dependencies": {},
   "devDependencies": {
+    "@babel/preset-env": "^7.9.5",
+    "babel-jest": "^25.3.0",
     "css-loader": "^3.4.2",
     "eslint": "^6.8.0",
     "eslint-config-airbnb-base": "^14.1.0",
     "eslint-plugin-import": "^2.20.1",
+    "eslint-plugin-jest": "^23.8.2",
     "file-loader": "^6.0.0",
     "html-webpack-plugin": "^4.0.3",
     "jest": "^25.1.0",
