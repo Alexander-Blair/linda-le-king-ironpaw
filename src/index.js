@@ -34,6 +34,7 @@ document.addEventListener('DOMContentLoaded', () => {
       pageNavigator,
     );
 
+    grid.spawnPinecone();
     gridRenderer.init();
     characterController.setupLumberjackMovementListener();
     characterController.setupBearMovementInterval();

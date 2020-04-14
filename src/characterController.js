@@ -26,14 +26,15 @@ CharacterController.prototype = {
     this.propagateChangesAfterMovement();
     this._gridRenderer.animateLumberjack(direction);
 
-    const lumberjackIndex = this._grid.lumberjackGridPosition().getCurrentCellIndex();
-
-    if (this._gridRenderer.cellContainsPinecone(lumberjackIndex)) {
-      if (this._grid.lumberjack().canPickUpPineCone()) {
-        this._gridRenderer.removePinecone(lumberjackIndex);
-        this._grid.lumberjack().pickUpPineCone();
-        this._gridRenderer.spawnPinecone();
-      }
+    if (this._grid.isLumberjackInCellWithPinecone()
+          && this._grid.lumberjack().canPickUpPineCone()) {
+      this._grid.lumberjack().pickUpPineCone();
+      this._grid.removePinecone();
+      this._gridRenderer.renderPinecones();
+      this._windowObject.setTimeout(() => {
+        this._grid.spawnPinecone();
+        this._gridRenderer.renderPinecones();
+      }, 1000);
     }
   },
   handleKeyUp() {

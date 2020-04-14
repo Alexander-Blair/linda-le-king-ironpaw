@@ -1,6 +1,6 @@
-import Bear from './bear';
+import { Bear } from './bear';
 import GridPosition from './gridPosition';
-import Lumberjack from './lumberjack';
+import { Lumberjack } from './lumberjack';
 
 const treePositions = [7, 8, 9, 20, 21, 22, 34, 38, 44, 48, 54, 61, 67, 71, 77, 81, 87];
 const bearStartSpeed = 100;
@@ -43,6 +43,8 @@ Grid.prototype = {
   lumberjackGridPosition() { return this._lumberjackGridPosition; },
   lumberjack() { return this._lumberjack; },
   bear() { return this._bear; },
+  pineconeIndex() { return this._pineconeIndex; },
+  lastPineconeIndex() { return this._lastPineconeIndex; },
   moveBear(direction) {
     if (this.bearGridPosition().canMove(direction)) {
       this.bearGridPosition().move(direction);
@@ -63,5 +65,26 @@ Grid.prototype = {
       this._lumberjack.loseLife();
       this._lumberjack.setExploring();
     }
+  },
+  isLumberjackInCellWithPinecone() {
+    return this._lumberjackGridPosition.getCurrentCellIndex() === this.pineconeIndex();
+  },
+  pickUpPinecone() {
+    this._lumberjack.pickUpPinecone();
+    this.removePinecone();
+  },
+  generateRandomIndex() { return Math.floor(Math.random() * this.numberOfCells()); },
+  spawnPinecone() {
+    const bearIndex = this._bearGridPosition.getCurrentCellIndex();
+    let pineconeIndex = this.generateRandomIndex();
+
+    while (treePositions.includes(pineconeIndex) || pineconeIndex === bearIndex) {
+      pineconeIndex = this.generateRandomIndex();
+    }
+    this._pineconeIndex = pineconeIndex;
+  },
+  removePinecone() {
+    this._lastPineconeIndex = this._pineconeIndex;
+    this._pineconeIndex = null;
   },
 };

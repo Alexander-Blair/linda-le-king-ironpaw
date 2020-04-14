@@ -43,8 +43,8 @@ GridRenderer.prototype = {
     this.initializeTrees();
     this.renderLumberjack();
     this.renderBear();
-    this.spawnPinecone();
     this.updateScoreboard();
+    this.renderPinecones();
     this.updateLifebar();
   },
   initializeTrees() {
@@ -120,22 +120,12 @@ GridRenderer.prototype = {
     }
   },
   updateScoreboard() { this._scoreboardElement.innerHTML = `Score: ${this._grid.score()}`; },
-  spawnPinecone() {
-    const bearIndex = this._grid.bearGridPosition().getCurrentCellIndex();
-    let pineconeIndex;
-
-    this._windowObject.setTimeout(() => {
-      pineconeIndex = Math.floor(Math.random() * this._grid.numberOfCells());
-      while (this._grid.treePositions().includes(pineconeIndex) || pineconeIndex === bearIndex) {
-        pineconeIndex = Math.floor(Math.random() * this._grid.numberOfCells());
-      }
-      this._cellElements[pineconeIndex].classList.add('pinecone');
-    }, 1000);
-  },
-  cellContainsPinecone(cellIndex) {
-    return this._cellElements[cellIndex].classList.contains('pinecone');
-  },
-  removePinecone(cellIndex) {
-    this._cellElements[cellIndex].classList.remove('pinecone');
+  renderPinecones() {
+    if (this._grid.pineconeIndex()) {
+      this._cellElements[this._grid.pineconeIndex()].classList.add('pinecone');
+    }
+    if (this._grid.lastPineconeIndex()) {
+      this._cellElements[this._grid.lastPineconeIndex()].classList.remove('pinecone');
+    }
   },
 };
