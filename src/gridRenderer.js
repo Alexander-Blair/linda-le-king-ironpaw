@@ -41,6 +41,9 @@ GridRenderer.prototype = {
     this.initializeCells();
     this.initializeLifebar();
     this.initializeTrees();
+    this.render();
+  },
+  render() {
     this.renderLumberjack();
     this.renderBear();
     this.updateScoreboard();

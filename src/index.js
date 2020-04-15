@@ -2,6 +2,7 @@ import CharacterController from './characterController';
 import Grid from './grid';
 import GridRenderer from './gridRenderer';
 import PageNavigator from './pageNavigator';
+import generateGameConfig from './generateGameConfig';
 import '../css/style.css';
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -13,10 +14,8 @@ document.addEventListener('DOMContentLoaded', () => {
   );
 
   function createGameClasses() {
-    const gridWidth = 10;
-    const gridHeight = 10;
-    const numberOfLives = 3;
-    const grid = new Grid(gridWidth, gridHeight, numberOfLives);
+    const gameConfig = generateGameConfig();
+    const grid = new Grid(gameConfig);
 
     const gridRenderer = new GridRenderer(
       grid,

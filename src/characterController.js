@@ -22,36 +22,29 @@ CharacterController.prototype = {
 
     e.preventDefault();
 
+    const numberOfPineconesBefore = this._grid.lumberjack().numberOfPinecones();
+
     this._grid.moveLumberjack(direction);
-    this.propagateChangesAfterMovement();
+    this.render();
     this._gridRenderer.animateLumberjack(direction);
 
-    if (this._grid.isLumberjackInCellWithPinecone()
-          && this._grid.lumberjack().canPickUpPineCone()) {
-      this._grid.lumberjack().pickUpPineCone();
-      this._grid.removePinecone();
-      this._gridRenderer.renderPinecones();
+    if (this._grid.lumberjack().numberOfPinecones() > numberOfPineconesBefore) {
       this._windowObject.setTimeout(() => {
         this._grid.spawnPinecone();
-        this._gridRenderer.renderPinecones();
+        this._gridRenderer.render();
       }, 1000);
     }
   },
-  handleKeyUp() {
-    this._grid.lumberjack().setExploring();
-  },
+  handleKeyUp() { this._grid.lumberjack().setExploring(); },
   setupLumberjackMovementListener() {
     this.keyUpListener = () => this.handleKeyUp();
     this.keyDownListener = (e) => this.handleKeyDown(e);
     this._documentObject.addEventListener('keyup', this.keyUpListener);
     this._documentObject.addEventListener('keydown', this.keyDownListener);
   },
-  propagateChangesAfterMovement() {
-    this._grid.updateStatuses();
-    this._gridRenderer.renderLumberjack();
-    this._gridRenderer.renderBear();
-    this._gridRenderer.updateLifebar();
+  render() {
     if (this._grid.lumberjack().isDead()) this.loseGame();
+    this._gridRenderer.render();
   },
   setupBearMovementInterval() {
     this._bearMovementInterval = this._windowObject.setInterval(() => {
@@ -63,7 +56,7 @@ CharacterController.prototype = {
         if (this._grid.moveBear(direction)) bearMoved = true;
       }
       this._grid.bear().setExploring();
-      this.propagateChangesAfterMovement();
+      this.render();
     }, this._grid.bear().movementInterval());
   },
   loseGame() {
