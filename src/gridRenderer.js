@@ -80,6 +80,20 @@ GridRenderer.prototype = {
     }
   },
   hideCells() { this._cellElements.forEach((e) => e.classList.add('hidden')); },
+  removeCharacters() {
+    this._cellElements[this._grid.lumberjackGridPosition().getPreviousCellIndex()].classList.remove(
+      'lumberjack', 'lumberjackAttack', 'lumberjackRight', 'lumberjackLeft', 'lumberjackHurt',
+    );
+    this._cellElements[this._grid.lumberjackGridPosition().getCurrentCellIndex()].classList.remove(
+      'lumberjack', 'lumberjackAttack', 'lumberjackRight', 'lumberjackLeft', 'lumberjackHurt',
+    );
+    this._cellElements[this._grid.bearGridPosition().getPreviousCellIndex()].classList.remove(
+      'bearAttack', 'bearHurt', 'bear',
+    );
+    this._cellElements[this._grid.bearGridPosition().getCurrentCellIndex()].classList.remove(
+      'bearAttack', 'bearHurt', 'bear',
+    );
+  },
   renderLumberjack() {
     const previousCellIndex = this._grid.lumberjackGridPosition().getPreviousCellIndex();
     const currentCellIndex = this._grid.lumberjackGridPosition().getCurrentCellIndex();

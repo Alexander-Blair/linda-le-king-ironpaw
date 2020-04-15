@@ -37,17 +37,30 @@ CharacterController.prototype = {
   },
   handleKeyUp() { this._grid.lumberjack().setExploring(); },
   setupLumberjackMovementListener() {
-    this.keyUpListener = () => this.handleKeyUp();
-    this.keyDownListener = (e) => this.handleKeyDown(e);
-    this._documentObject.addEventListener('keyup', this.keyUpListener);
-    this._documentObject.addEventListener('keydown', this.keyDownListener);
+    this._keyUpListener = () => this.handleKeyUp();
+    this._keyDownListener = (e) => this.handleKeyDown(e);
+    this._documentObject.addEventListener('keyup', this._keyUpListener);
+    this._documentObject.addEventListener('keydown', this._keyDownListener);
   },
   render() {
     if (this._grid.lumberjack().isDead()) this.loseGame();
+    if (this._grid.isBearAttacking()) {
+      this._windowObject.clearInterval(this._bearMovementInterval);
+      this.clearKeyListeners();
+      this._grid.lumberjack().setExploring();
+      this._windowObject.setTimeout(() => {
+        this._gridRenderer.removeCharacters();
+        this._grid.initializeGridPositions();
+        this.setupBearMovementInterval();
+        this.setupLumberjackMovementListener();
+      }, 1000);
+    }
+
     this._gridRenderer.render();
   },
   setupBearMovementInterval() {
     this._bearMovementInterval = this._windowObject.setInterval(() => {
+      this._grid.bear().setExploring();
       const directions = ['up', 'down', 'left', 'right'];
       let bearMoved = false;
 
@@ -55,14 +68,16 @@ CharacterController.prototype = {
         const direction = directions[Math.floor(Math.random() * directions.length)];
         if (this._grid.moveBear(direction)) bearMoved = true;
       }
-      this._grid.bear().setExploring();
       this.render();
     }, this._grid.bear().movementInterval());
   },
+  clearKeyListeners() {
+    this._documentObject.removeEventListener('keydown', this._keyDownListener);
+    this._documentObject.removeEventListener('keyup', this._keyUpListener);
+  },
   loseGame() {
     this._windowObject.clearInterval(this._bearMovementInterval);
-    this._documentObject.removeEventListener('keydown', this.keyDownListener);
-    this._documentObject.removeEventListener('keyup', this.keyUpListener);
+    this.clearKeyListeners();
 
     this._windowObject.setTimeout(() => {
       this._pageNavigator.showGameOverPage();

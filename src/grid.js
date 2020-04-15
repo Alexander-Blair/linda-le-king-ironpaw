@@ -7,26 +7,30 @@ export default function Grid(gameConfig) {
   this._height = gameConfig.gridHeight;
   this._lumberjack = new Lumberjack(gameConfig.lumberjackStartingLives);
   this._bear = new Bear(gameConfig.bearStartSpeed);
-  this._lumberjackGridPosition = new GridPosition(
-    gameConfig.lumberjackStartingXCoordinate,
-    gameConfig.lumberjackStartingYCoordinate,
-    gameConfig.gridWidth,
-    gameConfig.gridHeight,
-    gameConfig.treePositions,
-  );
-  this._bearGridPosition = new GridPosition(
-    gameConfig.bearStartingXCoordinate,
-    gameConfig.bearStartingYCoordinate,
-    gameConfig.gridWidth,
-    gameConfig.gridHeight,
-    gameConfig.treePositions,
-  );
+  this._gameConfig = gameConfig;
   this._pineconeIndex = gameConfig.initialPineconeIndex;
   this._treePositions = gameConfig.treePositions;
   this._score = 0;
+  this.initializeGridPositions();
 }
 
 Grid.prototype = {
+  initializeGridPositions() {
+    this._lumberjackGridPosition = new GridPosition(
+      this._gameConfig.lumberjackStartingXCoordinate,
+      this._gameConfig.lumberjackStartingYCoordinate,
+      this._gameConfig.gridWidth,
+      this._gameConfig.gridHeight,
+      this._gameConfig.treePositions,
+    );
+    this._bearGridPosition = new GridPosition(
+      this._gameConfig.bearStartingXCoordinate,
+      this._gameConfig.bearStartingYCoordinate,
+      this._gameConfig.gridWidth,
+      this._gameConfig.gridHeight,
+      this._gameConfig.treePositions,
+    );
+  },
   treePositions() { return this._treePositions; },
   score() { return this._score; },
   numberOfCells() { return this._height * this._width; },
