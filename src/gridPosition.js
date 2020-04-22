@@ -42,4 +42,30 @@ GridPosition.prototype = {
   getPreviousCellIndex() {
     return this._previousXCoordinate + this._previousYCoordinate * 10;
   },
+  calculateIdealRoute(xCoordinate, yCoordinate) {
+    let routeXCoordinate = this._currentXCoordinate;
+    let routeYCoordinate = this._currentYCoordinate;
+    const route = [];
+
+    const updateYCoordinate = () => {
+      if (yCoordinate < routeYCoordinate) {
+        routeYCoordinate -= 1;
+      } else routeYCoordinate += 1;
+    };
+
+    const updateXCoordinate = () => {
+      if (xCoordinate < routeXCoordinate) {
+        routeXCoordinate -= 1;
+      } else routeXCoordinate += 1;
+    };
+
+    while (routeXCoordinate !== xCoordinate || routeYCoordinate !== yCoordinate) {
+      if (Math.abs(routeXCoordinate - xCoordinate) > Math.abs(routeYCoordinate - yCoordinate)) {
+        updateXCoordinate();
+      } else updateYCoordinate();
+
+      route.push([routeXCoordinate, routeYCoordinate]);
+    }
+    return route;
+  },
 };
