@@ -45,7 +45,7 @@ GridPosition.prototype = {
   calculateIdealRoute(xCoordinate, yCoordinate) {
     let routeXCoordinate = this._currentXCoordinate;
     let routeYCoordinate = this._currentYCoordinate;
-    const route = [];
+    const route = [[routeXCoordinate, routeYCoordinate]];
 
     const updateYCoordinate = () => {
       if (yCoordinate < routeYCoordinate) {

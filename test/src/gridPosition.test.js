@@ -180,7 +180,7 @@ describe('GridPosition', () => {
         route = gridPosition.calculateIdealRoute(xCoordinate, yCoordinate);
 
         expect(JSON.stringify(route)).toEqual(
-          JSON.stringify([[2, 1], [2, 2], [2, 3], [2, 4]]),
+          JSON.stringify([[2, 0], [2, 1], [2, 2], [2, 3], [2, 4]]),
         );
       });
     });
@@ -203,7 +203,7 @@ describe('GridPosition', () => {
         route = gridPosition.calculateIdealRoute(xCoordinate, yCoordinate);
 
         expect(JSON.stringify(route)).toEqual(
-          JSON.stringify([[1, 3], [1, 2], [1, 1], [1, 0]]),
+          JSON.stringify([[1, 4], [1, 3], [1, 2], [1, 1], [1, 0]]),
         );
       });
     });
@@ -226,7 +226,7 @@ describe('GridPosition', () => {
         route = gridPosition.calculateIdealRoute(xCoordinate, yCoordinate);
 
         expect(JSON.stringify(route)).toEqual(
-          JSON.stringify([[1, 4], [2, 4], [3, 4], [4, 4]]),
+          JSON.stringify([[0, 4], [1, 4], [2, 4], [3, 4], [4, 4]]),
         );
       });
     });
@@ -249,7 +249,7 @@ describe('GridPosition', () => {
         route = gridPosition.calculateIdealRoute(xCoordinate, yCoordinate);
 
         expect(JSON.stringify(route)).toEqual(
-          JSON.stringify([[3, 3], [2, 3], [1, 3], [0, 3]]),
+          JSON.stringify([[4, 3], [3, 3], [2, 3], [1, 3], [0, 3]]),
         );
       });
     });
@@ -275,7 +275,7 @@ describe('GridPosition', () => {
         route = gridPosition.calculateIdealRoute(xCoordinate, yCoordinate);
 
         expect(JSON.stringify(route)).toEqual(
-          JSON.stringify([[0, 3], [1, 3], [1, 2], [2, 2], [2, 1], [3, 1], [3, 0], [4, 0]]),
+          JSON.stringify([[0, 4], [0, 3], [1, 3], [1, 2], [2, 2], [2, 1], [3, 1], [3, 0], [4, 0]]),
         );
       });
     });
@@ -299,7 +299,7 @@ describe('GridPosition', () => {
         route = gridPosition.calculateIdealRoute(xCoordinate, yCoordinate);
 
         expect(JSON.stringify(route)).toEqual(
-          JSON.stringify([[4, 3], [3, 3], [3, 2], [2, 2], [2, 1], [1, 1], [1, 0], [0, 0]]),
+          JSON.stringify([[4, 4], [4, 3], [3, 3], [3, 2], [2, 2], [2, 1], [1, 1], [1, 0], [0, 0]]),
         );
       });
     });
@@ -323,7 +323,7 @@ describe('GridPosition', () => {
         route = gridPosition.calculateIdealRoute(xCoordinate, yCoordinate);
 
         expect(JSON.stringify(route)).toEqual(
-          JSON.stringify([[4, 1], [3, 1], [3, 2], [2, 2], [2, 3], [1, 3], [1, 4], [0, 4]]),
+          JSON.stringify([[4, 0], [4, 1], [3, 1], [3, 2], [2, 2], [2, 3], [1, 3], [1, 4], [0, 4]]),
         );
       });
     });
@@ -347,7 +347,7 @@ describe('GridPosition', () => {
         route = gridPosition.calculateIdealRoute(xCoordinate, yCoordinate);
 
         expect(JSON.stringify(route)).toEqual(
-          JSON.stringify([[0, 1], [1, 1], [1, 2], [2, 2], [2, 3], [3, 3], [3, 4], [4, 4]]),
+          JSON.stringify([[0, 0], [0, 1], [1, 1], [1, 2], [2, 2], [2, 3], [3, 3], [3, 4], [4, 4]]),
         );
       });
     });
