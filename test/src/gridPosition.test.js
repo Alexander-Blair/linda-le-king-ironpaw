@@ -352,4 +352,73 @@ describe('GridPosition', () => {
       });
     });
   });
+
+  describe('calculateRoute', () => {
+    let xCoordinate;
+    let yCoordinate;
+    let route;
+
+    describe('when directly below the other grid position, but blocked by trees', () => {
+      const treePositions = [20, 21];
+      const gridWidth = 5;
+      const gridHeight = 5;
+
+      beforeEach(() => {
+        gridPosition = new GridPosition(1, 4, gridWidth, gridHeight, treePositions);
+        xCoordinate = 1;
+        yCoordinate = 0;
+      });
+
+      // Diagram showing start position (S), target position (T), and expected route
+      // | |T| | | |
+      // | |←|↑| | |
+      // |*|*|↑| | |
+      // | |↑|→| | |
+      // | |S| | | |
+
+      it('heads to the target', () => {
+        route = gridPosition.calculateRoute(xCoordinate, yCoordinate);
+
+        expect(JSON.stringify(route)).toEqual(
+          JSON.stringify([[1, 4], [1, 3], [2, 3], [2, 2], [2, 1], [1, 1], [1, 0]]),
+        );
+      });
+    });
+
+    describe('when far away and blocked by multiple trees', () => {
+      const treePositions = [7, 8, 9, 20, 21, 22, 34, 38, 44, 48, 54, 61, 67, 71, 77, 81, 87];
+      const gridWidth = 10;
+      const gridHeight = 10;
+
+      beforeEach(() => {
+        gridPosition = new GridPosition(9, 9, gridWidth, gridHeight, treePositions);
+        xCoordinate = 0;
+        yCoordinate = 0;
+      });
+
+      // Diagram showing start position (S), target position (T), and expected route
+      // |T| | | | | | |*|*|*|
+      // | | | | | | | | | | |
+      // |*|*|*| | | | | | | |
+      // | | | | |*| | | |*| |
+      // | | | | |*| | | |*| |
+      // | | | | |*| | | | | |
+      // | |*| | | | | |*| | |
+      // | |*| | | | | |*| | |
+      // | |*| | | | | |*| | |
+      // | | | | | | | | | |S|
+
+      it('heads to the target', () => {
+        route = gridPosition.calculateRoute(xCoordinate, yCoordinate);
+
+        expect(JSON.stringify(route)).toEqual(
+          JSON.stringify([
+            [9, 9], [9, 8], [8, 8], [8, 7], [8, 6], [8, 5], [7, 5],
+            [6, 5], [5, 5], [5, 4], [5, 3], [5, 2], [4, 2], [3, 2],
+            [3, 1], [2, 1], [1, 1], [1, 0], [0, 0],
+          ]),
+        );
+      });
+    });
+  });
 });

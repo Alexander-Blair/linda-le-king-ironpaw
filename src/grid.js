@@ -44,13 +44,24 @@ Grid.prototype = {
   bear() { return this._bear; },
   pineconeIndex() { return this._pineconeIndex; },
   lastPineconeIndex() { return this._lastPineconeIndex; },
-  moveBear(direction) {
-    if (this.bearGridPosition().canMove(direction)) {
-      this.bearGridPosition().move(direction);
-      this.updateStatuses();
-      return true;
-    }
-    return false;
+  moveBear() {
+    const nextPosition = this._bearGridPosition.nextPosition(
+      this._lumberjackGridPosition._currentXCoordinate,
+      this._lumberjackGridPosition._currentYCoordinate,
+    );
+    const currentXCoord = this._bearGridPosition._currentXCoordinate;
+    const currentYCoord = this._bearGridPosition._currentYCoordinate;
+    const newXCoord = nextPosition[0];
+    const newYCoord = nextPosition[1];
+    let direction;
+
+    if (newXCoord < currentXCoord) direction = 'left';
+    else if (newXCoord > currentXCoord) direction = 'right';
+    else if (newYCoord < currentYCoord) direction = 'up';
+    else direction = 'down';
+
+    this.bearGridPosition().move(direction);
+    this.updateStatuses();
   },
   moveLumberjack(direction) {
     this._lumberjack.setExploring();

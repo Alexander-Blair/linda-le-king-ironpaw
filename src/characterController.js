@@ -61,13 +61,7 @@ CharacterController.prototype = {
   setupBearMovementInterval() {
     this._bearMovementInterval = this._windowObject.setInterval(() => {
       this._grid.bear().setExploring();
-      const directions = ['up', 'down', 'left', 'right'];
-      let bearMoved = false;
-
-      while (!bearMoved) {
-        const direction = directions[Math.floor(Math.random() * directions.length)];
-        if (this._grid.moveBear(direction)) bearMoved = true;
-      }
+      this._grid.moveBear();
       this.render();
     }, this._grid.bear().movementInterval());
   },
