@@ -18,13 +18,12 @@ GridPosition.prototype = {
   canMove(direction) {
     const nextXCoordinate = this.getNextXCoordinate(direction);
     const nextYCoordinate = this.getNextYCoordinate(direction);
-    const nextCellIndex = nextXCoordinate + nextYCoordinate * 10;
 
     return nextXCoordinate >= 0
       && nextXCoordinate < this._gridWidth
       && nextYCoordinate >= 0
       && nextYCoordinate < this._gridHeight
-      && !this._treePositions.includes(nextCellIndex);
+      && !this.containsTree([nextXCoordinate, nextYCoordinate]);
   },
   move(direction) {
     this._previousXCoordinate = this._currentXCoordinate;
@@ -75,6 +74,11 @@ GridPosition.prototype = {
     return xCoordinate < 0 || yCoordinate < 0
       || xCoordinate >= this._gridWidth || yCoordinate >= this._gridHeight;
   },
+  containsTree(position) {
+    return this._treePositions.some((treePosition) => (
+      treePosition[0] === position[0] && treePosition[1] === position[1]
+    ));
+  },
   routeContains(xCoordinate, yCoordinate, route) {
     return route.some((routePosition) => (
       routePosition[0] === xCoordinate && routePosition[1] === yCoordinate
@@ -85,18 +89,14 @@ GridPosition.prototype = {
       [xCoordinate, yCoordinate + 1], [xCoordinate, yCoordinate - 1],
       [xCoordinate + 1, yCoordinate], [xCoordinate - 1, yCoordinate],
     ];
-    return possibilities.filter((position) => {
-      const indexOnBoard = this.getIndex(position[0], position[1]);
-      return !this._treePositions.includes(indexOnBoard)
+    return possibilities.filter((position) => (
+      !this.containsTree(position)
         && !this.isOutOfBounds(position[0], position[1])
-        && !this.routeContains(position[0], position[1], route);
-    });
+        && !this.routeContains(position[0], position[1], route)
+    ));
   },
   clone(array) {
     return JSON.parse(JSON.stringify(array));
-  },
-  distanceFrom(currentX, currentY, targetX, targetY) {
-    return Math.abs(currentX - targetX) + Math.abs(currentY - targetY);
   },
   generateNextSteps(route) {
     const currentPosition = route[route.length - 1];
@@ -134,24 +134,34 @@ GridPosition.prototype = {
 
     return route[1];
   },
+  generateRouteByForce(route, firstTargetIndex, idealRoute) {
+    let routeAttempts = this.generateNextSteps(route);
+    while (!routeAttempts.some((routeAttempt) => (
+      this.reachedTarget(routeAttempt, firstTargetIndex, idealRoute)
+    ))) {
+      routeAttempts = routeAttempts.map((routeAttempt) => (
+        this.generateNextSteps(routeAttempt)
+      )).flat();
+    }
+    return routeAttempts.filter((routeAttempt) => (
+      this.reachedTarget(routeAttempt, firstTargetIndex, idealRoute)
+    ))[0];
+  },
+  reachedTarget(routeAttempt, firstTargetIndex, idealRoute) {
+    const lastRoutePosition = routeAttempt[routeAttempt.length - 1];
+    const targets = idealRoute.filter((_, index) => index >= firstTargetIndex);
+
+    return targets.some((target) => (
+      lastRoutePosition[0] === target[0] && lastRoutePosition[1] === target[1]
+    ));
+  },
   calculateRoute(xCoordinate, yCoordinate) {
-    const reachedTarget = (routeAttempt, firstTargetIndex, idealRoute) => {
-      const lastRoutePosition = routeAttempt[routeAttempt.length - 1];
-      const targets = idealRoute.filter((_, index) => index >= firstTargetIndex);
-
-      return targets.some((target) => (
-        lastRoutePosition[0] === target[0] && lastRoutePosition[1] === target[1]
-      ));
-    };
-
     const idealRoute = this.calculateIdealRoute(xCoordinate, yCoordinate);
     let route = [];
     let rerouting = false;
 
-    idealRoute.forEach((position, index) => {
-      const indexOnBoard = this.getIndex(position[0], position[1]);
-
-      if (this._treePositions.includes(indexOnBoard)) {
+    idealRoute.forEach((idealRoutePosition, index) => {
+      if (this.containsTree(idealRoutePosition)) {
         if (rerouting) return;
 
         rerouting = true;
@@ -160,35 +170,21 @@ GridPosition.prototype = {
         let potentialTargetIndex = index + 1;
         while (!target && potentialTargetIndex < idealRoute.length) {
           const potentialTarget = idealRoute[potentialTargetIndex];
-          const indexOfPotentialTarget = this.getIndex(potentialTarget[0], potentialTarget[1]);
-          if (!this._treePositions.includes(indexOfPotentialTarget)) {
+          if (!this.containsTree(potentialTarget)) {
             firstTargetIndex = potentialTargetIndex;
             target = potentialTarget;
           }
           potentialTargetIndex += 1;
         }
 
-        let routeAttempts = this.generateNextSteps(route);
-        while (!routeAttempts.some((routeAttempt) => (
-          reachedTarget(routeAttempt, firstTargetIndex, idealRoute)
-        ))) {
-          routeAttempts = routeAttempts.map((routeAttempt) => (
-            this.generateNextSteps(routeAttempt)
-          )).flat();
-        }
-        const successfulAttempt = routeAttempts.filter((routeAttempt) => (
-          reachedTarget(routeAttempt, firstTargetIndex, idealRoute)
-        ))[0];
-
-        route = successfulAttempt;
+        route = this.generateRouteByForce(route, firstTargetIndex, idealRoute);
       } else {
         rerouting = false;
-        const mostAdvancedPositionIndex = idealRoute.reduce((mostAdvancedIndex, p, i) => {
-          if (this.routeContains(p[0], p[1], route)) return i;
+        const mostAdvancedPositionIndex = idealRoute.reduce((mostAdvancedIndex, position, i) => {
+          if (this.routeContains(position[0], position[1], route)) return i;
           return mostAdvancedIndex;
         }, -1);
-        if (index <= mostAdvancedPositionIndex) return;
-        route = route.concat([position]);
+        if (index > mostAdvancedPositionIndex) route.push(idealRoutePosition);
       }
     });
     return route;

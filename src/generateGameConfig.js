@@ -2,7 +2,10 @@ export default function generateGameConfig() {
   const gridWidth = 10;
   const gridHeight = 10;
   const lumberjackStartingLives = 3;
-  const treePositions = [7, 8, 9, 20, 21, 22, 34, 38, 44, 48, 54, 61, 67, 71, 77, 81, 87];
+  const treePositions = [
+    [0, 2], [1, 2], [1, 6], [1, 7], [1, 8], [2, 2], [4, 3], [4, 4], [4, 5],
+    [7, 0], [7, 6], [7, 7], [7, 8], [8, 0], [8, 3], [8, 4], [9, 0],
+  ];
   const bearStartSpeed = 100;
   const bearStartingXCoordinate = 9;
   const bearStartingYCoordinate = 9;

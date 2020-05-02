@@ -51,7 +51,8 @@ GridRenderer.prototype = {
     this.updateLifebar();
   },
   initializeTrees() {
-    this._grid.treePositions().forEach((index) => {
+    this._grid.treePositions().forEach((position) => {
+      const index = position[0] + position[1] * 10;
       this._cellElements[index].classList.add('tree');
     });
   },

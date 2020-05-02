@@ -73,7 +73,7 @@ describe('GridPosition', () => {
     });
 
     describe('when there is a tree in the position requested', () => {
-      treePositions = [15];
+      treePositions = [[5, 1]];
 
       describe('when approaching from left', () => {
         it('returns false', () => {
@@ -359,7 +359,7 @@ describe('GridPosition', () => {
     let route;
 
     describe('when directly below the other grid position, but blocked by trees', () => {
-      const treePositions = [20, 21];
+      const treePositions = [[0, 2], [1, 2]];
       const gridWidth = 5;
       const gridHeight = 5;
 
@@ -386,7 +386,10 @@ describe('GridPosition', () => {
     });
 
     describe('when far away and blocked by multiple trees', () => {
-      const treePositions = [7, 8, 9, 20, 21, 22, 34, 38, 44, 48, 54, 61, 67, 71, 77, 81, 87];
+      const treePositions = [
+        [0, 2], [1, 2], [1, 6], [1, 7], [1, 8], [2, 2], [4, 3], [4, 4], [4, 5],
+        [7, 0], [7, 6], [7, 7], [7, 8], [8, 0], [8, 3], [8, 4], [9, 0],
+      ];
       const gridWidth = 10;
       const gridHeight = 10;
 
