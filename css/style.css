@@ -195,8 +195,6 @@ body, html {
 }
 
 #grid div {
-  width: 10%;
-  height: 10%;
   display: inline-block;
 }
 

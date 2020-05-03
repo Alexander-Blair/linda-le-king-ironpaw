@@ -33,6 +33,8 @@ Grid.prototype = {
   },
   treePositions() { return this._treePositions; },
   score() { return this._score; },
+  height() { return this._height; },
+  width() { return this._width; },
   numberOfCells() { return this._height * this._width; },
   isBearAttacking() {
     return this._bearGridPosition.getCurrentCellIndex()

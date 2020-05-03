@@ -63,6 +63,8 @@ GridRenderer.prototype = {
 
     for (let i = 0; i < this._grid.numberOfCells(); i += 1) {
       const div = document.createElement('div');
+      div.style.height = `${(100 / this._grid.height())}%`;
+      div.style.width = `${(100 / this._grid.width())}%`;
       this._gridElement.appendChild(div);
       this._cellElements.push(div);
     }
