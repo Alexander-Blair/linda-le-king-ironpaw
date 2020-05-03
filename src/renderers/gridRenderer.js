@@ -1,5 +1,5 @@
-import { lumberjackExploring, lumberjackAttacking, lumberjackHurt } from './lumberjack';
-import { bearExploring, bearAttacking, bearHurt } from './bear';
+import { lumberjackExploring, lumberjackAttacking, lumberjackHurt } from '../game/lumberjack';
+import { bearExploring, bearAttacking, bearHurt } from '../game/bear';
 
 const bearClassMappings = {
   [bearExploring]: 'bear',

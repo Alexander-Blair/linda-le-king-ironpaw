@@ -1,4 +1,4 @@
-import RouteFinder from '../../src/routeFinder';
+import RouteFinder from '../../../src/game/routeFinder';
 
 describe('RouteFinder', () => {
   let routeFinder;

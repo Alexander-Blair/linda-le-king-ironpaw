@@ -18,6 +18,9 @@ export default function GridPosition(
 }
 
 GridPosition.prototype = {
+  gridWidth() { return this._gridWidth; },
+  gridHeight() { return this._gridHeight; },
+  treePositions() { return this._treePositions; },
   canMove(direction) {
     const nextXCoordinate = this.getNextXCoordinate(direction);
     const nextYCoordinate = this.getNextYCoordinate(direction);

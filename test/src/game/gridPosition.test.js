@@ -1,4 +1,4 @@
-import GridPosition from '../../src/gridPosition';
+import GridPosition from '../../../src/game/gridPosition';
 
 describe('GridPosition', () => {
   let gridPosition;

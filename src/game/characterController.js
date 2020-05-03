@@ -37,6 +37,7 @@ CharacterController.prototype = {
   },
   handleKeyUp() { this._grid.lumberjack().setExploring(); },
   setupLumberjackMovementListener() {
+    console.log('moving lumberjack');
     this._keyUpListener = () => this.handleKeyUp();
     this._keyDownListener = (e) => this.handleKeyDown(e);
     this._documentObject.addEventListener('keyup', this._keyUpListener);
@@ -49,12 +50,17 @@ CharacterController.prototype = {
       return;
     }
     if (this._grid.isBearAttacking()) {
+      console.log('clearing listeners');
       this._windowObject.clearInterval(this._bearMovementInterval);
       this.clearKeyListeners();
+      console.log('cleared listeners');
       this._grid.lumberjack().setExploring();
       this._windowObject.setTimeout(() => {
+        console.log('removing characters');
         this._gridRenderer.removeCharacters();
+        console.log('reinitializing grid positions');
         this._grid.initializeGridPositions();
+        console.log('setting up movements again');
         this.setupBearMovementInterval();
         this.setupLumberjackMovementListener();
       }, 1000);
@@ -64,6 +70,7 @@ CharacterController.prototype = {
   },
   setupBearMovementInterval() {
     this._bearMovementInterval = this._windowObject.setInterval(() => {
+      console.log('Moving bear');
       this._grid.bear().setExploring();
       this._grid.moveBear();
       this.render();
@@ -74,8 +81,10 @@ CharacterController.prototype = {
     this._documentObject.removeEventListener('keyup', this._keyUpListener);
   },
   loseGame() {
+    console.log('game lost');
     this._windowObject.clearInterval(this._bearMovementInterval);
     this.clearKeyListeners();
+    console.log('cleared listeners');
 
     this._windowObject.setTimeout(() => {
       this._pageNavigator.showGameOverPage();

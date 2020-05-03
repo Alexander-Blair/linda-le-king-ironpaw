@@ -1,4 +1,4 @@
-import { Lumberjack, maxPineCones } from '../../src/lumberjack';
+import { Lumberjack, maxPineCones } from '../../../src/game/lumberjack';
 
 describe('Lumberjack', () => {
   describe('dying', () => {

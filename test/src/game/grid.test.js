@@ -1,5 +1,5 @@
-import Grid from '../../src/grid';
-import { lumberjackExploring, lumberjackHurt } from '../../src/lumberjack';
+import Grid from '../../../src/game/grid';
+import { lumberjackExploring, lumberjackHurt } from '../../../src/game/lumberjack';
 
 describe('Grid', () => {
   describe('Lumberjack picking up a pinecone', () => {

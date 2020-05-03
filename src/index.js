@@ -1,8 +1,8 @@
-import CharacterController from './characterController';
-import Grid from './grid';
-import GridRenderer from './gridRenderer';
+import CharacterController from './game/characterController';
+import Grid from './game/grid';
+import GridRenderer from './renderers/gridRenderer';
 import PageNavigator from './pageNavigator';
-import generateGameConfig from './generateGameConfig';
+import generateGameConfig from './config/generateGameConfig';
 import '../css/style.css';
 
 document.addEventListener('DOMContentLoaded', () => {
