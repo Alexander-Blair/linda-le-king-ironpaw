@@ -1,6 +1,7 @@
 import { Bear } from './bear';
 import GridPosition from './gridPosition';
 import { Lumberjack } from './lumberjack';
+import containsTree from './containsTree';
 
 export default function Grid(gameConfig) {
   this._width = gameConfig.gridWidth;
@@ -8,8 +9,8 @@ export default function Grid(gameConfig) {
   this._lumberjack = new Lumberjack(gameConfig.lumberjackStartingLives);
   this._bear = new Bear(gameConfig.bearStartSpeed);
   this._gameConfig = gameConfig;
-  this._pineconeIndex = gameConfig.initialPineconeIndex;
   this._treePositions = gameConfig.treePositions;
+  this._pineconePosition = gameConfig.initialPineconePosition;
   this._score = 0;
   this.initializeGridPositions();
 }
@@ -44,15 +45,15 @@ Grid.prototype = {
   lumberjackGridPosition() { return this._lumberjackGridPosition; },
   lumberjack() { return this._lumberjack; },
   bear() { return this._bear; },
-  pineconeIndex() { return this._pineconeIndex; },
-  lastPineconeIndex() { return this._lastPineconeIndex; },
+  pineconePosition() { return this._pineconePosition; },
+  lastPineconePosition() { return this._lastPineconePosition; },
   moveBear() {
     const nextPosition = this._bearGridPosition.nextPosition(
-      this._lumberjackGridPosition._currentXCoordinate,
-      this._lumberjackGridPosition._currentYCoordinate,
+      this._lumberjackGridPosition.getCurrentPosition(),
     );
-    const currentXCoord = this._bearGridPosition._currentXCoordinate;
-    const currentYCoord = this._bearGridPosition._currentYCoordinate;
+    const bearPosition = this._bearGridPosition.getCurrentPosition();
+    const currentXCoord = bearPosition[0];
+    const currentYCoord = bearPosition[1];
     const newXCoord = nextPosition[0];
     const newYCoord = nextPosition[1];
     let direction;
@@ -86,20 +87,28 @@ Grid.prototype = {
     this._lumberjack.loseLife();
   },
   isLumberjackInCellWithPinecone() {
-    return this._lumberjackGridPosition.getCurrentCellIndex() === this.pineconeIndex();
-  },
-  generateRandomIndex() { return Math.floor(Math.random() * this.numberOfCells()); },
-  spawnPinecone() {
-    const bearIndex = this._bearGridPosition.getCurrentCellIndex();
-    let pineconeIndex = this.generateRandomIndex();
+    if (!this.pineconePosition()) return false;
 
-    while (this._treePositions.includes(pineconeIndex) || pineconeIndex === bearIndex) {
-      pineconeIndex = this.generateRandomIndex();
+    const lumberjackPosition = this._lumberjackGridPosition.getCurrentPosition();
+
+    return lumberjackPosition[0] === this.pineconePosition()[0]
+      && lumberjackPosition[1] === this.pineconePosition()[1];
+  },
+  generateRandomPosition() {
+    const index = Math.floor(Math.random() * this.numberOfCells());
+
+    return [parseInt(index / this._width, 10), index % this._width];
+  },
+  spawnPinecone() {
+    let pineconePosition = this.generateRandomPosition();
+
+    while (containsTree(this._treePositions, pineconePosition)) {
+      pineconePosition = this.generateRandomPosition();
     }
-    this._pineconeIndex = pineconeIndex;
+    this._pineconePosition = pineconePosition;
   },
   removePinecone() {
-    this._lastPineconeIndex = this._pineconeIndex;
-    this._pineconeIndex = null;
+    this._lastPineconePosition = this._pineconePosition;
+    this._pineconePosition = null;
   },
 };

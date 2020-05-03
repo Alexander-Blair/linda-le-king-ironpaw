@@ -52,7 +52,7 @@ GridRenderer.prototype = {
   },
   initializeTrees() {
     this._grid.treePositions().forEach((position) => {
-      const index = position[0] + position[1] * 10;
+      const index = position[0] + position[1] * this._grid.height();
       this._cellElements[index].classList.add('tree');
     });
   },
@@ -141,11 +141,16 @@ GridRenderer.prototype = {
   },
   updateScoreboard() { this._scoreboardElement.innerHTML = `Score: ${this._grid.score()}`; },
   renderPinecones() {
-    if (this._grid.pineconeIndex()) {
-      this._cellElements[this._grid.pineconeIndex()].classList.add('pinecone');
+    const pineconePosition = this._grid.pineconePosition();
+    const lastPineconePosition = this._grid.lastPineconePosition();
+
+    if (pineconePosition) {
+      const index = pineconePosition[0] + pineconePosition[1] * this._grid.width();
+      this._cellElements[index].classList.add('pinecone');
     }
-    if (this._grid.lastPineconeIndex()) {
-      this._cellElements[this._grid.lastPineconeIndex()].classList.remove('pinecone');
+    if (lastPineconePosition) {
+      const index = lastPineconePosition[0] + lastPineconePosition[1] * this._grid.width();
+      this._cellElements[index].classList.remove('pinecone');
     }
   },
 };

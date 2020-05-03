@@ -12,7 +12,7 @@ describe('Grid', () => {
         bearStartSpeed: 1000,
         gridWidth: 10,
         gridHeight: 10,
-        initialPineconeIndex: 15,
+        initialPineconePosition: [5, 1],
         lumberjackStartingLives: 3,
         lumberjackStartingXCoordinate: 0,
         lumberjackStartingYCoordinate: 0,
@@ -41,7 +41,7 @@ describe('Grid', () => {
         bearStartSpeed: 1000,
         gridWidth: 10,
         gridHeight: 10,
-        initialPineconeIndex: 15,
+        initialPineconePosition: [5, 1],
         lumberjackStartingLives: 3,
         lumberjackStartingXCoordinate: 0,
         lumberjackStartingYCoordinate: 0,
@@ -72,7 +72,7 @@ describe('Grid', () => {
       it('removes a life from the Lumberjack', () => {
         expect(grid.lumberjack().numberOfLives()).toEqual(3);
 
-        for (let i = 0; i < 5; i += 1) grid.moveBear('up');
+        for (let i = 0; i < 5; i += 1) grid.moveBear();
 
         expect(grid.lumberjack().numberOfLives()).toEqual(2);
       });
@@ -80,7 +80,7 @@ describe('Grid', () => {
       it('sets the correct statuses', () => {
         expect(grid.lumberjack().state()).toEqual(lumberjackExploring);
 
-        for (let i = 0; i < 5; i += 1) grid.moveBear('up');
+        for (let i = 0; i < 5; i += 1) grid.moveBear();
 
         expect(grid.lumberjack().state()).toEqual(lumberjackHurt);
       });
