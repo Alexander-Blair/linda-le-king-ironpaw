@@ -43,7 +43,11 @@ CharacterController.prototype = {
     this._documentObject.addEventListener('keydown', this._keyDownListener);
   },
   render() {
-    if (this._grid.lumberjack().isDead()) this.loseGame();
+    if (this._grid.lumberjack().isDead()) {
+      this._gridRenderer.render();
+      this.loseGame();
+      return;
+    }
     if (this._grid.isBearAttacking()) {
       this._windowObject.clearInterval(this._bearMovementInterval);
       this.clearKeyListeners();
