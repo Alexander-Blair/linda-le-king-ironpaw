@@ -1,7 +1,7 @@
 import { Bear } from './bear';
 import GridPosition from './gridPosition';
 import { Lumberjack } from './lumberjack';
-import containsTree from './containsTree';
+import containsTree from './utils/containsTree';
 
 export default function Grid(gameConfig) {
   this._width = gameConfig.gridWidth;

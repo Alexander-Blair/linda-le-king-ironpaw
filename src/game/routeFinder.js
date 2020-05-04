@@ -1,4 +1,4 @@
-import containsTree from './containsTree';
+import containsTree from './utils/containsTree';
 
 export default function RouteFinder(
   gridWidth,

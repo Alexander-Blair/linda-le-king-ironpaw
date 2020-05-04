@@ -1,5 +1,5 @@
 import RouteFinder from './routeFinder';
-import containsTree from './containsTree';
+import containsTree from './utils/containsTree';
 
 export default function GridPosition(
   startingXCoordinate,
