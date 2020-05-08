@@ -10,17 +10,12 @@ export default function GridPosition(
 ) {
   this._currentXCoordinate = startingXCoordinate;
   this._currentYCoordinate = startingYCoordinate;
-  this._previousXCoordinate = startingXCoordinate;
-  this._previousYCoordinate = startingYCoordinate;
   this._gridWidth = gridWidth;
   this._gridHeight = gridHeight;
   this._treePositions = treePositions;
 }
 
 GridPosition.prototype = {
-  gridWidth() { return this._gridWidth; },
-  gridHeight() { return this._gridHeight; },
-  treePositions() { return this._treePositions; },
   canMove(direction) {
     const nextXCoordinate = this.getNextXCoordinate(direction);
     const nextYCoordinate = this.getNextYCoordinate(direction);
@@ -32,8 +27,6 @@ GridPosition.prototype = {
       && !containsTree(this._treePositions, [nextXCoordinate, nextYCoordinate]);
   },
   move(direction) {
-    this._previousXCoordinate = this._currentXCoordinate;
-    this._previousYCoordinate = this._currentYCoordinate;
     this._currentXCoordinate = this.getNextXCoordinate(direction);
     this._currentYCoordinate = this.getNextYCoordinate(direction);
   },
@@ -45,12 +38,6 @@ GridPosition.prototype = {
   },
   getCurrentPosition() {
     return [this._currentXCoordinate, this._currentYCoordinate];
-  },
-  getCurrentCellIndex() {
-    return this._currentXCoordinate + this._currentYCoordinate * this._gridHeight;
-  },
-  getPreviousCellIndex() {
-    return this._previousXCoordinate + this._previousYCoordinate * this._gridHeight;
   },
   getRoute(targetXCoordinate, targetYCoordinate) {
     return new RouteFinder(

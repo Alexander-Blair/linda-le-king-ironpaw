@@ -1,17 +1,30 @@
-import { Bear } from './bear';
 import GridPosition from './gridPosition';
 import { Lumberjack } from './lumberjack';
 import containsTree from './utils/containsTree';
+import {
+  bearAttackLumberjack,
+  moveBear,
+  moveLumberjack,
+  pickUpPinecone,
+  spawnBear,
+  spawnPinecone,
+  spawnLumberjack,
+  updateBearStatus,
+  updateLumberjackStatus,
+} from '../redux/actions';
+import {
+  bearAttacking, bearExploring,
+  lumberjackExploring, lumberjackHurt,
+} from './statuses';
 
-export default function Grid(gameConfig) {
-  this._width = gameConfig.gridWidth;
-  this._height = gameConfig.gridHeight;
-  this._lumberjack = new Lumberjack(gameConfig.lumberjackStartingLives);
-  this._bear = new Bear(gameConfig.bearStartSpeed);
+export default function Grid(gameConfig, store) {
   this._gameConfig = gameConfig;
   this._treePositions = gameConfig.treePositions;
   this._pineconePosition = gameConfig.initialPineconePosition;
   this._score = 0;
+  this._store = store;
+
+  this._lumberjack = new Lumberjack(this._gameConfig.lumberjackStartingLives);
   this.initializeGridPositions();
 }
 
@@ -31,60 +44,75 @@ Grid.prototype = {
       this._gameConfig.gridHeight,
       this._gameConfig.treePositions,
     );
+    this._store.dispatch(
+      spawnBear(
+        ...this._bearGridPosition.getCurrentPosition(),
+        bearExploring,
+        this._gameConfig.gridWidth,
+      ),
+    );
+    this._store.dispatch(
+      spawnLumberjack(
+        ...this._lumberjackGridPosition.getCurrentPosition(),
+        this._lumberjack.numberOfLives(),
+        lumberjackExploring,
+        this._gameConfig.gridWidth,
+      ),
+    );
   },
-  treePositions() { return this._treePositions; },
+  bearMovementInterval() { return this._gameConfig.bearStartSpeed; },
   score() { return this._score; },
-  height() { return this._height; },
-  width() { return this._width; },
-  numberOfCells() { return this._height * this._width; },
   isBearAttacking() {
-    return this._bearGridPosition.getCurrentCellIndex()
-      === this._lumberjackGridPosition.getCurrentCellIndex();
+    const bearPosition = this._bearGridPosition.getCurrentPosition();
+    const lumberjackPosition = this._lumberjackGridPosition.getCurrentPosition();
+
+    return bearPosition[0] === lumberjackPosition[0] && bearPosition[1] === lumberjackPosition[1];
   },
-  bearGridPosition() { return this._bearGridPosition; },
-  lumberjackGridPosition() { return this._lumberjackGridPosition; },
   lumberjack() { return this._lumberjack; },
-  bear() { return this._bear; },
   pineconePosition() { return this._pineconePosition; },
-  lastPineconePosition() { return this._lastPineconePosition; },
   moveBear() {
-    const nextPosition = this._bearGridPosition.nextPosition(
+    let direction;
+
+    const [newXCoord, newYCoord] = this._bearGridPosition.nextPosition(
       this._lumberjackGridPosition.getCurrentPosition(),
     );
-    const bearPosition = this._bearGridPosition.getCurrentPosition();
-    const currentXCoord = bearPosition[0];
-    const currentYCoord = bearPosition[1];
-    const newXCoord = nextPosition[0];
-    const newYCoord = nextPosition[1];
-    let direction;
+    const [currentXCoord, currentYCoord] = this._bearGridPosition.getCurrentPosition();
 
     if (newXCoord < currentXCoord) direction = 'left';
     else if (newXCoord > currentXCoord) direction = 'right';
     else if (newYCoord < currentYCoord) direction = 'up';
     else direction = 'down';
 
-    this.bearGridPosition().move(direction);
+    this._bearGridPosition.move(direction);
+    this._store.dispatch(
+      moveBear(...this._bearGridPosition.getCurrentPosition(), this._gameConfig.gridWidth),
+    );
     this.updateStatuses();
   },
   moveLumberjack(direction) {
-    this._lumberjack.setExploring();
+    if (!this._lumberjackGridPosition.canMove(direction)) return;
 
-    if (!this.lumberjackGridPosition().canMove(direction)) return;
-
-    this.lumberjackGridPosition().move(direction);
+    this._lumberjackGridPosition.move(direction);
+    this._store.dispatch(moveLumberjack(
+      ...this._lumberjackGridPosition.getCurrentPosition(),
+      this._gameConfig.gridWidth,
+      direction,
+    ));
     this.updateStatuses();
 
     if (this.isLumberjackInCellWithPinecone() && this._lumberjack.canPickUpPineCone()) {
       this._lumberjack.pickUpPineCone();
       this.removePinecone();
+      this._store.dispatch(pickUpPinecone());
     }
   },
   updateStatuses() {
     if (!this.isBearAttacking()) return;
 
-    this._lumberjack.setHurt();
-    this._bear.setAttacking();
     this._lumberjack.loseLife();
+    this._store.dispatch(bearAttackLumberjack(this._lumberjack.numberOfLives()));
+    this._store.dispatch(updateBearStatus(bearAttacking));
+    this._store.dispatch(updateLumberjackStatus(lumberjackHurt));
   },
   isLumberjackInCellWithPinecone() {
     if (!this.pineconePosition()) return false;
@@ -95,9 +123,10 @@ Grid.prototype = {
       && lumberjackPosition[1] === this.pineconePosition()[1];
   },
   generateRandomPosition() {
-    const index = Math.floor(Math.random() * this.numberOfCells());
+    const numberOfCells = this._gameConfig.gridHeight * this._gameConfig.gridWidth;
+    const index = Math.floor(Math.random() * numberOfCells);
 
-    return [parseInt(index / this._width, 10), index % this._width];
+    return [parseInt(index / this._gameConfig.gridWidth, 10), index % this._gameConfig.gridWidth];
   },
   spawnPinecone() {
     let pineconePosition = this.generateRandomPosition();
@@ -106,9 +135,7 @@ Grid.prototype = {
       pineconePosition = this.generateRandomPosition();
     }
     this._pineconePosition = pineconePosition;
+    this._store.dispatch(spawnPinecone(...this.pineconePosition(), this._gameConfig.gridWidth));
   },
-  removePinecone() {
-    this._lastPineconePosition = this._pineconePosition;
-    this._pineconePosition = null;
-  },
+  removePinecone() { this._pineconePosition = null; },
 };

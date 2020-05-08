@@ -20,7 +20,9 @@
     "url": "https://github.com/Alexander-Blair/linda-le-king-ironpaw/issues"
   },
   "homepage": "https://github.com/Alexander-Blair/linda-le-king-ironpaw#readme",
-  "dependencies": {},
+  "dependencies": {
+    "redux": "^4.0.5"
+  },
   "devDependencies": {
     "@babel/preset-env": "^7.9.5",
     "babel-jest": "^25.3.0",

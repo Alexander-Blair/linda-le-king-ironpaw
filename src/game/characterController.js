@@ -1,12 +1,10 @@
 export default function CharacterController(
   grid,
-  gridRenderer,
   documentObject,
   windowObject,
   pageNavigator,
 ) {
   this._grid = grid;
-  this._gridRenderer = gridRenderer;
   this._documentObject = documentObject;
   this._windowObject = windowObject;
   this._pageNavigator = pageNavigator;
@@ -22,73 +20,47 @@ CharacterController.prototype = {
 
     e.preventDefault();
 
-    const numberOfPineconesBefore = this._grid.lumberjack().numberOfPinecones();
-
     this._grid.moveLumberjack(direction);
-    this.render();
-    this._gridRenderer.animateLumberjack(direction);
+    this.checkForBearAttack();
 
-    if (this._grid.lumberjack().numberOfPinecones() > numberOfPineconesBefore) {
+    if (!this._grid.pineconePosition()) {
       this._windowObject.setTimeout(() => {
-        this._grid.spawnPinecone();
-        this._gridRenderer.render();
+        if (!this._grid.pineconePosition()) this._grid.spawnPinecone();
       }, 1000);
     }
   },
-  handleKeyUp() { this._grid.lumberjack().setExploring(); },
   setupLumberjackMovementListener() {
-    console.log('moving lumberjack');
-    this._keyUpListener = () => this.handleKeyUp();
     this._keyDownListener = (e) => this.handleKeyDown(e);
-    this._documentObject.addEventListener('keyup', this._keyUpListener);
     this._documentObject.addEventListener('keydown', this._keyDownListener);
   },
-  render() {
+  checkForBearAttack() {
     if (this._grid.lumberjack().isDead()) {
-      this._gridRenderer.render();
       this.loseGame();
       return;
     }
     if (this._grid.isBearAttacking()) {
-      console.log('clearing listeners');
       this._windowObject.clearInterval(this._bearMovementInterval);
-      this.clearKeyListeners();
-      console.log('cleared listeners');
-      this._grid.lumberjack().setExploring();
+      this.clearKeyListener();
       this._windowObject.setTimeout(() => {
-        console.log('removing characters');
-        this._gridRenderer.removeCharacters();
-        console.log('reinitializing grid positions');
         this._grid.initializeGridPositions();
-        console.log('setting up movements again');
         this.setupBearMovementInterval();
         this.setupLumberjackMovementListener();
       }, 1000);
     }
-
-    this._gridRenderer.render();
   },
   setupBearMovementInterval() {
     this._bearMovementInterval = this._windowObject.setInterval(() => {
-      console.log('Moving bear');
-      this._grid.bear().setExploring();
       this._grid.moveBear();
-      this.render();
-    }, this._grid.bear().movementInterval());
+      this.checkForBearAttack();
+    }, this._grid.bearMovementInterval());
   },
-  clearKeyListeners() {
+  clearKeyListener() {
     this._documentObject.removeEventListener('keydown', this._keyDownListener);
-    this._documentObject.removeEventListener('keyup', this._keyUpListener);
   },
   loseGame() {
-    console.log('game lost');
     this._windowObject.clearInterval(this._bearMovementInterval);
-    this.clearKeyListeners();
-    console.log('cleared listeners');
+    this.clearKeyListener();
 
-    this._windowObject.setTimeout(() => {
-      this._pageNavigator.showGameOverPage();
-      this._gridRenderer.hideCells();
-    }, 600);
+    this._windowObject.setTimeout(() => this._pageNavigator.showGameOverPage(), 600);
   },
 };

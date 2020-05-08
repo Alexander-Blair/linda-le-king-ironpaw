@@ -1,5 +1,11 @@
-import { lumberjackExploring, lumberjackAttacking, lumberjackHurt } from '../game/lumberjack';
-import { bearExploring, bearAttacking, bearHurt } from '../game/bear';
+import {
+  lumberjackExploring,
+  lumberjackAttacking,
+  lumberjackHurt,
+  bearExploring,
+  bearAttacking,
+  bearHurt,
+} from '../game/statuses';
 
 const bearClassMappings = {
   [bearExploring]: 'bear',
@@ -21,19 +27,21 @@ const lumberjackAnimations = {
 };
 
 export default function GridRenderer(
-  grid,
   gridElement,
   lifebarElement,
   scoreboardElement,
-  windowObject,
+  store,
+  gameConfig,
 ) {
-  this._grid = grid;
   this._gridElement = gridElement;
   this._cellElements = [];
   this._lifebarElement = lifebarElement;
   this._lifeElements = [];
   this._scoreboardElement = scoreboardElement;
-  this._windowObject = windowObject;
+  this._store = store;
+  this._gameConfig = gameConfig;
+
+  store.subscribe(this.render.bind(this));
 }
 
 GridRenderer.prototype = {
@@ -44,15 +52,22 @@ GridRenderer.prototype = {
     this.render();
   },
   render() {
+    console.log(this._store.getState());
     this.renderLumberjack();
     this.renderBear();
-    this.updateScoreboard();
     this.renderPinecones();
     this.updateLifebar();
+    if (this._previousState && this.lumberjackCurrentIndex() !== this.lumberjackLastStateIndex()) {
+      this.animateLumberjack();
+    }
+    this._previousState = this._store.getState();
   },
+  bear() { return this._store.getState().bear; },
+  lumberjack() { return this._store.getState().lumberjack; },
+  pinecone() { return this._store.getState().pinecone; },
   initializeTrees() {
-    this._grid.treePositions().forEach((position) => {
-      const index = position[0] + position[1] * this._grid.height();
+    this._gameConfig.treePositions.forEach((position) => {
+      const index = position[0] + position[1] * this._gameConfig.gridHeight;
       this._cellElements[index].classList.add('tree');
     });
   },
@@ -60,11 +75,12 @@ GridRenderer.prototype = {
     const newGridElement = this._gridElement.cloneNode(false);
     this._gridElement.parentNode.replaceChild(newGridElement, this._gridElement);
     this._gridElement = newGridElement;
+    const numberOfCells = this._gameConfig.gridWidth * this._gameConfig.gridHeight;
 
-    for (let i = 0; i < this._grid.numberOfCells(); i += 1) {
+    for (let i = 0; i < numberOfCells; i += 1) {
       const div = document.createElement('div');
-      div.style.height = `${(100 / this._grid.height())}%`;
-      div.style.width = `${(100 / this._grid.width())}%`;
+      div.style.height = `${(100 / this._gameConfig.gridHeight)}%`;
+      div.style.width = `${(100 / this._gameConfig.gridWidth)}%`;
       this._gridElement.appendChild(div);
       this._cellElements.push(div);
     }
@@ -75,7 +91,7 @@ GridRenderer.prototype = {
     this._lifebarElement.parentNode.replaceChild(newLifebarElement, this._lifebarElement);
     this._lifebarElement = newLifebarElement;
 
-    for (let i = 0; i < this._grid.lumberjack().numberOfLives(); i += 1) {
+    for (let i = 0; i < this.lumberjack().numberOfLives; i += 1) {
       const div = document.createElement('div');
       div.classList.add('life');
       this._lifebarElement.appendChild(div);
@@ -83,54 +99,62 @@ GridRenderer.prototype = {
     }
   },
   hideCells() { this._cellElements.forEach((e) => e.classList.add('hidden')); },
-  removeCharacters() {
-    this._cellElements[this._grid.lumberjackGridPosition().getPreviousCellIndex()].classList.remove(
-      'lumberjack', 'lumberjackAttack', 'lumberjackRight', 'lumberjackLeft', 'lumberjackHurt',
-    );
-    this._cellElements[this._grid.lumberjackGridPosition().getCurrentCellIndex()].classList.remove(
-      'lumberjack', 'lumberjackAttack', 'lumberjackRight', 'lumberjackLeft', 'lumberjackHurt',
-    );
-    this._cellElements[this._grid.bearGridPosition().getPreviousCellIndex()].classList.remove(
-      'bearAttack', 'bearHurt', 'bear',
-    );
-    this._cellElements[this._grid.bearGridPosition().getCurrentCellIndex()].classList.remove(
-      'bearAttack', 'bearHurt', 'bear',
-    );
+  lumberjackCurrentIndex() { return this.lumberjack().index; },
+  lumberjackLastStateIndex() {
+    if (!this._previousState) return undefined;
+    return this._previousState.lumberjack.index;
+  },
+  bearCurrentIndex() { return this.bear().index; },
+  bearLastStateIndex() {
+    if (!this._previousState) return undefined;
+    return this._previousState.bear.index;
+  },
+  pineconeCurrentIndex() { return this.pinecone().index; },
+  pineconeLastStateIndex() {
+    if (!this._previousState) return undefined;
+    return this._previousState.pinecone.index;
   },
   renderLumberjack() {
-    const previousCellIndex = this._grid.lumberjackGridPosition().getPreviousCellIndex();
-    const currentCellIndex = this._grid.lumberjackGridPosition().getCurrentCellIndex();
+    const previousCellIndex = this.lumberjackLastStateIndex();
+    const currentCellIndex = this.lumberjackCurrentIndex();
 
-    if (previousCellIndex !== undefined) {
+    if (previousCellIndex !== undefined && previousCellIndex !== currentCellIndex) {
       this._cellElements[previousCellIndex].classList.remove(
         'lumberjack', 'lumberjackAttack', 'lumberjackRight', 'lumberjackLeft', 'lumberjackHurt',
       );
     }
-    const className = lumberjackClassMappings[this._grid.lumberjack().state()];
-
-    this._cellElements[currentCellIndex].classList.add(className);
+    if (currentCellIndex !== undefined) {
+      const className = lumberjackClassMappings[this.lumberjack().status];
+      this._cellElements[currentCellIndex].classList.add(className);
+    }
   },
-  animateLumberjack(direction) {
-    const lumberjackIndex = this._grid.lumberjackGridPosition().getCurrentCellIndex();
-    this._cellElements[lumberjackIndex].classList.add(lumberjackAnimations[direction]);
-    setTimeout(() => {
-      this._cellElements[lumberjackIndex].classList.remove(lumberjackAnimations[direction]);
-    }, 200);
+  animateLumberjack() {
+    const lumberjackIndex = this.lumberjackCurrentIndex();
+    const { direction } = this.lumberjack();
+
+    if (lumberjackIndex !== undefined) {
+      this._cellElements[lumberjackIndex].classList.add(lumberjackAnimations[direction]);
+      setTimeout(() => {
+        this._cellElements[lumberjackIndex].classList.remove(lumberjackAnimations[direction]);
+      }, 200);
+    }
   },
   renderBear() {
-    const previousCellIndex = this._grid.bearGridPosition().getPreviousCellIndex();
-    const currentCellIndex = this._grid.bearGridPosition().getCurrentCellIndex();
+    const previousCellIndex = this.bearLastStateIndex();
+    const currentCellIndex = this.bearCurrentIndex();
 
-    if (previousCellIndex !== undefined) {
+    if (previousCellIndex !== undefined && previousCellIndex !== currentCellIndex) {
       this._cellElements[previousCellIndex].classList.remove('bearAttack', 'bearHurt', 'bear');
     }
 
-    const className = bearClassMappings[this._grid.bear().state()];
-    this._cellElements[currentCellIndex].classList.add(className);
+    if (currentCellIndex !== undefined) {
+      const className = bearClassMappings[this.bear().status];
+      this._cellElements[currentCellIndex].classList.add(className);
+    }
   },
   updateLifebar() {
     const startingLives = this._lifeElements.length;
-    const currentLives = this._grid.lumberjack().numberOfLives();
+    const currentLives = this.lumberjack().numberOfLives;
 
     for (let i = 0; i < startingLives; i += 1) {
       const lifeElementIndex = startingLives - i - 1;
@@ -139,18 +163,16 @@ GridRenderer.prototype = {
       }
     }
   },
-  updateScoreboard() { this._scoreboardElement.innerHTML = `Score: ${this._grid.score()}`; },
+  // updateScoreboard() { this._scoreboardElement.innerHTML = `Score: ${this._grid.score()}`; },
   renderPinecones() {
-    const pineconePosition = this._grid.pineconePosition();
-    const lastPineconePosition = this._grid.lastPineconePosition();
+    const currentIndex = this.pineconeCurrentIndex();
+    const previousIndex = this.pineconeLastStateIndex();
 
-    if (pineconePosition) {
-      const index = pineconePosition[0] + pineconePosition[1] * this._grid.width();
-      this._cellElements[index].classList.add('pinecone');
+    if (currentIndex !== undefined) {
+      this._cellElements[currentIndex].classList.add('pinecone');
     }
-    if (lastPineconePosition) {
-      const index = lastPineconePosition[0] + lastPineconePosition[1] * this._grid.width();
-      this._cellElements[index].classList.remove('pinecone');
+    if (previousIndex !== undefined && previousIndex !== currentIndex) {
+      this._cellElements[previousIndex].classList.remove('pinecone');
     }
   },
 };
