@@ -8,6 +8,8 @@ export default function GridPosition(
   gridHeight,
   treePositions,
 ) {
+  this._startingXCoordinate = startingXCoordinate;
+  this._startingYCoordinate = startingYCoordinate;
   this._currentXCoordinate = startingXCoordinate;
   this._currentYCoordinate = startingYCoordinate;
   this._gridWidth = gridWidth;
@@ -16,6 +18,10 @@ export default function GridPosition(
 }
 
 GridPosition.prototype = {
+  reset() {
+    this._currentXCoordinate = this._startingXCoordinate;
+    this._currentYCoordinate = this._startingYCoordinate;
+  },
   canMove(direction) {
     const nextXCoordinate = this.getNextXCoordinate(direction);
     const nextYCoordinate = this.getNextYCoordinate(direction);

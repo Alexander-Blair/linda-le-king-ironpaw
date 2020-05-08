@@ -1,28 +1,24 @@
-import GridPosition from './gridPosition';
 import { Lumberjack } from './lumberjack';
 import containsTree from './utils/containsTree';
 import {
-  bearAttackLumberjack,
-  moveBear,
-  moveLumberjack,
-  pickUpPinecone,
-  spawnBear,
-  spawnPinecone,
-  spawnLumberjack,
-  updateBearStatus,
-  updateLumberjackStatus,
+  bearAttackLumberjack, moveBear, moveLumberjack,
+  pickUpPinecone, spawnBear, spawnPinecone,
+  spawnLumberjack, updateBearStatus, updateLumberjackStatus,
 } from '../redux/actions';
 import {
   bearAttacking, bearExploring,
   lumberjackExploring, lumberjackHurt,
 } from './statuses';
 
-export default function Grid(gameConfig, store) {
+export default function Grid(gameConfig, store, lumberjackGridPosition, bearGridPosition) {
   this._gameConfig = gameConfig;
+  this._store = store;
+  this._lumberjackGridPosition = lumberjackGridPosition;
+  this._bearGridPosition = bearGridPosition;
+
   this._treePositions = gameConfig.treePositions;
   this._pineconePosition = gameConfig.initialPineconePosition;
   this._score = 0;
-  this._store = store;
 
   this._lumberjack = new Lumberjack(this._gameConfig.lumberjackStartingLives);
   this.initializeGridPositions();
@@ -30,20 +26,8 @@ export default function Grid(gameConfig, store) {
 
 Grid.prototype = {
   initializeGridPositions() {
-    this._lumberjackGridPosition = new GridPosition(
-      this._gameConfig.lumberjackStartingXCoordinate,
-      this._gameConfig.lumberjackStartingYCoordinate,
-      this._gameConfig.gridWidth,
-      this._gameConfig.gridHeight,
-      this._gameConfig.treePositions,
-    );
-    this._bearGridPosition = new GridPosition(
-      this._gameConfig.bearStartingXCoordinate,
-      this._gameConfig.bearStartingYCoordinate,
-      this._gameConfig.gridWidth,
-      this._gameConfig.gridHeight,
-      this._gameConfig.treePositions,
-    );
+    this._lumberjackGridPosition.reset();
+    this._bearGridPosition.reset();
     this._store.dispatch(
       spawnBear(
         ...this._bearGridPosition.getCurrentPosition(),

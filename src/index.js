@@ -2,6 +2,7 @@ import { createStore } from 'redux';
 
 import CharacterController from './game/characterController';
 import Grid from './game/grid';
+import GridPosition from './game/gridPosition';
 import GridRenderer from './renderers/gridRenderer';
 import PageNavigator from './pageNavigator';
 import generateGameConfig from './config/generateGameConfig';
@@ -20,7 +21,21 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function createGameClasses() {
     const gameConfig = generateGameConfig();
-    const grid = new Grid(gameConfig, store);
+    const lumberjackGridPosition = new GridPosition(
+      gameConfig.lumberjackStartingXCoordinate,
+      gameConfig.lumberjackStartingYCoordinate,
+      gameConfig.gridWidth,
+      gameConfig.gridHeight,
+      gameConfig.treePositions,
+    );
+    const bearGridPosition = new GridPosition(
+      gameConfig.bearStartingXCoordinate,
+      gameConfig.bearStartingYCoordinate,
+      gameConfig.gridWidth,
+      gameConfig.gridHeight,
+      gameConfig.treePositions,
+    );
+    const grid = new Grid(gameConfig, store, lumberjackGridPosition, bearGridPosition);
 
     const gridRenderer = new GridRenderer(
       document.querySelector('#grid'),

@@ -116,40 +116,4 @@ describe('GridPosition', () => {
       });
     });
   });
-
-  describe('moving', () => {
-    const gridWidth = 10;
-    const gridHeight = 10;
-    const treePositions = [];
-
-    beforeEach(() => {
-      gridPosition = new GridPosition(
-        5, 2, gridWidth, gridHeight, treePositions,
-      );
-    });
-
-    describe('when first initialized', () => {
-      it('has the same current and previous index', () => {
-        expect(gridPosition.getCurrentCellIndex()).toEqual(25);
-        expect(gridPosition.getPreviousCellIndex()).toEqual(25);
-      });
-
-      it('keeps track of the previous indexes when moving', () => {
-        gridPosition.move('left');
-
-        expect(gridPosition.getPreviousCellIndex()).toEqual(25);
-        expect(gridPosition.getCurrentCellIndex()).toEqual(24);
-
-        gridPosition.move('down');
-
-        expect(gridPosition.getPreviousCellIndex()).toEqual(24);
-        expect(gridPosition.getCurrentCellIndex()).toEqual(34);
-
-        gridPosition.move('right');
-
-        expect(gridPosition.getPreviousCellIndex()).toEqual(34);
-        expect(gridPosition.getCurrentCellIndex()).toEqual(35);
-      });
-    });
-  });
 });
