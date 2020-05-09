@@ -338,6 +338,44 @@ describe('RouteFinder', () => {
       });
     });
 
+    describe('when there is a pile of trees in the way', () => {
+      const treePositions = [[0, 2], [1, 2], [2, 2]];
+      const gridWidth = 5;
+      const gridHeight = 5;
+
+      beforeEach(() => {
+        currentXCoordinate = 3;
+        currentYCoordinate = 3;
+        targetXCoordinate = 0;
+        targetYCoordinate = 1;
+
+        routeFinder = new RouteFinder(
+          gridWidth,
+          gridHeight,
+          treePositions,
+          currentXCoordinate,
+          currentYCoordinate,
+          targetXCoordinate,
+          targetYCoordinate,
+        );
+      });
+
+      // Diagram showing start position (S), target position (T), and expected route
+      // | | | | | |
+      // |T|←|←|↑| |
+      // |*|*|*|↑| |
+      // | | | |S| |
+      // | | | | | |
+
+      it('heads to the target', () => {
+        route = routeFinder.calculateRoute();
+
+        expect(JSON.stringify(route)).toEqual(
+          JSON.stringify([[3, 3], [3, 2], [3, 1], [2, 1], [1, 1], [0, 1]]),
+        );
+      });
+    });
+
     describe('when far away and blocked by multiple trees', () => {
       const treePositions = [
         [0, 2], [1, 2], [1, 6], [1, 7], [1, 8], [2, 2], [4, 3], [4, 4], [4, 5],
@@ -364,15 +402,15 @@ describe('RouteFinder', () => {
       });
 
       // Diagram showing start position (S), target position (T), and expected route
-      // |T| | | | | | |*|*|*|
-      // | | | | | | | | | | |
-      // |*|*|*| | | | | | | |
-      // | | | | |*| | | |*| |
-      // | | | | |*| | | |*| |
-      // | | | | |*| | | | | |
-      // | |*| | | | | |*| | |
-      // | |*| | | | | |*| | |
-      // | |*| | | | | |*| | |
+      // |T|↑| | | | | |*|*|*|
+      // | |←|←|↑| | | | | | |
+      // |*|*|*|←|←|↑| | | | |
+      // | | | | |*|↑| | |*| |
+      // | | | | |*|←|↑| |*| |
+      // | | | | |*| |←|←|↑| |
+      // | |*| | | | | |*|↑| |
+      // | |*| | | | | |*|↑| |
+      // | |*| | | | | |*|←|↑|
       // | | | | | | | | | |S|
 
       it('heads to the target', () => {
@@ -383,6 +421,55 @@ describe('RouteFinder', () => {
             [9, 9], [9, 8], [8, 8], [8, 7], [8, 6], [8, 5], [7, 5],
             [6, 5], [5, 5], [5, 4], [5, 3], [5, 2], [4, 2], [3, 2],
             [3, 1], [2, 1], [1, 1], [1, 0], [0, 0],
+          ]),
+        );
+      });
+    });
+
+    describe('when far away and blocked by multiple trees', () => {
+      const treePositions = [
+        [0, 2], [1, 2], [1, 6], [1, 7], [1, 8], [2, 2], [4, 3], [4, 4], [4, 5],
+        [7, 0], [7, 6], [7, 7], [7, 8], [8, 0], [8, 3], [8, 4], [9, 0],
+      ];
+      const gridWidth = 10;
+      const gridHeight = 10;
+
+      beforeEach(() => {
+        currentXCoordinate = 6;
+        currentYCoordinate = 5;
+        targetXCoordinate = 0;
+        targetYCoordinate = 1;
+
+        routeFinder = new RouteFinder(
+          gridWidth,
+          gridHeight,
+          treePositions,
+          currentXCoordinate,
+          currentYCoordinate,
+          targetXCoordinate,
+          targetYCoordinate,
+        );
+      });
+
+      // Diagram showing start position (S), target position (T), and expected route
+      // | | | | | | | |*|*|*|
+      // |T|←|←|↑| | | | | | |
+      // |*|*|*|↑| | | | | | |
+      // | | | |↑|*| | | |*| |
+      // | | | |↑|*| | | |*| |
+      // | | | |↑|*|←|S| | | |
+      // | |*| |←|←|↓| |*| | |
+      // | |*| | | | | |*| | |
+      // | |*| | | | | |*| | |
+      // | | | | | | | | | | |
+
+      it('heads to the target', () => {
+        route = routeFinder.calculateRoute();
+
+        expect(JSON.stringify(route)).toEqual(
+          JSON.stringify([
+            [6, 5], [5, 5], [5, 6], [4, 6], [3, 6], [3, 5], [3, 4],
+            [3, 3], [3, 2], [3, 1], [2, 1], [1, 1], [0, 1],
           ]),
         );
       });

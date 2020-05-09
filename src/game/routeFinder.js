@@ -23,12 +23,7 @@ RouteFinder.prototype = {
     return xCoordinate < 0 || yCoordinate < 0
       || xCoordinate >= this._gridWidth || yCoordinate >= this._gridHeight;
   },
-  routeContains(xCoordinate, yCoordinate, route) {
-    return route.some((routePosition) => (
-      routePosition[0] === xCoordinate && routePosition[1] === yCoordinate
-    ));
-  },
-  generateNextPossibleSquares(xCoordinate, yCoordinate, route) {
+  generateNextPossibleSquares(xCoordinate, yCoordinate) {
     const possibilities = [
       [xCoordinate, yCoordinate + 1], [xCoordinate, yCoordinate - 1],
       [xCoordinate + 1, yCoordinate], [xCoordinate - 1, yCoordinate],
@@ -36,12 +31,9 @@ RouteFinder.prototype = {
     return possibilities.filter((position) => (
       !containsTree(this._treePositions, position)
         && !this.isOutOfBounds(position[0], position[1])
-        && !this.routeContains(position[0], position[1], route)
     ));
   },
-  clone(array) {
-    return JSON.parse(JSON.stringify(array));
-  },
+  clone(array) { return JSON.parse(JSON.stringify(array)); },
   generateNextSteps(route) {
     const currentPosition = route[route.length - 1];
     const nextPossibleSquares = this.generateNextPossibleSquares(
@@ -54,60 +46,76 @@ RouteFinder.prototype = {
         return branch;
       });
   },
-  generateRouteByForce(route, firstTargetIndex, idealRoute) {
+  generateRouteByForce(route, target) {
     let routeAttempts = this.generateNextSteps(route);
-    while (!routeAttempts.some((routeAttempt) => (
-      this.reachedTarget(routeAttempt, firstTargetIndex, idealRoute)
-    ))) {
+    while (!routeAttempts.some((routeAttempt) => this.nextToTarget(routeAttempt, target))) {
       routeAttempts = routeAttempts.map((routeAttempt) => (
         this.generateNextSteps(routeAttempt)
       )).flat();
+      // console.log('next steps', routeAttempts);
+      // if (routeAttempts.length > 100) throw 'FISH!';
     }
-    return routeAttempts.filter((routeAttempt) => (
-      this.reachedTarget(routeAttempt, firstTargetIndex, idealRoute)
-    ))[0];
-  },
-  reachedTarget(routeAttempt, firstTargetIndex, idealRoute) {
-    const lastRoutePosition = routeAttempt[routeAttempt.length - 1];
-    const targets = idealRoute.filter((_, index) => index >= firstTargetIndex);
 
-    return targets.some((target) => (
-      lastRoutePosition[0] === target[0] && lastRoutePosition[1] === target[1]
+    return routeAttempts.filter((routeAttempt) => this.nextToTarget(routeAttempt, target))[0];
+  },
+  nextToTarget(routeAttempt, target) {
+    const lastRoutePosition = routeAttempt[routeAttempt.length - 1];
+    return this.areAdjacent(lastRoutePosition, target);
+  },
+  areAdjacent(firstPosition, secondPosition) {
+    if (!secondPosition) return true;
+
+    return Math.abs(firstPosition[0] - secondPosition[0])
+      + Math.abs(firstPosition[1] - secondPosition[1]) === 1;
+  },
+  linkGapsInIdealRoute(idealRoute) {
+    return idealRoute.reduce((route, currentRoutePosition, index) => {
+      const nextRoutePosition = idealRoute[index + 1];
+
+      route.push(currentRoutePosition);
+
+      if (!this.areAdjacent(currentRoutePosition, nextRoutePosition)) {
+        return this.generateRouteByForce(route, nextRoutePosition);
+      }
+
+      return route;
+    }, []);
+  },
+  removeUnavailableSquares(route) {
+    return route.filter((position) => (
+      !containsTree(this._treePositions, position)
+        && !this.isOutOfBounds(position[0], position[1])
     ));
+  },
+  squareOccurrences(route) {
+    const occurrences = {};
+
+    route.forEach((position) => {
+      const positionAsString = JSON.stringify(position);
+      const count = occurrences[positionAsString] || 0;
+      occurrences[positionAsString] = count + 1;
+    });
+    return occurrences;
+  },
+  removeRepeatedSquares(route) {
+    let skipping;
+    const occurrences = this.squareOccurrences(route);
+
+    return route.reduce((finalRoute, position) => {
+      if (occurrences[JSON.stringify(position)] > 1 && skipping) {
+        finalRoute.push(position);
+        skipping = false;
+      } else if (occurrences[JSON.stringify(position)] > 1 && !skipping) {
+        skipping = true;
+      } else if (!skipping) finalRoute.push(position);
+      return finalRoute;
+    }, []);
   },
   calculateRoute() {
     const idealRoute = this.calculateIdealRoute();
-    let route = [];
-    let rerouting = false;
-
-    idealRoute.forEach((idealRoutePosition, index) => {
-      if (containsTree(this._treePositions, idealRoutePosition)) {
-        if (rerouting) return;
-
-        rerouting = true;
-        let target;
-        let firstTargetIndex;
-        let potentialTargetIndex = index + 1;
-        while (!target && potentialTargetIndex < idealRoute.length) {
-          const potentialTarget = idealRoute[potentialTargetIndex];
-          if (!containsTree(this._treePositions, potentialTarget)) {
-            firstTargetIndex = potentialTargetIndex;
-            target = potentialTarget;
-          }
-          potentialTargetIndex += 1;
-        }
-
-        route = this.generateRouteByForce(route, firstTargetIndex, idealRoute);
-      } else {
-        rerouting = false;
-        const mostAdvancedPositionIndex = idealRoute.reduce((mostAdvancedIndex, position, i) => {
-          if (this.routeContains(position[0], position[1], route)) return i;
-          return mostAdvancedIndex;
-        }, -1);
-        if (index > mostAdvancedPositionIndex) route.push(idealRoutePosition);
-      }
-    });
-    return route;
+    const idealRouteWithUnavailableSquaresRemoved = this.removeUnavailableSquares(idealRoute);
+    const route = this.linkGapsInIdealRoute(idealRouteWithUnavailableSquaresRemoved);
+    return this.removeRepeatedSquares(route);
   },
   calculateIdealRoute() {
     let routeXCoordinate = this._currentXCoordinate;
