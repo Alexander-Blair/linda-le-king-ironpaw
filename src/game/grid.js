@@ -44,7 +44,6 @@ Grid.prototype = {
         this._gameConfig.gridWidth,
       ),
     );
-    this.spawnPinecone();
   },
   bearMovementInterval() { return this._gameConfig.bearStartSpeed; },
   score() { return this._score; },
@@ -68,7 +67,6 @@ Grid.prototype = {
   lumberjack() { return this._lumberjack; },
   availablePineconePosition() { return this._availablePineconePosition; },
   moveBear() {
-    console.log('MOVING BEAR');
     this._isBearHit = false;
     const [newXCoord, newYCoord] = this._bearGridPosition.nextPosition(
       this._lumberjackGridPosition.getCurrentPosition(),
@@ -158,7 +156,6 @@ Grid.prototype = {
       this._gameConfig.gridHeight,
       this._gameConfig.treePositions,
     );
-    if (this._firedPineconeGridPosition.canMove(this._firedPineconeDirection)) this.movePinecone();
     this._store.dispatch(
       throwPinecone(
         ...this._firedPineconeGridPosition.getCurrentPosition(),
@@ -166,10 +163,12 @@ Grid.prototype = {
         this._gameConfig.gridWidth,
       ),
     );
+
+    if (this._firedPineconeGridPosition.canMove(this._firedPineconeDirection)) this.movePinecone();
     return true;
   },
   movePinecone() {
-    if (this._firedPineconeSquaresTravelled > 5) return false;
+    if (this._firedPineconeSquaresTravelled >= 5 || this.isBearHit()) return false;
 
     const direction = this._firedPineconeDirection;
     if (this._firedPineconeGridPosition.canMove(direction)) {
