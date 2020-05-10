@@ -1,10 +1,12 @@
 import { combineReducers } from 'redux';
 import bear from './reducers/bear';
 import lumberjack from './reducers/lumberjack';
-import pinecone from './reducers/pinecone';
+import availablePinecone from './reducers/availablePinecone';
+import firedPinecone from './reducers/firedPinecone';
 
 export default combineReducers({
-  lumberjack,
   bear,
-  pinecone,
+  availablePinecone,
+  firedPinecone,
+  lumberjack,
 });

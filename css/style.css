@@ -259,6 +259,18 @@ body, html {
   background-image: url('../images/tree.png');
 }
 
+.firedPineconeRight {
+  background-image: url('../images/Pinecone.gif');
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+
+.firedPineconeLeft {
+  background-image: url('../images/PineconeFlipped.gif');
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+
 .pinecone {
   background-image: url('../images/pinecone.png');
   background-size: contain;

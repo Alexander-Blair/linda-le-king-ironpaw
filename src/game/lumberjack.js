@@ -14,4 +14,6 @@ Lumberjack.prototype = {
   canThrowPineCone() { return this._numberOfPineCones > 0; },
   canPickUpPineCone() { return this._numberOfPineCones < maxPineCones; },
   throwPineCone() { if (this.canThrowPineCone()) this._numberOfPineCones -= 1; },
+  direction() { return this._direction; },
+  updateDirection(direction) { this._direction = direction; },
 };

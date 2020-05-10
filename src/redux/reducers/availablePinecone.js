@@ -1,18 +1,18 @@
 import {
-  PICK_UP_PINECONE,
-  SPAWN_PINECONE,
+  PICK_UP_AVAILABLE_PINECONE,
+  SPAWN_AVAILABLE_PINECONE,
 } from '../actions';
 
-export default function pinecone(state = {}, action) {
+export default function availablePinecone(state = {}, action) {
   switch (action.type) {
-    case SPAWN_PINECONE:
+    case SPAWN_AVAILABLE_PINECONE:
       return {
         ...state,
         xCoordinate: action.xCoordinate,
         yCoordinate: action.yCoordinate,
         index: action.index,
       };
-    case PICK_UP_PINECONE:
+    case PICK_UP_AVAILABLE_PINECONE:
       return {
         ...state,
         xCoordinate: undefined,

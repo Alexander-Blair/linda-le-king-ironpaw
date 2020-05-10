@@ -32,6 +32,10 @@ GridPosition.prototype = {
       && nextYCoordinate < this._gridHeight
       && !containsTree(this._treePositions, [nextXCoordinate, nextYCoordinate]);
   },
+  moveTo(xCoordinate, yCoordinate) {
+    this._currentXCoordinate = xCoordinate;
+    this._currentYCoordinate = yCoordinate;
+  },
   move(direction) {
     this._currentXCoordinate = this.getNextXCoordinate(direction);
     this._currentYCoordinate = this.getNextYCoordinate(direction);

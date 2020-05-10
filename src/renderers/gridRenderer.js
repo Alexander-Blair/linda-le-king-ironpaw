@@ -13,6 +13,13 @@ const bearClassMappings = {
   [bearHurt]: 'bearHurt',
 };
 
+const firedPineconeMappings = {
+  left: 'firedPineconeLeft',
+  right: 'firedPineconeRight',
+  up: 'firedPineconeLeft',
+  down: 'firedPineconeRight',
+};
+
 const lumberjackClassMappings = {
   [lumberjackExploring]: 'lumberjack',
   [lumberjackAttacking]: 'lumberjackAttack',
@@ -64,7 +71,8 @@ GridRenderer.prototype = {
   },
   bear() { return this._store.getState().bear; },
   lumberjack() { return this._store.getState().lumberjack; },
-  pinecone() { return this._store.getState().pinecone; },
+  availablePinecone() { return this._store.getState().availablePinecone; },
+  firedPinecone() { return this._store.getState().firedPinecone; },
   initializeTrees() {
     this._gameConfig.treePositions.forEach((position) => {
       const index = position[0] + position[1] * this._gameConfig.gridHeight;
@@ -109,10 +117,15 @@ GridRenderer.prototype = {
     if (!this._previousState) return undefined;
     return this._previousState.bear.index;
   },
-  pineconeCurrentIndex() { return this.pinecone().index; },
-  pineconeLastStateIndex() {
+  availablePineconeCurrentIndex() { return this.availablePinecone().index; },
+  availablePineconeLastStateIndex() {
     if (!this._previousState) return undefined;
-    return this._previousState.pinecone.index;
+    return this._previousState.availablePinecone.index;
+  },
+  firedPineconeCurrentIndex() { return this.firedPinecone().index; },
+  firedPineconeLastStateIndex() {
+    if (!this._previousState) return undefined;
+    return this._previousState.firedPinecone.index;
   },
   renderLumberjack() {
     const previousCellIndex = this.lumberjackLastStateIndex();
@@ -165,14 +178,26 @@ GridRenderer.prototype = {
   },
   // updateScoreboard() { this._scoreboardElement.innerHTML = `Score: ${this._grid.score()}`; },
   renderPinecones() {
-    const currentIndex = this.pineconeCurrentIndex();
-    const previousIndex = this.pineconeLastStateIndex();
+    this.renderAvailablePinecone();
+    this.renderFiredPinecone();
+  },
+  renderAvailablePinecone() {
+    const currentIndex = this.availablePineconeCurrentIndex();
+    const previousIndex = this.availablePineconeLastStateIndex();
 
-    if (currentIndex !== undefined) {
-      this._cellElements[currentIndex].classList.add('pinecone');
-    }
+    if (currentIndex !== undefined) this._cellElements[currentIndex].classList.add('pinecone');
     if (previousIndex !== undefined && previousIndex !== currentIndex) {
       this._cellElements[previousIndex].classList.remove('pinecone');
+    }
+  },
+  renderFiredPinecone() {
+    const currentIndex = this.firedPineconeCurrentIndex();
+    const previousIndex = this.firedPineconeLastStateIndex();
+    const cssClass = firedPineconeMappings[this.firedPinecone().direction];
+
+    if (currentIndex !== undefined) this._cellElements[currentIndex].classList.add(cssClass);
+    if (previousIndex !== undefined && previousIndex !== currentIndex) {
+      this._cellElements[previousIndex].classList.remove('firedPineconeLeft', 'firedPineconeRight');
     }
   },
 };
