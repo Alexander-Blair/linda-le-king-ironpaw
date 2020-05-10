@@ -17,9 +17,8 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelector('#instructions'),
   );
 
-  const store = createStore(reducer);
-
   function createGameClasses() {
+    const store = createStore(reducer);
     const gameConfig = generateGameConfig();
     const lumberjackGridPosition = new GridPosition(
       gameConfig.lumberjackStartingXCoordinate,
@@ -45,11 +44,8 @@ document.addEventListener('DOMContentLoaded', () => {
       gameConfig,
     );
 
-    const characterController = new CharacterController(grid, document, window, pageNavigator);
-
     gridRenderer.init();
-    characterController.setupLumberjackMovementListener();
-    characterController.setupBearMovementInterval();
+    new CharacterController(grid, document, window, pageNavigator).startGame();
   }
 
   const newGameButton = document.querySelector('#new-game-button');
