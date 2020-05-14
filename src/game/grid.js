@@ -31,9 +31,7 @@ Grid.prototype = {
     this._bearGridPosition.reset();
     this._store.dispatch(
       spawnBear(
-        ...this._bearGridPosition.getCurrentPosition(),
-        bearExploring,
-        this._gameConfig.gridWidth,
+        ...this._bearGridPosition.getCurrentPosition(), bearExploring, this._gameConfig.gridWidth,
       ),
     );
     this._store.dispatch(
@@ -151,7 +149,7 @@ Grid.prototype = {
     this._firedPineconeSquaresTravelled = 0;
     this._firedPineconeDirection = this._lumberjack.direction();
     this._firedPineconeGridPosition = new GridPosition(
-      ...this._lumberjackGridPosition.getCurrentPosition(),
+      this._lumberjackGridPosition.getCurrentPosition(),
       this._gameConfig.gridWidth,
       this._gameConfig.gridHeight,
       this._gameConfig.treePositions,

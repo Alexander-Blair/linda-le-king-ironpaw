@@ -8,27 +8,21 @@ describe('RouteFinder', () => {
     const gridHeight = 5;
     const treePositions = [];
 
-    let currentXCoordinate;
-    let currentYCoordinate;
-    let targetXCoordinate;
-    let targetYCoordinate;
+    let currentPosition;
+    let targetPosition;
     let route;
 
     describe('when directly above the other grid position', () => {
       beforeEach(() => {
-        targetXCoordinate = 2;
-        targetYCoordinate = 4;
-        currentXCoordinate = 2;
-        currentYCoordinate = 0;
+        targetPosition = [2, 4];
+        currentPosition = [2, 0];
 
         routeFinder = new RouteFinder(
           gridWidth,
           gridHeight,
           treePositions,
-          currentXCoordinate,
-          currentYCoordinate,
-          targetXCoordinate,
-          targetYCoordinate,
+          currentPosition,
+          targetPosition,
         );
       });
 
@@ -50,19 +44,15 @@ describe('RouteFinder', () => {
 
     describe('when directly below the other grid position', () => {
       beforeEach(() => {
-        currentXCoordinate = 1;
-        currentYCoordinate = 4;
-        targetXCoordinate = 1;
-        targetYCoordinate = 0;
+        currentPosition = [1, 4];
+        targetPosition = [1, 0];
 
         routeFinder = new RouteFinder(
           gridWidth,
           gridHeight,
           treePositions,
-          currentXCoordinate,
-          currentYCoordinate,
-          targetXCoordinate,
-          targetYCoordinate,
+          currentPosition,
+          targetPosition,
         );
       });
 
@@ -84,19 +74,15 @@ describe('RouteFinder', () => {
 
     describe('when directly to the left of the other grid position', () => {
       beforeEach(() => {
-        currentXCoordinate = 0;
-        currentYCoordinate = 4;
-        targetXCoordinate = 4;
-        targetYCoordinate = 4;
+        currentPosition = [0, 4];
+        targetPosition = [4, 4];
 
         routeFinder = new RouteFinder(
           gridWidth,
           gridHeight,
           treePositions,
-          currentXCoordinate,
-          currentYCoordinate,
-          targetXCoordinate,
-          targetYCoordinate,
+          currentPosition,
+          targetPosition,
         );
       });
 
@@ -118,19 +104,15 @@ describe('RouteFinder', () => {
 
     describe('when directly to the right of the other grid position', () => {
       beforeEach(() => {
-        currentXCoordinate = 4;
-        currentYCoordinate = 3;
-        targetXCoordinate = 0;
-        targetYCoordinate = 3;
+        currentPosition = [4, 3];
+        targetPosition = [0, 3];
 
         routeFinder = new RouteFinder(
           gridWidth,
           gridHeight,
           treePositions,
-          currentXCoordinate,
-          currentYCoordinate,
-          targetXCoordinate,
-          targetYCoordinate,
+          currentPosition,
+          targetPosition,
         );
       });
 
@@ -152,19 +134,15 @@ describe('RouteFinder', () => {
 
     describe('when in bottom left corner, and target is top right', () => {
       beforeEach(() => {
-        currentXCoordinate = 0;
-        currentYCoordinate = 4;
-        targetXCoordinate = 4;
-        targetYCoordinate = 0;
+        currentPosition = [0, 4];
+        targetPosition = [4, 0];
 
         routeFinder = new RouteFinder(
           gridWidth,
           gridHeight,
           treePositions,
-          currentXCoordinate,
-          currentYCoordinate,
-          targetXCoordinate,
-          targetYCoordinate,
+          currentPosition,
+          targetPosition,
         );
       });
 
@@ -189,19 +167,15 @@ describe('RouteFinder', () => {
 
     describe('when in bottom right corner, and target is top left', () => {
       beforeEach(() => {
-        currentXCoordinate = 4;
-        currentYCoordinate = 4;
-        targetXCoordinate = 0;
-        targetYCoordinate = 0;
+        currentPosition = [4, 4];
+        targetPosition = [0, 0];
 
         routeFinder = new RouteFinder(
           gridWidth,
           gridHeight,
           treePositions,
-          currentXCoordinate,
-          currentYCoordinate,
-          targetXCoordinate,
-          targetYCoordinate,
+          currentPosition,
+          targetPosition,
         );
       });
 
@@ -224,19 +198,15 @@ describe('RouteFinder', () => {
 
     describe('when in top right corner, and target is bottom left', () => {
       beforeEach(() => {
-        currentXCoordinate = 4;
-        currentYCoordinate = 0;
-        targetXCoordinate = 0;
-        targetYCoordinate = 4;
+        currentPosition = [4, 0];
+        targetPosition = [0, 4];
 
         routeFinder = new RouteFinder(
           gridWidth,
           gridHeight,
           treePositions,
-          currentXCoordinate,
-          currentYCoordinate,
-          targetXCoordinate,
-          targetYCoordinate,
+          currentPosition,
+          targetPosition,
         );
       });
 
@@ -259,19 +229,15 @@ describe('RouteFinder', () => {
 
     describe('when in top left corner, and target is bottom right', () => {
       beforeEach(() => {
-        currentXCoordinate = 0;
-        currentYCoordinate = 0;
-        targetXCoordinate = 4;
-        targetYCoordinate = 4;
+        currentPosition = [0, 0];
+        targetPosition = [4, 4];
 
         routeFinder = new RouteFinder(
           gridWidth,
           gridHeight,
           treePositions,
-          currentXCoordinate,
-          currentYCoordinate,
-          targetXCoordinate,
-          targetYCoordinate,
+          currentPosition,
+          targetPosition,
         );
       });
 
@@ -294,10 +260,8 @@ describe('RouteFinder', () => {
   });
 
   describe('calculateRoute', () => {
-    let currentXCoordinate;
-    let currentYCoordinate;
-    let targetXCoordinate;
-    let targetYCoordinate;
+    let currentPosition;
+    let targetPosition;
     let route;
 
     describe('when directly below the other grid position, but blocked by trees', () => {
@@ -306,19 +270,15 @@ describe('RouteFinder', () => {
       const gridHeight = 5;
 
       beforeEach(() => {
-        currentXCoordinate = 1;
-        currentYCoordinate = 4;
-        targetXCoordinate = 1;
-        targetYCoordinate = 0;
+        currentPosition = [1, 4];
+        targetPosition = [1, 0];
 
         routeFinder = new RouteFinder(
           gridWidth,
           gridHeight,
           treePositions,
-          currentXCoordinate,
-          currentYCoordinate,
-          targetXCoordinate,
-          targetYCoordinate,
+          currentPosition,
+          targetPosition,
         );
       });
 
@@ -344,19 +304,15 @@ describe('RouteFinder', () => {
       const gridHeight = 5;
 
       beforeEach(() => {
-        currentXCoordinate = 3;
-        currentYCoordinate = 3;
-        targetXCoordinate = 0;
-        targetYCoordinate = 1;
+        currentPosition = [3, 3];
+        targetPosition = [0, 1];
 
         routeFinder = new RouteFinder(
           gridWidth,
           gridHeight,
           treePositions,
-          currentXCoordinate,
-          currentYCoordinate,
-          targetXCoordinate,
-          targetYCoordinate,
+          currentPosition,
+          targetPosition,
         );
       });
 
@@ -385,19 +341,15 @@ describe('RouteFinder', () => {
       const gridHeight = 10;
 
       beforeEach(() => {
-        currentXCoordinate = 9;
-        currentYCoordinate = 9;
-        targetXCoordinate = 0;
-        targetYCoordinate = 0;
+        currentPosition = [9, 9];
+        targetPosition = [0, 0];
 
         routeFinder = new RouteFinder(
           gridWidth,
           gridHeight,
           treePositions,
-          currentXCoordinate,
-          currentYCoordinate,
-          targetXCoordinate,
-          targetYCoordinate,
+          currentPosition,
+          targetPosition,
         );
       });
 
@@ -435,19 +387,15 @@ describe('RouteFinder', () => {
       const gridHeight = 10;
 
       beforeEach(() => {
-        currentXCoordinate = 6;
-        currentYCoordinate = 5;
-        targetXCoordinate = 0;
-        targetYCoordinate = 1;
+        currentPosition = [6, 5];
+        targetPosition = [0, 1];
 
         routeFinder = new RouteFinder(
           gridWidth,
           gridHeight,
           treePositions,
-          currentXCoordinate,
-          currentYCoordinate,
-          targetXCoordinate,
-          targetYCoordinate,
+          currentPosition,
+          targetPosition,
         );
       });
 

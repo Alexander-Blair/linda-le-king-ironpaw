@@ -22,10 +22,10 @@ describe('Lumberjack picking up a pinecone', () => {
       treePositions,
     };
     const bearGridPosition = new GridPosition(
-      9, 9, gridWidth, gridHeight, treePositions,
+      [9, 9], gridWidth, gridHeight, treePositions,
     );
     const lumberjackGridPosition = new GridPosition(
-      0, 0, gridWidth, gridHeight, treePositions,
+      [0, 0], gridWidth, gridHeight, treePositions,
     );
     grid = new Grid(
       gameConfig, store, lumberjackGridPosition, bearGridPosition,

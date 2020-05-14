@@ -24,10 +24,10 @@ describe('Lumberjack getting attacked by a bear', () => {
       treePositions,
     };
     const bearGridPosition = new GridPosition(
-      0, 5, gridWidth, gridHeight, treePositions,
+      [0, 5], gridWidth, gridHeight, treePositions,
     );
     const lumberjackGridPosition = new GridPosition(
-      0, 0, gridWidth, gridHeight, treePositions,
+      [0, 0], gridWidth, gridHeight, treePositions,
     );
     grid = new Grid(
       gameConfig, store, lumberjackGridPosition, bearGridPosition,

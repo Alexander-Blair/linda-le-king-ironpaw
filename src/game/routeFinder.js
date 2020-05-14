@@ -4,18 +4,14 @@ export default function RouteFinder(
   gridWidth,
   gridHeight,
   treePositions,
-  currentXCoordinate,
-  currentYCoordinate,
-  targetXCoordinate,
-  targetYCoordinate,
+  currentPosition,
+  targetPosition,
 ) {
   this._gridWidth = gridWidth;
   this._gridHeight = gridHeight;
   this._treePositions = treePositions;
-  this._currentXCoordinate = currentXCoordinate;
-  this._currentYCoordinate = currentYCoordinate;
-  this._targetXCoordinate = targetXCoordinate;
-  this._targetYCoordinate = targetYCoordinate;
+  this._currentPosition = currentPosition;
+  this._targetPosition = targetPosition;
 }
 
 RouteFinder.prototype = {
@@ -29,16 +25,13 @@ RouteFinder.prototype = {
       [xCoordinate + 1, yCoordinate], [xCoordinate - 1, yCoordinate],
     ];
     return possibilities.filter((position) => (
-      !containsTree(this._treePositions, position)
-        && !this.isOutOfBounds(position[0], position[1])
+      !containsTree(this._treePositions, position) && !this.isOutOfBounds(...position)
     ));
   },
   clone(array) { return JSON.parse(JSON.stringify(array)); },
   generateNextSteps(route) {
     const currentPosition = route[route.length - 1];
-    const nextPossibleSquares = this.generateNextPossibleSquares(
-      currentPosition[0], currentPosition[1], route,
-    );
+    const nextPossibleSquares = this.generateNextPossibleSquares(...currentPosition);
     return nextPossibleSquares
       .map((nextPosition) => {
         const branch = this.clone(route);
@@ -52,8 +45,6 @@ RouteFinder.prototype = {
       routeAttempts = routeAttempts.map((routeAttempt) => (
         this.generateNextSteps(routeAttempt)
       )).flat();
-      // console.log('next steps', routeAttempts);
-      // if (routeAttempts.length > 100) throw 'FISH!';
     }
 
     return routeAttempts.filter((routeAttempt) => this.nextToTarget(routeAttempt, target))[0];
@@ -118,26 +109,27 @@ RouteFinder.prototype = {
     return this.removeRepeatedSquares(route);
   },
   calculateIdealRoute() {
-    let routeXCoordinate = this._currentXCoordinate;
-    let routeYCoordinate = this._currentYCoordinate;
+    let [routeXCoordinate, routeYCoordinate] = this._currentPosition;
+    const [targetXCoordinate, targetYCoordinate] = this._targetPosition;
+
     const route = [[routeXCoordinate, routeYCoordinate]];
 
     const updateYCoordinate = () => {
-      if (this._targetYCoordinate < routeYCoordinate) {
+      if (targetYCoordinate < routeYCoordinate) {
         routeYCoordinate -= 1;
       } else routeYCoordinate += 1;
     };
 
     const updateXCoordinate = () => {
-      if (this._targetXCoordinate < routeXCoordinate) {
+      if (targetXCoordinate < routeXCoordinate) {
         routeXCoordinate -= 1;
       } else routeXCoordinate += 1;
     };
 
-    while (routeXCoordinate !== this._targetXCoordinate
-      || routeYCoordinate !== this._targetYCoordinate) {
-      if (Math.abs(routeXCoordinate - this._targetXCoordinate)
-        > Math.abs(routeYCoordinate - this._targetYCoordinate)) {
+    while (routeXCoordinate !== targetXCoordinate
+      || routeYCoordinate !== targetYCoordinate) {
+      if (Math.abs(routeXCoordinate - targetXCoordinate)
+        > Math.abs(routeYCoordinate - targetYCoordinate)) {
         updateXCoordinate();
       } else updateYCoordinate();
 

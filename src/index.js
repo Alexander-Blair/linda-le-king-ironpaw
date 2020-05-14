@@ -21,15 +21,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const store = createStore(reducer);
     const gameConfig = generateGameConfig();
     const lumberjackGridPosition = new GridPosition(
-      gameConfig.lumberjackStartingXCoordinate,
-      gameConfig.lumberjackStartingYCoordinate,
+      gameConfig.lumberjackStartingPosition,
       gameConfig.gridWidth,
       gameConfig.gridHeight,
       gameConfig.treePositions,
     );
     const bearGridPosition = new GridPosition(
-      gameConfig.bearStartingXCoordinate,
-      gameConfig.bearStartingYCoordinate,
+      gameConfig.bearStartingPosition,
       gameConfig.gridWidth,
       gameConfig.gridHeight,
       gameConfig.treePositions,

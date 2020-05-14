@@ -11,7 +11,7 @@ describe('GridPosition', () => {
     describe('when on the far left of the board', () => {
       beforeEach(() => {
         gridPosition = new GridPosition(
-          0, 4, gridWidth, gridHeight, treePositions,
+          [0, 4], gridWidth, gridHeight, treePositions,
         );
       });
 
@@ -27,7 +27,7 @@ describe('GridPosition', () => {
     describe('when on the far right of the board', () => {
       beforeEach(() => {
         gridPosition = new GridPosition(
-          9, 4, gridWidth, gridHeight, treePositions,
+          [9, 4], gridWidth, gridHeight, treePositions,
         );
       });
 
@@ -43,7 +43,7 @@ describe('GridPosition', () => {
     describe('when at the top of the board', () => {
       beforeEach(() => {
         gridPosition = new GridPosition(
-          0, 0, gridWidth, gridHeight, treePositions,
+          [0, 0], gridWidth, gridHeight, treePositions,
         );
       });
 
@@ -59,7 +59,7 @@ describe('GridPosition', () => {
     describe('when at the bottom of the board', () => {
       beforeEach(() => {
         gridPosition = new GridPosition(
-          0, 9, gridWidth, gridHeight, treePositions,
+          [0, 9], gridWidth, gridHeight, treePositions,
         );
       });
 
@@ -78,7 +78,7 @@ describe('GridPosition', () => {
       describe('when approaching from left', () => {
         it('returns false', () => {
           gridPosition = new GridPosition(
-            4, 1, gridWidth, gridHeight, treePositions,
+            [4, 1], gridWidth, gridHeight, treePositions,
           );
 
           expect(gridPosition.canMove('right')).toBe(false);
@@ -88,7 +88,7 @@ describe('GridPosition', () => {
       describe('when approaching from right', () => {
         it('returns false', () => {
           gridPosition = new GridPosition(
-            6, 1, gridWidth, gridHeight, treePositions,
+            [6, 1], gridWidth, gridHeight, treePositions,
           );
 
           expect(gridPosition.canMove('left')).toBe(false);
@@ -98,7 +98,7 @@ describe('GridPosition', () => {
       describe('when approaching from top', () => {
         it('returns false', () => {
           gridPosition = new GridPosition(
-            5, 0, gridWidth, gridHeight, treePositions,
+            [5, 0], gridWidth, gridHeight, treePositions,
           );
 
           expect(gridPosition.canMove('down')).toBe(false);
@@ -108,7 +108,7 @@ describe('GridPosition', () => {
       describe('when approaching from bottom', () => {
         it('returns false', () => {
           gridPosition = new GridPosition(
-            5, 2, gridWidth, gridHeight, treePositions,
+            [5, 2], gridWidth, gridHeight, treePositions,
           );
 
           expect(gridPosition.canMove('up')).toBe(false);

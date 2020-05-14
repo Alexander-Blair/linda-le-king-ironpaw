@@ -24,10 +24,10 @@ describe('Lumberjack throwing a pinecone into open space', () => {
       treePositions,
     };
     const bearGridPosition = new GridPosition(
-      9, 9, gridWidth, gridHeight, treePositions,
+      [9, 9], gridWidth, gridHeight, treePositions,
     );
     const lumberjackGridPosition = new GridPosition(
-      0, 0, gridWidth, gridHeight, treePositions,
+      [0, 0], gridWidth, gridHeight, treePositions,
     );
     grid = new Grid(
       gameConfig, store, lumberjackGridPosition, bearGridPosition,
@@ -87,10 +87,10 @@ describe('Lumberjack throwing a pinecone into a tree', () => {
       treePositions,
     };
     const bearGridPosition = new GridPosition(
-      9, 9, gridWidth, gridHeight, treePositions,
+      [9, 9], gridWidth, gridHeight, treePositions,
     );
     const lumberjackGridPosition = new GridPosition(
-      0, 0, gridWidth, gridHeight, treePositions,
+      [0, 0], gridWidth, gridHeight, treePositions,
     );
     grid = new Grid(
       gameConfig, store, lumberjackGridPosition, bearGridPosition,
@@ -130,10 +130,10 @@ describe('Lumberjack hitting the bear with a pinecone', () => {
       treePositions,
     };
     const bearGridPosition = new GridPosition(
-      6, 0, gridWidth, gridHeight, treePositions,
+      [6, 0], gridWidth, gridHeight, treePositions,
     );
     const lumberjackGridPosition = new GridPosition(
-      0, 0, gridWidth, gridHeight, treePositions,
+      [0, 0], gridWidth, gridHeight, treePositions,
     );
     grid = new Grid(
       gameConfig, store, lumberjackGridPosition, bearGridPosition,
@@ -171,10 +171,10 @@ describe('Bear walking into the pinecone', () => {
       treePositions,
     };
     const bearGridPosition = new GridPosition(
-      6, 0, gridWidth, gridHeight, treePositions,
+      [6, 0], gridWidth, gridHeight, treePositions,
     );
     const lumberjackGridPosition = new GridPosition(
-      0, 0, gridWidth, gridHeight, treePositions,
+      [0, 0], gridWidth, gridHeight, treePositions,
     );
     grid = new Grid(
       gameConfig, store, lumberjackGridPosition, bearGridPosition,

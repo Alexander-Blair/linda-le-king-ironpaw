@@ -7,10 +7,8 @@ export default function generateGameConfig() {
     [7, 0], [7, 6], [7, 7], [7, 8], [8, 0], [8, 3], [8, 4], [9, 0],
   ];
   const bearStartSpeed = 150;
-  const bearStartingXCoordinate = 9;
-  const bearStartingYCoordinate = 9;
-  const lumberjackStartingXCoordinate = 0;
-  const lumberjackStartingYCoordinate = 0;
+  const bearStartingPosition = [9, 9];
+  const lumberjackStartingPosition = [0, 0];
 
   return {
     gridWidth,
@@ -18,9 +16,7 @@ export default function generateGameConfig() {
     lumberjackStartingLives,
     treePositions,
     bearStartSpeed,
-    bearStartingXCoordinate,
-    bearStartingYCoordinate,
-    lumberjackStartingXCoordinate,
-    lumberjackStartingYCoordinate,
+    bearStartingPosition,
+    lumberjackStartingPosition,
   };
 }
