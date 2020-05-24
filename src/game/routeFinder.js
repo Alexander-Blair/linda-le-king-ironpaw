@@ -1,3 +1,5 @@
+import containsTree from './utils/containsTree';
+
 export default function RouteFinder(
   gridWidth,
   gridHeight,
@@ -33,9 +35,7 @@ RouteFinder.prototype = {
   },
   removeRepeatsOrTreeOccupiedSquares(possibilities, route) {
     return possibilities.filter((position) => (
-      !this._treePositions.some((treePosition) => (
-        treePosition[0] === position[0] && treePosition[1] === position[1]
-      )) && !route.some((routePosition) => (
+      !containsTree(this._treePositions, position) && !route.some((routePosition) => (
         routePosition[0] === position[0] && routePosition[1] === position[1]
       ))
     ));
