@@ -64,7 +64,10 @@ GridRenderer.prototype = {
     this.renderBear();
     this.renderPinecones();
     this.updateLifebar();
-    if (this._previousState && this.lumberjackCurrentIndex() !== this.lumberjackLastStateIndex()) {
+    this.updatePineconeInventory();
+    this.updateScoreboard();
+    this.updateRoundNumber();
+    if (this._previousState && this.lumberjack().index !== this.lumberjackLastStateIndex()) {
       this.animateLumberjack();
     }
     this._previousState = this._store.getState();
@@ -107,29 +110,13 @@ GridRenderer.prototype = {
     }
   },
   hideCells() { this._cellElements.forEach((e) => e.classList.add('hidden')); },
-  lumberjackCurrentIndex() { return this.lumberjack().index; },
   lumberjackLastStateIndex() {
     if (!this._previousState) return undefined;
     return this._previousState.lumberjack.index;
   },
-  bearCurrentIndex() { return this.bear().index; },
-  bearLastStateIndex() {
-    if (!this._previousState) return undefined;
-    return this._previousState.bear.index;
-  },
-  availablePineconeCurrentIndex() { return this.availablePinecone().index; },
-  availablePineconeLastStateIndex() {
-    if (!this._previousState) return undefined;
-    return this._previousState.availablePinecone.index;
-  },
-  firedPineconeCurrentIndex() { return this.firedPinecone().index; },
-  firedPineconeLastStateIndex() {
-    if (!this._previousState) return undefined;
-    return this._previousState.firedPinecone.index;
-  },
   renderLumberjack() {
     const previousCellIndex = this.lumberjackLastStateIndex();
-    const currentCellIndex = this.lumberjackCurrentIndex();
+    const currentCellIndex = this.lumberjack().index;
 
     if (previousCellIndex !== undefined && previousCellIndex !== currentCellIndex) {
       this._cellElements[previousCellIndex].classList.remove(
@@ -142,7 +129,7 @@ GridRenderer.prototype = {
     }
   },
   animateLumberjack() {
-    const lumberjackIndex = this.lumberjackCurrentIndex();
+    const lumberjackIndex = this.lumberjack().index;
     const { direction } = this.lumberjack();
 
     if (lumberjackIndex !== undefined) {
@@ -153,8 +140,8 @@ GridRenderer.prototype = {
     }
   },
   renderBear() {
-    const previousCellIndex = this.bearLastStateIndex();
-    const currentCellIndex = this.bearCurrentIndex();
+    const previousCellIndex = this._previousState ? this._previousState.bear.index : undefined;
+    const currentCellIndex = this.bear().index;
 
     if (previousCellIndex !== undefined && previousCellIndex !== currentCellIndex) {
       this._cellElements[previousCellIndex].classList.remove('bearAttack', 'bearHurt', 'bear');
@@ -182,8 +169,9 @@ GridRenderer.prototype = {
     this.renderFiredPinecone();
   },
   renderAvailablePinecone() {
-    const currentIndex = this.availablePineconeCurrentIndex();
-    const previousIndex = this.availablePineconeLastStateIndex();
+    const currentIndex = this.availablePinecone().index;
+    const previousIndex = this._previousState
+      ? this._previousState.availablePinecone.index : undefined;
 
     if (currentIndex !== undefined) this._cellElements[currentIndex].classList.add('pinecone');
     if (previousIndex !== undefined && previousIndex !== currentIndex) {
@@ -191,8 +179,9 @@ GridRenderer.prototype = {
     }
   },
   renderFiredPinecone() {
-    const currentIndex = this.firedPineconeCurrentIndex();
-    const previousIndex = this.firedPineconeLastStateIndex();
+    const currentIndex = this.firedPinecone().index;
+    const previousIndex = this._previousState
+      ? this._previousState.firedPinecone.index : undefined;
     const cssClass = firedPineconeMappings[this.firedPinecone().direction];
 
     if (currentIndex !== undefined) this._cellElements[currentIndex].classList.add(cssClass);
