@@ -9,15 +9,17 @@ export default function CharacterController(
 }
 
 const PINECONE_INTERVAL = 100;
+const PINECONE_DISAPPEARANCE_TIME = 300;
 const directionMappings = {
   38: 'up', 40: 'down', 37: 'left', 39: 'right',
 };
 
 CharacterController.prototype = {
-  startGame() {
+  startListenersAndIntervals() {
     this.setupLumberjackMovementListener();
     this.setupBearMovementInterval();
     this.setupPineconeSpawnInterval();
+    this.setupTimerInterval();
   },
   handleKeyDown(e) {
     e.stopPropagation();
@@ -49,14 +51,12 @@ CharacterController.prototype = {
     if (!this._grid.throwPinecone()) return;
 
     this._pineconeTravelInterval = this._windowObject.setInterval(() => {
-      if (this._grid.movePinecone()) {
-        this.checkForAttacks();
-      } else {
+      if (!this._grid.movePinecone()) {
         this._windowObject.clearInterval(this._pineconeTravelInterval);
         this._windowObject.setTimeout(() => {
           this._grid.removeFiredPinecone();
-        }, PINECONE_INTERVAL);
-      }
+        }, PINECONE_DISAPPEARANCE_TIME);
+      } else this.checkForAttacks();
     }, PINECONE_INTERVAL);
   },
   handleLumberjackMovement(e) {
@@ -80,21 +80,24 @@ CharacterController.prototype = {
     this._documentObject.addEventListener('keydown', this._keyDownListener);
   },
   checkForAttacks() {
-    if (this._grid.lumberjack().isDead()) {
-      this.loseGame();
-    } else if (this._grid.isBearHit() && !this._clearingBearInverval) {
+    if (this._grid.lumberjack().isDead()) { this.loseGame(); }
+
+    if (this._clearingBearInverval) return;
+
+    if (this._grid.isBearHit()) {
       this._clearingBearInverval = true;
       this._windowObject.clearInterval(this._pineconeTravelInterval);
-      this._windowObject.setTimeout(() => { this._grid.removeFiredPinecone(); }, 300);
       this._windowObject.clearInterval(this._bearMovementInterval);
 
       this._windowObject.setTimeout(() => {
+        this._grid.removeFiredPinecone();
+      }, PINECONE_DISAPPEARANCE_TIME);
+
+      this._windowObject.setTimeout(() => {
         this._windowObject.clearInterval(this._bearMovementInterval);
-        this.setupBearMovementInterval();
+        if (!this._isGamePaused) this.setupBearMovementInterval();
       }, 2000);
-    } else if (
-      this._grid.isBearAttacking() && !this._grid.isBearHit() && !this._clearingBearInverval
-    ) {
+    } else if (this._grid.isBearAttacking()) {
       this._clearingBearInverval = true;
 
       this._windowObject.clearInterval(this._bearMovementInterval);
@@ -102,6 +105,8 @@ CharacterController.prototype = {
       this.clearKeyListener();
 
       this._windowObject.setTimeout(() => {
+        if (this._isGamePaused) return;
+
         this._grid.initializeGridPositions();
         this.setupBearMovementInterval();
         this.setupLumberjackMovementListener();
@@ -111,6 +116,8 @@ CharacterController.prototype = {
   },
   setupBearMovementInterval() {
     this._bearMovementInterval = this._windowObject.setInterval(() => {
+      if (this._isGamePaused) return;
+
       this._grid.moveBear();
       this._clearingBearInverval = false;
       this.checkForAttacks();
@@ -119,11 +126,15 @@ CharacterController.prototype = {
   clearKeyListener() {
     this._documentObject.removeEventListener('keydown', this._keyDownListener);
   },
-  loseGame() {
+  clearListenersAndInvervals() {
     this._windowObject.clearInterval(this._bearMovementInterval);
     this._windowObject.clearInterval(this._pineconeTravelInterval);
     this._windowObject.clearInterval(this._spawnPineconeInterval);
+    this._windowObject.clearInterval(this._timerInterval);
     this.clearKeyListener();
+  },
+  loseGame() {
+    this.clearListenersAndInvervals();
 
     this._windowObject.setTimeout(() => this._pageNavigator.showGameOverPage(), 600);
   },
