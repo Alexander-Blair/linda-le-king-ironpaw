@@ -1,6 +1,7 @@
 import Lumberjack from './lumberjack';
 import GridPosition from './gridPosition';
 import containsTree from './utils/containsTree';
+import generateRandomPosition from './utils/generateRandomPosition';
 import {
   bearAttackLumberjack, moveBear, moveLumberjack, moveFiredPinecone,
   pickUpAvailablePinecone, removeFiredPinecone, spawnBear, spawnAvailablePinecone,
@@ -107,6 +108,7 @@ Grid.prototype = {
 
     if (this.isLumberjackInCellWithPinecone() && this._lumberjack.canPickUpPineCone()) {
       this._lumberjack.pickUpPineCone();
+      this._store.dispatch(pickUpAvailablePinecone(this._lumberjack.numberOfPinecones()));
       this.removeAvailablePinecone();
     }
     return true;
@@ -136,17 +138,17 @@ Grid.prototype = {
     return lumberjackPosition[0] === this.availablePineconePosition()[0]
       && lumberjackPosition[1] === this.availablePineconePosition()[1];
   },
-  generateRandomPosition() {
-    const numberOfCells = this._gameConfig.gridHeight * this._gameConfig.gridWidth;
-    const index = Math.floor(Math.random() * numberOfCells);
-
-    return [parseInt(index / this._gameConfig.gridWidth, 10), index % this._gameConfig.gridWidth];
-  },
   spawnPinecone() {
-    let pineconePosition = this.generateRandomPosition();
+    let pineconePosition = generateRandomPosition(
+      this._gameConfig.gridWidth,
+      this._gameConfig.gridHeight,
+    );
 
     while (containsTree(this._treePositions, pineconePosition)) {
-      pineconePosition = this.generateRandomPosition();
+      pineconePosition = generateRandomPosition(
+        this._gameConfig.gridWidth,
+        this._gameConfig.gridHeight,
+      );
     }
     this._availablePineconePosition = pineconePosition;
     this._store.dispatch(
@@ -154,7 +156,6 @@ Grid.prototype = {
     );
   },
   removeAvailablePinecone() {
-    this._store.dispatch(pickUpAvailablePinecone());
     this._availablePineconePosition = null;
   },
   removeFiredPinecone() {
