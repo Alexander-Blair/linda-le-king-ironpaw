@@ -48,7 +48,7 @@ describe('Lumberjack throwing a pinecone into open space', () => {
 
     expect(grid.lumberjack().numberOfPinecones()).toEqual(0);
     expect(store.dispatch).toHaveBeenCalledWith(
-      throwPinecone(1, 0, 'right', gridWidth),
+      throwPinecone(1, 0, 'right', gridWidth, 0),
     );
     expect(store.dispatch).toHaveBeenCalledWith(
       moveFiredPinecone(2, 0, gridWidth),

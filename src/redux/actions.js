@@ -51,8 +51,8 @@ export function moveLumberjack(xCoordinate, yCoordinate, gridWidth, direction) {
   };
 }
 
-export function pickUpAvailablePinecone() {
-  return { type: PICK_UP_AVAILABLE_PINECONE };
+export function pickUpAvailablePinecone(lumberjackNumberOfPinecones) {
+  return { type: PICK_UP_AVAILABLE_PINECONE, lumberjackNumberOfPinecones };
 }
 
 export function removeFiredPinecone() {
@@ -97,13 +97,20 @@ export function spawnLumberjack(
   };
 }
 
-export function throwPinecone(xCoordinate, yCoordinate, direction, gridWidth) {
+export function throwPinecone(
+  xCoordinate,
+  yCoordinate,
+  direction,
+  gridWidth,
+  lumberjackNumberOfPinecones,
+) {
   return {
     type: THROW_PINECONE,
     xCoordinate,
     yCoordinate,
     direction,
     index: positionToIndex(xCoordinate, yCoordinate, gridWidth),
+    lumberjackNumberOfPinecones,
   };
 }
 

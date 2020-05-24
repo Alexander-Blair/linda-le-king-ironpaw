@@ -1,7 +1,9 @@
 import {
   BEAR_ATTACK_LUMBERJACK,
   MOVE_LUMBERJACK,
+  PICK_UP_AVAILABLE_PINECONE,
   SPAWN_LUMBERJACK,
+  THROW_PINECONE,
   UPDATE_LUMBERJACK_STATUS,
 } from '../actions';
 
@@ -20,6 +22,11 @@ export default function lumberjack(state = {}, action) {
         direction: action.direction,
         index: action.index,
       };
+    case PICK_UP_AVAILABLE_PINECONE:
+      return {
+        ...state,
+        numberOfPinecones: action.lumberjackNumberOfPinecones,
+      };
     case SPAWN_LUMBERJACK:
       return {
         ...state,
@@ -29,6 +36,11 @@ export default function lumberjack(state = {}, action) {
         status: action.status,
         index: action.index,
         maxPinecones: action.maxPinecones,
+      };
+    case THROW_PINECONE:
+      return {
+        ...state,
+        numberOfPinecones: action.lumberjackNumberOfPinecones,
       };
     case UPDATE_LUMBERJACK_STATUS:
       return {

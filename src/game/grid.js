@@ -179,6 +179,7 @@ Grid.prototype = {
         ...this._firedPineconeGridPosition.getCurrentPosition(),
         this._firedPineconeDirection,
         this._gameConfig.gridWidth,
+        this._lumberjack.numberOfPinecones(),
       ),
     );
 
