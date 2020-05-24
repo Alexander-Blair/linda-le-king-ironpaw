@@ -10,6 +10,8 @@ export const SPAWN_AVAILABLE_PINECONE = 'SPAWN_AVAILABLE_PINECONE';
 export const THROW_PINECONE = 'THROW_PINECONE';
 export const UPDATE_BEAR_STATUS = 'UPDATE_BEAR_STATUS';
 export const UPDATE_LUMBERJACK_STATUS = 'UPDATE_LUMBERJACK_STATUS';
+export const UPDATE_ROUND_NUMBER = 'UPDATE_ROUND_NUMBER';
+export const UPDATE_SCORE = 'UPDATE_SCORE';
 
 function positionToIndex(xCoordinate, yCoordinate, gridWidth) {
   if (xCoordinate === undefined || yCoordinate === undefined) return undefined;
@@ -103,4 +105,12 @@ export function updateBearStatus(status) {
 
 export function updateLumberjackStatus(status) {
   return { type: UPDATE_LUMBERJACK_STATUS, status };
+}
+
+export function updateRoundNumber(roundNumber) {
+  return { type: UPDATE_ROUND_NUMBER, roundNumber };
+}
+
+export function updateScore(score) {
+  return { type: UPDATE_SCORE, score };
 }
