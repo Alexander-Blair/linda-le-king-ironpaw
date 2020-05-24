@@ -45,6 +45,7 @@ Grid.prototype = {
         this._lumberjack.numberOfLives(),
         lumberjackExploring,
         this._gameConfig.gridWidth,
+        this._gameConfig.lumberjackMaxPinecones,
       ),
     );
   },

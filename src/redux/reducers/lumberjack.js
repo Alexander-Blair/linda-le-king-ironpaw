@@ -28,6 +28,7 @@ export default function lumberjack(state = {}, action) {
         numberOfLives: action.numberOfLives,
         status: action.status,
         index: action.index,
+        maxPinecones: action.maxPinecones,
       };
     case UPDATE_LUMBERJACK_STATUS:
       return {

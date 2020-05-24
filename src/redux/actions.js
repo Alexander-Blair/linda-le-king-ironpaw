@@ -78,7 +78,14 @@ export function spawnBear(xCoordinate, yCoordinate, status, gridWidth) {
   };
 }
 
-export function spawnLumberjack(xCoordinate, yCoordinate, numberOfLives, status, gridWidth) {
+export function spawnLumberjack(
+  xCoordinate,
+  yCoordinate,
+  numberOfLives,
+  status,
+  gridWidth,
+  maxPinecones,
+) {
   return {
     type: SPAWN_LUMBERJACK,
     xCoordinate,
@@ -86,6 +93,7 @@ export function spawnLumberjack(xCoordinate, yCoordinate, numberOfLives, status,
     numberOfLives,
     status,
     index: positionToIndex(xCoordinate, yCoordinate, gridWidth),
+    maxPinecones,
   };
 }
 

@@ -1,5 +1,4 @@
 export default function Lumberjack(numberOfLives, maxPinecones) {
-  this._initialNumberOfLives = numberOfLives;
   this._numberOfLives = numberOfLives;
   this._numberOfPineCones = 0;
   this._maxPinecones = maxPinecones;
