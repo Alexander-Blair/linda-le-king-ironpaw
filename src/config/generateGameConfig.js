@@ -10,6 +10,7 @@ export default function generateGameConfig() {
   const bearStartSpeed = 150;
   const bearStartingPosition = [9, 9];
   const lumberjackStartingPosition = [0, 0];
+  const roundLengthSeconds = 20;
 
   return {
     gridWidth,
@@ -20,5 +21,6 @@ export default function generateGameConfig() {
     bearStartSpeed,
     bearStartingPosition,
     lumberjackStartingPosition,
+    roundLengthSeconds,
   };
 }

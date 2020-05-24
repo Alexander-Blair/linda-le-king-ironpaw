@@ -43,7 +43,9 @@ document.addEventListener('DOMContentLoaded', () => {
     );
 
     gridRenderer.init();
-    new CharacterController(grid, document, window, pageNavigator).startGame();
+    new CharacterController(
+      grid, document, window, pageNavigator, gameConfig,
+    ).startListenersAndIntervals();
   }
 
   const newGameButton = document.querySelector('#new-game-button');

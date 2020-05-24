@@ -4,7 +4,8 @@ import containsTree from './utils/containsTree';
 import {
   bearAttackLumberjack, moveBear, moveLumberjack, moveFiredPinecone,
   pickUpAvailablePinecone, removeFiredPinecone, spawnBear, spawnAvailablePinecone,
-  spawnLumberjack, throwPinecone, updateBearStatus, updateLumberjackStatus,
+  spawnLumberjack, throwPinecone, updateBearStatus,
+  updateLumberjackStatus, updateRoundNumber, updateScore,
 } from '../redux/actions';
 import {
   bearAttacking, bearExploring, bearHurt,
@@ -20,6 +21,7 @@ export default function Grid(gameConfig, store, lumberjackGridPosition, bearGrid
   this._treePositions = gameConfig.treePositions;
   this._availablePineconePosition = gameConfig.initialPineconePosition;
   this._score = 0;
+  this._roundNumber = 1;
 
   this._lumberjack = new Lumberjack(
     this._gameConfig.lumberjackStartingLives,
@@ -48,6 +50,15 @@ Grid.prototype = {
   },
   bearMovementInterval() { return this._gameConfig.bearStartSpeed; },
   score() { return this._score; },
+  nextRound() {
+    this.initializeGridPositions();
+    this._roundNumber += 1;
+    this._store.dispatch(updateRoundNumber(this._roundNumber));
+  },
+  incrementScoreFromTime() {
+    this._score += 10 * this._roundNumber;
+    this._store.dispatch(updateScore(this._score));
+  },
   isBearAttacking() {
     const bearPosition = this._bearGridPosition.getCurrentPosition();
     const lumberjackPosition = this._lumberjackGridPosition.getCurrentPosition();
@@ -100,7 +111,11 @@ Grid.prototype = {
     return true;
   },
   checkForBearHit() {
-    if (this.isBearHit()) this._store.dispatch(updateBearStatus(bearHurt));
+    if (this.isBearHit()) {
+      this._store.dispatch(updateBearStatus(bearHurt));
+      this._score += 50 * this._roundNumber;
+      this._store.dispatch(updateScore(this._score));
+    }
   },
   checkForBearAttack() {
     if (this.isBearHit()) return;

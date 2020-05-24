@@ -1,10 +1,11 @@
 export default function CharacterController(
-  grid, documentObject, windowObject, pageNavigator,
+  grid, documentObject, windowObject, pageNavigator, gameConfig,
 ) {
   this._grid = grid;
   this._documentObject = documentObject;
   this._windowObject = windowObject;
   this._pageNavigator = pageNavigator;
+  this._gameConfig = gameConfig;
 }
 
 const PINECONE_INTERVAL = 100;
@@ -24,6 +25,25 @@ CharacterController.prototype = {
       this.handleLumberjackMovement(e);
     }
     if (e.keyCode === 32) this.handlePineconeThrow();
+  },
+  setupTimerInterval() {
+    let seconds = 0;
+
+    this._timerInterval = this._windowObject.setInterval(() => {
+      if (seconds >= this._gameConfig.roundLengthSeconds) {
+        this._isGamePaused = true;
+        this.clearListenersAndInvervals();
+        this._windowObject.setTimeout(() => {
+          this._isGamePaused = false;
+          this._grid.nextRound();
+          this.startListenersAndIntervals();
+        }, 5000);
+        return;
+      }
+
+      if (seconds % 10 === 0) this._grid.incrementScoreFromTime();
+      seconds += 1;
+    }, 1000);
   },
   handlePineconeThrow() {
     if (!this._grid.throwPinecone()) return;
