@@ -21,6 +21,7 @@ describe('Lumberjack throwing a pinecone into open space', () => {
       gridHeight,
       initialPineconePosition: [1, 0],
       lumberjackStartingLives: 3,
+      lumberjackMaxPinecones: 10,
       treePositions,
     };
     const bearGridPosition = new GridPosition(
@@ -84,6 +85,7 @@ describe('Lumberjack throwing a pinecone into a tree', () => {
       gridHeight,
       initialPineconePosition: [1, 0],
       lumberjackStartingLives: 3,
+      lumberjackMaxPinecones: 10,
       treePositions,
     };
     const bearGridPosition = new GridPosition(
@@ -127,6 +129,7 @@ describe('Lumberjack hitting the bear with a pinecone', () => {
       gridHeight,
       initialPineconePosition: [1, 0],
       lumberjackStartingLives: 3,
+      lumberjackMaxPinecones: 10,
       treePositions,
     };
     const bearGridPosition = new GridPosition(
@@ -168,6 +171,7 @@ describe('Bear walking into the pinecone', () => {
       gridHeight,
       initialPineconePosition: [1, 0],
       lumberjackStartingLives: 3,
+      lumberjackMaxPinecones: 10,
       treePositions,
     };
     const bearGridPosition = new GridPosition(

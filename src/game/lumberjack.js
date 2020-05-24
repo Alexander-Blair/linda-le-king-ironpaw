@@ -1,8 +1,8 @@
-export const maxPineCones = 10;
-
-export function Lumberjack(numberOfLives) {
+export default function Lumberjack(numberOfLives, maxPinecones) {
+  this._initialNumberOfLives = numberOfLives;
   this._numberOfLives = numberOfLives;
   this._numberOfPineCones = 0;
+  this._maxPinecones = maxPinecones;
 }
 
 Lumberjack.prototype = {
@@ -12,7 +12,7 @@ Lumberjack.prototype = {
   numberOfPinecones() { return this._numberOfPineCones; },
   pickUpPineCone() { this._numberOfPineCones += 1; },
   canThrowPineCone() { return this._numberOfPineCones > 0; },
-  canPickUpPineCone() { return this._numberOfPineCones < maxPineCones; },
+  canPickUpPineCone() { return this._numberOfPineCones < this._maxPinecones; },
   throwPineCone() { if (this.canThrowPineCone()) this._numberOfPineCones -= 1; },
   direction() { return this._direction; },
   updateDirection(direction) { this._direction = direction; },

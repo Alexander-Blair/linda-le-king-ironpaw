@@ -1,12 +1,14 @@
-import { Lumberjack, maxPineCones } from '../../../src/game/lumberjack';
+import Lumberjack from '../../../src/game/lumberjack';
 
 describe('Lumberjack', () => {
+  const maxPinecones = 10;
+
   describe('dying', () => {
     let lumberjack;
     const numberOfLives = 3;
 
     beforeEach(() => {
-      lumberjack = new Lumberjack(numberOfLives);
+      lumberjack = new Lumberjack(numberOfLives, maxPinecones);
     });
 
     it('starts out with the given number of lives', () => {
@@ -28,7 +30,7 @@ describe('Lumberjack', () => {
     let lumberjack;
 
     beforeEach(() => {
-      lumberjack = new Lumberjack(1);
+      lumberjack = new Lumberjack(1, maxPinecones);
     });
 
     it('starts with no pinecones', () => {
@@ -50,7 +52,7 @@ describe('Lumberjack', () => {
     });
 
     it('cannot pick up any more pinecones after limit is reached', () => {
-      for (let i = 0; i < maxPineCones; i += 1) {
+      for (let i = 0; i < maxPinecones; i += 1) {
         expect(lumberjack.canPickUpPineCone()).toBe(true);
         lumberjack.pickUpPineCone();
       }

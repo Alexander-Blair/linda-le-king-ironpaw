@@ -19,6 +19,7 @@ describe('Lumberjack picking up a pinecone', () => {
       gridHeight,
       initialPineconePosition: [5, 1],
       lumberjackStartingLives: 3,
+      lumberjackMaxPinecones: 10,
       treePositions,
     };
     const bearGridPosition = new GridPosition(
@@ -39,6 +40,6 @@ describe('Lumberjack picking up a pinecone', () => {
     for (let i = 0; i < 5; i += 1) grid.moveLumberjack('right');
 
     expect(grid.lumberjack().numberOfPinecones()).toEqual(1);
-    expect(store.dispatch).toHaveBeenCalledWith(pickUpAvailablePinecone());
+    expect(store.dispatch).toHaveBeenCalledWith(pickUpAvailablePinecone(1));
   });
 });

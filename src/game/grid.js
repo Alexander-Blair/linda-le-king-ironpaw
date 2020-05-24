@@ -1,4 +1,4 @@
-import { Lumberjack } from './lumberjack';
+import Lumberjack from './lumberjack';
 import GridPosition from './gridPosition';
 import containsTree from './utils/containsTree';
 import {
@@ -21,7 +21,10 @@ export default function Grid(gameConfig, store, lumberjackGridPosition, bearGrid
   this._availablePineconePosition = gameConfig.initialPineconePosition;
   this._score = 0;
 
-  this._lumberjack = new Lumberjack(this._gameConfig.lumberjackStartingLives);
+  this._lumberjack = new Lumberjack(
+    this._gameConfig.lumberjackStartingLives,
+    this._gameConfig.lumberjackMaxPinecones,
+  );
   this.initializeGridPositions();
 }
 
