@@ -37,6 +37,7 @@ export default function GridRenderer(
   gridElement,
   lifebarElement,
   scoreboardElement,
+  roundNumberElement,
   store,
   gameConfig,
 ) {
@@ -45,6 +46,7 @@ export default function GridRenderer(
   this._lifebarElement = lifebarElement;
   this._lifeElements = [];
   this._scoreboardElement = scoreboardElement;
+  this._roundNumberElement = roundNumberElement;
   this._store = store;
   this._gameConfig = gameConfig;
 
@@ -62,7 +64,8 @@ GridRenderer.prototype = {
     console.log(this._store.getState());
     this.renderLumberjack();
     this.renderBear();
-    this.renderPinecones();
+    this.renderAvailablePinecone();
+    this.renderFiredPinecone();
     this.updateLifebar();
     this.updatePineconeInventory();
     this.updateScoreboard();
@@ -76,6 +79,7 @@ GridRenderer.prototype = {
   lumberjack() { return this._store.getState().lumberjack; },
   availablePinecone() { return this._store.getState().availablePinecone; },
   firedPinecone() { return this._store.getState().firedPinecone; },
+  gameStats() { return this._store.getState().gameStats; },
   initializeTrees() {
     this._gameConfig.treePositions.forEach((position) => {
       const index = position[0] + position[1] * this._gameConfig.gridHeight;
@@ -163,10 +167,9 @@ GridRenderer.prototype = {
       }
     }
   },
-  // updateScoreboard() { this._scoreboardElement.innerHTML = `Score: ${this._grid.score()}`; },
-  renderPinecones() {
-    this.renderAvailablePinecone();
-    this.renderFiredPinecone();
+  updateScoreboard() { this._scoreboardElement.innerHTML = `Score: ${this.gameStats().score}`; },
+  updateRoundNumber() {
+    this._roundNumberElement.innerHTML = `Round: ${this.gameStats().roundNumber}`;
   },
   renderAvailablePinecone() {
     const currentIndex = this.availablePinecone().index;

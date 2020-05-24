@@ -38,6 +38,7 @@ document.addEventListener('DOMContentLoaded', () => {
       document.querySelector('#grid'),
       document.querySelector('#lifebar'),
       document.querySelector('#scoreboard'),
+      document.querySelector('#round-number'),
       store,
       gameConfig,
     );
