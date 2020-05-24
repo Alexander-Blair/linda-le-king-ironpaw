@@ -1,6 +1,6 @@
 export default function generateGameConfig() {
-  const gridWidth = 12;
-  const gridHeight = 12;
+  const gridWidth = 18;
+  const gridHeight = 10;
   const lumberjackMaxPinecones = 10;
   const lumberjackStartingLives = 3;
   const treePositions = [

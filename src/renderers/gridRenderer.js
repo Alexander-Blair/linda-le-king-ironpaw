@@ -86,7 +86,7 @@ GridRenderer.prototype = {
   gameStats() { return this._store.getState().gameStats; },
   initializeTrees() {
     this._gameConfig.treePositions.forEach((position) => {
-      const index = position[0] + position[1] * this._gameConfig.gridHeight;
+      const index = position[0] + position[1] * this._gameConfig.gridWidth;
       this._cellElements[index].classList.add('tree');
     });
   },
