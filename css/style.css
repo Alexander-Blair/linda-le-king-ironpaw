@@ -164,8 +164,8 @@ body, html {
 }
 
 .game-statistic {
-  left: 1vw;
-  width: 30%;
+  left: -20vw;
+  width: 35%;
   height: 2vw;
   position: relative;
   text-align: left;
@@ -179,7 +179,17 @@ body, html {
   background-image: url('../images/heart.png');
   background-size: contain;
   background-repeat: no-repeat;
-  float: right;
+  float: left;
+  display: inline;
+}
+
+.lumberjack-pinecone {
+  height: 2vw;
+  width: 2vw;
+  background-image: url('../images/pinecone.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  float: left;
   display: inline;
 }
 

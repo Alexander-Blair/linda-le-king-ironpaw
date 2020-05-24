@@ -36,6 +36,7 @@ const lumberjackAnimations = {
 export default function GridRenderer(
   gridElement,
   lifebarElement,
+  pineconeInventoryElement,
   scoreboardElement,
   roundNumberElement,
   store,
@@ -45,6 +46,8 @@ export default function GridRenderer(
   this._cellElements = [];
   this._lifebarElement = lifebarElement;
   this._lifeElements = [];
+  this._pineconeInventoryElement = pineconeInventoryElement;
+  this._pineconeInventoryElements = [];
   this._scoreboardElement = scoreboardElement;
   this._roundNumberElement = roundNumberElement;
   this._store = store;
@@ -57,6 +60,7 @@ GridRenderer.prototype = {
   init() {
     this.initializeCells();
     this.initializeLifebar();
+    this.initializePineconeInventory();
     this.initializeTrees();
     this.render();
   },
@@ -100,9 +104,22 @@ GridRenderer.prototype = {
       this._cellElements.push(div);
     }
   },
+  initializePineconeInventory() {
+    const newPineconeElement = this._pineconeInventoryElement.cloneNode(false);
+    this._pineconeInventoryElement
+      .parentNode
+      .replaceChild(newPineconeElement, this._pineconeInventoryElement);
+    this._pineconeInventoryElement = newPineconeElement;
+
+    for (let i = 0; i < this.lumberjack().maxPinecones; i += 1) {
+      const div = document.createElement('div');
+      div.classList.add('lumberjack-pinecone', 'hidden');
+      this._pineconeInventoryElement.appendChild(div);
+      this._pineconeInventoryElements.push(div);
+    }
+  },
   initializeLifebar() {
     const newLifebarElement = this._lifebarElement.cloneNode(false);
-    newLifebarElement.innerHTML = 'Lives: ';
     this._lifebarElement.parentNode.replaceChild(newLifebarElement, this._lifebarElement);
     this._lifebarElement = newLifebarElement;
 
@@ -154,6 +171,15 @@ GridRenderer.prototype = {
     if (currentCellIndex !== undefined) {
       const className = bearClassMappings[this.bear().status];
       this._cellElements[currentCellIndex].classList.add(className);
+    }
+  },
+  updatePineconeInventory() {
+    const { numberOfPinecones, maxPinecones } = this.lumberjack();
+
+    for (let i = 0; i < maxPinecones; i += 1) {
+      if (numberOfPinecones > i) {
+        this._pineconeInventoryElements[i].classList.remove('hidden');
+      } else this._pineconeInventoryElements[i].classList.add('hidden');
     }
   },
   updateLifebar() {

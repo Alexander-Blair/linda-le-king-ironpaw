@@ -37,6 +37,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const gridRenderer = new GridRenderer(
       document.querySelector('#grid'),
       document.querySelector('#lifebar'),
+      document.querySelector('#pinecone-inventory'),
       document.querySelector('#scoreboard'),
       document.querySelector('#round-number'),
       store,
