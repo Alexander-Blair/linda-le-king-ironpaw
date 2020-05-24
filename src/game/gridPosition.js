@@ -31,13 +31,10 @@ GridPosition.prototype = {
   },
   getCurrentPosition() { return this._currentPosition; },
   getRoute(targetPosition) {
-    return new RouteFinder(
-      this._gridWidth,
-      this._gridHeight,
-      this._treePositions,
+    return this.routeFinder().calculateRoute(
       this._currentPosition,
       targetPosition,
-    ).calculateRoute();
+    );
   },
   nextPosition(targetPosition) {
     let route;
@@ -61,5 +58,11 @@ GridPosition.prototype = {
     if (nextPosition.length > 0) return nextPosition[0];
 
     return route[1];
+  },
+  routeFinder() {
+    if (!this._routeFinder) {
+      this._routeFinder = new RouteFinder(this._gridWidth, this._gridHeight, this._treePositions);
+    }
+    return this._routeFinder;
   },
 };
