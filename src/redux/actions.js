@@ -11,6 +11,7 @@ export const THROW_PINECONE = 'THROW_PINECONE';
 export const UPDATE_BEAR_STATUS = 'UPDATE_BEAR_STATUS';
 export const UPDATE_LUMBERJACK_STATUS = 'UPDATE_LUMBERJACK_STATUS';
 export const UPDATE_ROUND_NUMBER = 'UPDATE_ROUND_NUMBER';
+export const UPDATE_SECONDS_REMAINING = 'UPDATE_SECONDS_REMAINING';
 export const UPDATE_SCORE = 'UPDATE_SCORE';
 
 function positionToIndex(xCoordinate, yCoordinate, gridWidth) {
@@ -124,6 +125,10 @@ export function updateLumberjackStatus(status) {
 
 export function updateRoundNumber(roundNumber) {
   return { type: UPDATE_ROUND_NUMBER, roundNumber };
+}
+
+export function updateSecondsRemaining(secondsRemaining) {
+  return { type: UPDATE_SECONDS_REMAINING, secondsRemaining };
 }
 
 export function updateScore(score) {

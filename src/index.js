@@ -40,6 +40,7 @@ document.addEventListener('DOMContentLoaded', () => {
       document.querySelector('#pinecone-inventory'),
       document.querySelector('#scoreboard'),
       document.querySelector('#round-number'),
+      document.querySelector('#timer'),
       store,
       gameConfig,
     );

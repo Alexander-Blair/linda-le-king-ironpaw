@@ -1,6 +1,7 @@
 import {
   UPDATE_SCORE,
   UPDATE_ROUND_NUMBER,
+  UPDATE_SECONDS_REMAINING,
 } from '../actions';
 
 const initialState = {
@@ -19,6 +20,11 @@ export default function gameStats(state = initialState, action) {
       return {
         ...state,
         roundNumber: action.roundNumber,
+      };
+    case UPDATE_SECONDS_REMAINING:
+      return {
+        ...state,
+        secondsRemaining: action.secondsRemaining,
       };
     default:
       return state;

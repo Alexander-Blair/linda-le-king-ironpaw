@@ -39,6 +39,7 @@ export default function GridRenderer(
   pineconeInventoryElement,
   scoreboardElement,
   roundNumberElement,
+  timerElement,
   store,
   gameConfig,
 ) {
@@ -50,6 +51,7 @@ export default function GridRenderer(
   this._pineconeInventoryElements = [];
   this._scoreboardElement = scoreboardElement;
   this._roundNumberElement = roundNumberElement;
+  this._timerElement = timerElement;
   this._store = store;
   this._gameConfig = gameConfig;
 
@@ -73,6 +75,7 @@ GridRenderer.prototype = {
     this.updateLifebar();
     this.updatePineconeInventory();
     this.updateScoreboard();
+    this.updateTimer();
     this.updateRoundNumber();
     if (this._previousState && this.lumberjack().index !== this.lumberjackLastStateIndex()) {
       this.animateLumberjack();
@@ -194,6 +197,9 @@ GridRenderer.prototype = {
     }
   },
   updateScoreboard() { this._scoreboardElement.innerHTML = `Score: ${this.gameStats().score}`; },
+  updateTimer() {
+    this._timerElement.innerHTML = `Time: ${this.gameStats().secondsRemaining}`;
+  },
   updateRoundNumber() {
     this._roundNumberElement.innerHTML = `Round: ${this.gameStats().roundNumber}`;
   },

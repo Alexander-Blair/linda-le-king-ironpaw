@@ -14,6 +14,7 @@ export default function CharacterController(
 
 const PINECONE_INTERVAL = 100;
 const PINECONE_DISAPPEARANCE_TIME = 300;
+const ROUND_PAUSE_TIME = 3000;
 const directionMappings = {
   38: 'up', 40: 'down', 37: 'left', 39: 'right',
 };
@@ -49,22 +50,9 @@ CharacterController.prototype = {
     if (e.keyCode === 32) this.handlePineconeThrow();
   },
   setupTimerInterval() {
-    let seconds = 0;
-
     this._timerInterval = this._windowObject.setInterval(() => {
-      if (seconds >= this._gameConfig.roundLengthSeconds) {
-        this._isGamePaused = true;
-        this.clearListenersAndInvervals();
-        this._windowObject.setTimeout(() => {
-          this._isGamePaused = false;
-          this._grid.nextRound();
-          this.startListenersAndIntervals();
-        }, 5000);
-        return;
-      }
-
-      if (seconds % 10 === 0) this._grid.incrementScoreFromTime();
-      seconds += 1;
+      this._grid.incrementSeconds();
+      this.checkForStatusChange();
     }, 1000);
   },
   removeFiredPinecone() {

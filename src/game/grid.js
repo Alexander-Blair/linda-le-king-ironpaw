@@ -7,6 +7,7 @@ import {
   pickUpAvailablePinecone, removeFiredPinecone, spawnBear, spawnAvailablePinecone,
   spawnLumberjack, throwPinecone, updateBearStatus,
   updateLumberjackStatus, updateRoundNumber, updateScore,
+  updateSecondsRemaining,
 } from '../redux/actions';
 import {
   bearAttacking, bearExploring, bearHurt,
@@ -26,6 +27,7 @@ export default function Grid(gameConfig, store, lumberjackGridPosition, bearGrid
   this._availablePineconePosition = gameConfig.initialPineconePosition;
   this._score = 0;
   this._roundNumber = 1;
+  this._secondsRemaining = this._gameConfig.roundLengthSeconds;
 
   this._lumberjack = new Lumberjack(
     this._gameConfig.lumberjackStartingLives,
@@ -53,12 +55,25 @@ Grid.prototype = {
         this._gameConfig.lumberjackMaxPinecones,
       ),
     );
+    this._store.dispatch(updateSecondsRemaining(this._secondsRemaining));
   },
-  bearMovementInterval() { return this._gameConfig.bearStartSpeed; },
+  bearMovementInterval() {
+    const i = this._gameConfig.bearStartSpeed - (this._roundNumber - 1) * 15;
+    return i;
+  },
+  incrementSeconds() {
+    if (this._secondsRemaining <= 0) {
+      this._gameStatus = PAUSED;
+    } else {
+      this._store.dispatch(updateSecondsRemaining(this._secondsRemaining));
+      this._secondsRemaining -= 1;
+    }
+  },
   gameStatus() { return this._gameStatus; },
   score() { return this._score; },
   nextRound() {
     this.initializeGridPositions();
+    this._secondsRemaining = this._gameConfig.roundLengthSeconds;
     this._roundNumber += 1;
     this._store.dispatch(updateRoundNumber(this._roundNumber));
   },
@@ -133,6 +148,7 @@ Grid.prototype = {
       this._gameStatus = LUMBERJACK_HURT;
       this._lumberjack.loseLife();
       if (this._lumberjack.isDead()) this._gameStatus = GAME_OVER;
+
       this._store.dispatch(bearAttackLumberjack(this._lumberjack.numberOfLives()));
       this._store.dispatch(updateBearStatus(bearAttacking));
       this._store.dispatch(updateLumberjackStatus(lumberjackHurt));
