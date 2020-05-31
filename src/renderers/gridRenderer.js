@@ -5,7 +5,7 @@ import {
   bearExploring,
   bearAttacking,
   bearHurt,
-} from '../game/statuses';
+} from '../game/characterStatuses';
 
 const bearClassMappings = {
   [bearExploring]: 'bear',

@@ -1,6 +1,6 @@
 import Grid from '../../../../src/game/grid';
 import GridPosition from '../../../../src/game/gridPosition';
-import { lumberjackHurt, bearAttacking } from '../../../../src/game/statuses';
+import { lumberjackHurt, bearAttacking } from '../../../../src/game/characterStatuses';
 import {
   updateLumberjackStatus,
   updateBearStatus,

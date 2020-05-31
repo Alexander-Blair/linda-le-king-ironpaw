@@ -1,6 +1,6 @@
 import Grid from '../../../../src/game/grid';
 import GridPosition from '../../../../src/game/gridPosition';
-import { bearHurt } from '../../../../src/game/statuses';
+import { bearHurt } from '../../../../src/game/characterStatuses';
 import {
   moveFiredPinecone,
   throwPinecone,

@@ -11,7 +11,7 @@ import {
 import {
   bearAttacking, bearExploring, bearHurt,
   lumberjackExploring, lumberjackHurt,
-} from './statuses';
+} from './characterStatuses';
 
 export default function Grid(gameConfig, store, lumberjackGridPosition, bearGridPosition) {
   this._gameConfig = gameConfig;
