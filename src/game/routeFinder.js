@@ -6,8 +6,6 @@ export default function RouteFinder(gridWidth, gridHeight, treePositions) {
   this._treePositions = treePositions;
 }
 
-const MAXIMUM_CONCURRENT_BRANCES = 64;
-
 RouteFinder.prototype = {
   generateAllPossibleSteps(currentPosition) {
     const possibilities = [];
@@ -25,45 +23,28 @@ RouteFinder.prototype = {
 
     return possibilities;
   },
-  removeRepeatsOrTreeOccupiedSquares(possibilities, route) {
-    return possibilities.filter((position) => (
-      !containsTree(this._treePositions, position) && !route.some((routePosition) => (
-        routePosition[0] === position[0] && routePosition[1] === position[1]
-      ))
+  squareInRouteAlready(route, position) {
+    return route.some((routePosition) => (
+      routePosition[0] === position[0] && routePosition[1] === position[1]
     ));
   },
-  generateNextPossibleSteps(currentPosition, route) {
-    let possibilities = this.generateAllPossibleSteps(currentPosition);
-    possibilities = this.removeRepeatsOrTreeOccupiedSquares(possibilities, route);
-    return possibilities;
-  },
   generateNextAttempts(route) {
-    const currentPosition = route[route.length - 1];
-    const nextPossibleSteps = this.generateNextPossibleSteps(currentPosition, route);
-    return nextPossibleSteps
+    return this.generateAllPossibleSteps(route[route.length - 1])
+      .filter((position) => (
+        !containsTree(this._treePositions, position)
+        && !this.squareInRouteAlready(route, position)
+      ))
       .map((nextPosition) => {
-        const branch = this.clone(route);
+        const branch = route.map((position) => position.slice());
         branch.push(nextPosition);
         return branch;
       });
-  },
-  distanceFrom(currentPosition, targetPosition) {
-    return Math.abs(currentPosition[0] - targetPosition[0])
-      + Math.abs(currentPosition[1] - targetPosition[1]);
-  },
-  selectMostPromisingRoutes(routeAttempts, targetPosition) {
-    return routeAttempts.sort((first, second) => {
-      const firstDistance = this.distanceFrom(first[first.length - 1], targetPosition);
-      const secondDistance = this.distanceFrom(second[second.length - 1], targetPosition);
-      return firstDistance >= secondDistance ? 1 : -1;
-    }).slice(0, MAXIMUM_CONCURRENT_BRANCES - 1);
   },
   reachedTarget(routeAttempt, targetPosition) {
     const currentPosition = routeAttempt[routeAttempt.length - 1];
     return targetPosition[0] === currentPosition[0]
       && targetPosition[1] === currentPosition[1];
   },
-  clone(array) { return JSON.parse(JSON.stringify(array)); },
   orderAttempts(routeAttempts, targetPosition) {
     return routeAttempts.sort((first, second) => {
       const firstCurrentPosition = first[first.length - 1];
@@ -80,16 +61,29 @@ RouteFinder.prototype = {
       return firstLargestDistance > secondLargestDistance ? 1 : -1;
     });
   },
+  removeRoutesWithSameCurrentPosition(routeAttempts) {
+    const endingPositions = [];
+
+    return routeAttempts.filter((routeAttempt) => {
+      const endingPosition = routeAttempt[routeAttempt.length - 1];
+      const positionAlreadySeen = endingPositions.some((position) => (
+        position[0] === endingPosition[0] && position[1] === endingPosition[1]
+      ));
+      if (!positionAlreadySeen) endingPositions.push(endingPosition);
+
+      return !positionAlreadySeen;
+    });
+  },
   calculateRoute(startPosition, targetPosition) {
     let routeAttempts = this.generateNextAttempts([startPosition]);
     while (
-      !routeAttempts
-      || !routeAttempts.some((routeAttempt) => this.reachedTarget(routeAttempt, targetPosition))
+      !routeAttempts.some((routeAttempt) => this.reachedTarget(routeAttempt, targetPosition))
     ) {
-      routeAttempts = routeAttempts
-        .map((routeAttempt) => this.generateNextAttempts(routeAttempt)).flat();
+      routeAttempts = routeAttempts.map((routeAttempt) => (
+        this.generateNextAttempts(routeAttempt)
+      )).flat();
 
-      routeAttempts = this.selectMostPromisingRoutes(routeAttempts, targetPosition);
+      routeAttempts = this.removeRoutesWithSameCurrentPosition(routeAttempts);
       routeAttempts = this.orderAttempts(routeAttempts, targetPosition);
     }
 
