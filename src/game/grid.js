@@ -12,6 +12,9 @@ import {
   bearAttacking, bearExploring, bearHurt,
   lumberjackExploring, lumberjackHurt,
 } from './characterStatuses';
+import {
+  PLAYING, PAUSED, BEAR_HIT, LUMBERJACK_HURT, GAME_OVER,
+} from './gameStatuses';
 
 export default function Grid(gameConfig, store, lumberjackGridPosition, bearGridPosition) {
   this._gameConfig = gameConfig;
@@ -33,6 +36,7 @@ export default function Grid(gameConfig, store, lumberjackGridPosition, bearGrid
 
 Grid.prototype = {
   initializeGridPositions() {
+    this._gameStatus = PLAYING;
     this._lumberjackGridPosition.reset();
     this._bearGridPosition.reset();
     this._store.dispatch(
@@ -51,6 +55,7 @@ Grid.prototype = {
     );
   },
   bearMovementInterval() { return this._gameConfig.bearStartSpeed; },
+  gameStatus() { return this._gameStatus; },
   score() { return this._score; },
   nextRound() {
     this.initializeGridPositions();
@@ -68,20 +73,18 @@ Grid.prototype = {
     return bearPosition[0] === lumberjackPosition[0] && bearPosition[1] === lumberjackPosition[1];
   },
   isBearHit() {
-    if (this._isBearHit) return true;
     if (!this._firedPineconeGridPosition) return false;
 
     const bearPosition = this._bearGridPosition.getCurrentPosition();
     const firedPineconePosition = this._firedPineconeGridPosition.getCurrentPosition();
 
-    this._isBearHit = bearPosition[0] === firedPineconePosition[0]
+    return bearPosition[0] === firedPineconePosition[0]
       && bearPosition[1] === firedPineconePosition[1];
-    return this._isBearHit;
   },
   lumberjack() { return this._lumberjack; },
   availablePineconePosition() { return this._availablePineconePosition; },
   moveBear() {
-    this._isBearHit = false;
+    this._gameStatus = PLAYING;
     const [newXCoord, newYCoord] = this._bearGridPosition.nextPosition(
       this._lumberjackGridPosition.getCurrentPosition(),
     );
@@ -114,17 +117,22 @@ Grid.prototype = {
     return true;
   },
   checkForBearHit() {
+    if (this._gameStatus === BEAR_HIT) return;
+
     if (this.isBearHit()) {
+      this._gameStatus = BEAR_HIT;
       this._store.dispatch(updateBearStatus(bearHurt));
       this._score += 50 * this._roundNumber;
       this._store.dispatch(updateScore(this._score));
     }
   },
   checkForBearAttack() {
-    if (this.isBearHit()) return;
+    if (this._gameStatus === BEAR_HIT) return;
 
     if (this.isBearAttacking()) {
+      this._gameStatus = LUMBERJACK_HURT;
       this._lumberjack.loseLife();
+      if (this._lumberjack.isDead()) this._gameStatus = GAME_OVER;
       this._store.dispatch(bearAttackLumberjack(this._lumberjack.numberOfLives()));
       this._store.dispatch(updateBearStatus(bearAttacking));
       this._store.dispatch(updateLumberjackStatus(lumberjackHurt));
